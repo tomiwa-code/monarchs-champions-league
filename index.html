@@ -178,7 +178,7 @@
             font-size: 1.1rem;
         }
         
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], textarea {
             width: 100%;
             padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -187,9 +187,11 @@
             transition: all 0.3s ease;
             background: rgba(20, 20, 35, 0.7);
             color: #fff;
+            resize: vertical;
+            min-height: 120px;
         }
         
-        input[type="text"]:focus, input[type="number"]:focus {
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
             border-color: #6a98f0;
             outline: none;
             box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.3);
@@ -216,88 +218,12 @@
         
         .opponent-inputs {
             margin-top: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 10px;
         }
         
-        .opponent-inputs::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .opponent-inputs::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        
-        .opponent-inputs::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #6a98f0, #9d65c9);
-            border-radius: 10px;
-        }
-        
-        .opponent-input {
-            display: flex;
-            margin-bottom: 12px;
-            align-items: center;
-            background: rgba(20, 20, 35, 0.5);
-            padding: 10px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .opponent-input:hover {
-            background: rgba(30, 30, 50, 0.7);
-        }
-        
-        .opponent-input input {
-            flex: 1;
-            margin-right: 12px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .remove-opponent {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .remove-opponent:hover {
-            background: #ff5252;
-            transform: scale(1.1);
-        }
-        
-        .add-opponent {
-            background: #36b37e;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .add-opponent i {
-            margin-right: 8px;
-        }
-        
-        .add-opponent:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            background: #3cc489;
+        .opponents-textarea {
+            min-height: 150px;
+            font-family: monospace;
+            line-height: 1.5;
         }
         
         table {
@@ -656,6 +582,79 @@
             background: #ff6b6b;
         }
         
+        .download-btn {
+            background: #36b37e;
+        }
+        
+        .upload-section {
+            background: rgba(20, 20, 35, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            margin: 15px 0;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px 20px;
+            background: rgba(106, 152, 240, 0.3);
+            border: 2px dashed rgba(106, 152, 240, 0.5);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-input-label:hover {
+            background: rgba(106, 152, 240, 0.4);
+            border-color: rgba(106, 152, 240, 0.7);
+        }
+        
+        .file-input-label i {
+            margin-right: 8px;
+        }
+        
+        .edit-form {
+            display: none;
+        }
+        
+        .edit-form.active {
+            display: block;
+        }
+        
+        .create-form.active {
+            display: block;
+        }
+        
+        .create-form {
+            display: none;
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .cancel-edit-btn {
+            background: #6c757d;
+        }
+        
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
@@ -718,6 +717,12 @@
             .backup-actions {
                 align-self: flex-end;
             }
+            
+            .form-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -736,42 +741,60 @@
         </div>
         
         <div class="tab-content active" id="create">
-            <h2><i class="fas fa-plus-circle"></i> Create New Tournament</h2>
-            
-            <div class="stats">
-                <div class="stat-card">
-                    <h4>Active Players</h4>
-                    <div class="stat-value" id="active-players">0</div>
+            <div class="create-form active">
+                <h2><i class="fas fa-plus-circle"></i> Create New Tournament</h2>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <h4>Active Players</h4>
+                        <div class="stat-value" id="active-players">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Tournaments Created</h4>
+                        <div class="stat-value" id="tournament-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Matches Played</h4>
+                        <div class="stat-value" id="matches-played">0</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <h4>Tournaments Created</h4>
-                    <div class="stat-value" id="tournament-count">0</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Matches Played</h4>
-                    <div class="stat-value" id="matches-played">0</div>
-                </div>
+                
+                <form id="tournament-form">
+                    <div class="form-group">
+                        <label for="player-name"><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" id="player-name" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="opponents-textarea"><i class="fas fa-users"></i> Add Opponents (One per line)</label>
+                        <textarea id="opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line&#10;Example:&#10;John&#10;Mike&#10;Sarah" required></textarea>
+                    </div>
+                    
+                    <button type="submit"><i class="fas fa-rocket"></i> Create Tournament</button>
+                </form>
             </div>
             
-            <form id="tournament-form">
-                <div class="form-group">
-                    <label for="player-name"><i class="fas fa-user"></i> Your Name</label>
-                    <input type="text" id="player-name" placeholder="Enter your name" required>
+            <div class="edit-form" id="edit-tournament-form">
+                <div class="form-header">
+                    <h2><i class="fas fa-edit"></i> Edit Tournament</h2>
+                    <button class="cancel-edit-btn" id="cancel-edit-btn"><i class="fas fa-times"></i> Cancel Edit</button>
                 </div>
                 
-                <div class="form-group">
-                    <label><i class="fas fa-users"></i> Add Opponents (Any Amount)</label>
-                    <div class="opponent-inputs" id="opponent-inputs">
-                        <div class="opponent-input">
-                            <input type="text" class="opponent-name" placeholder="Enter opponent name" required>
-                            <button type="button" class="remove-opponent"><i class="fas fa-times"></i></button>
-                        </div>
+                <form id="edit-form">
+                    <input type="hidden" id="edit-tournament-id">
+                    <div class="form-group">
+                        <label for="edit-player-name"><i class="fas fa-user"></i> Your Name</label>
+                        <input type="text" id="edit-player-name" placeholder="Enter your name" required>
                     </div>
-                    <button type="button" class="add-opponent" id="add-opponent"><i class="fas fa-user-plus"></i> Add Another Opponent</button>
-                </div>
-                
-                <button type="submit"><i class="fas fa-rocket"></i> Create Tournament</button>
-            </form>
+                    
+                    <div class="form-group">
+                        <label for="edit-opponents-textarea"><i class="fas fa-users"></i> Edit Opponents (One per line)</label>
+                        <textarea id="edit-opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line" required></textarea>
+                    </div>
+                    
+                    <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
+                </form>
+            </div>
         </div>
         
         <div class="tab-content" id="tournaments">
@@ -823,6 +846,18 @@
                 <button id="create-backup-btn"><i class="fas fa-save"></i> Create Backup</button>
             </div>
             
+            <div class="upload-section">
+                <h3><i class="fas fa-upload"></i> Upload Backup</h3>
+                <p>Upload a previously downloaded backup file to restore your tournaments.</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="backup-upload" accept=".json">
+                    <label for="backup-upload" class="file-input-label">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose Backup File
+                    </label>
+                </div>
+                <button id="upload-backup-btn"><i class="fas fa-upload"></i> Upload and Restore</button>
+            </div>
+            
             <div class="backup-section">
                 <h3><i class="fas fa-history"></i> Existing Backups</h3>
                 <div class="backup-list" id="backup-list">
@@ -856,6 +891,11 @@
             tab.addEventListener('click', () => {
                 if (tab.dataset.tab !== 'tournament-view') {
                     switchTab(tab.dataset.tab);
+                    
+                    // Reset to create form when switching to create tab
+                    if (tab.dataset.tab === 'create') {
+                        showCreateForm();
+                    }
                 }
             });
         });
@@ -865,38 +905,9 @@
             switchTab('tournaments');
         });
         
-        // Opponent input management
-        const opponentInputs = document.getElementById('opponent-inputs');
-        const addOpponentBtn = document.getElementById('add-opponent');
-        
-        // Add opponent input field
-        addOpponentBtn.addEventListener('click', () => {
-            const newInput = document.createElement('div');
-            newInput.className = 'opponent-input';
-            newInput.innerHTML = `
-                <input type="text" class="opponent-name" placeholder="Enter opponent name" required>
-                <button type="button" class="remove-opponent"><i class="fas fa-times"></i></button>
-            `;
-            
-            opponentInputs.appendChild(newInput);
-            
-            // Add event listener to the new remove button
-            newInput.querySelector('.remove-opponent').addEventListener('click', () => {
-                if (opponentInputs.querySelectorAll('.opponent-input').length > 1) {
-                    newInput.remove();
-                } else {
-                    alert('At least one opponent is required');
-                }
-            });
-        });
-        
-        // Add event listener to initial remove button
-        document.querySelector('.remove-opponent').addEventListener('click', () => {
-            if (opponentInputs.querySelectorAll('.opponent-input').length > 1) {
-                document.querySelector('.opponent-input').remove();
-            } else {
-                alert('At least one opponent is required');
-            }
+        // Cancel edit button functionality
+        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+            showCreateForm();
         });
         
         // Form validation for tournament creation
@@ -905,14 +916,23 @@
             e.preventDefault();
             
             const playerName = document.getElementById('player-name').value;
-            const opponentNames = Array.from(document.querySelectorAll('.opponent-name'))
-                .map(input => input.value.trim())
-                .filter(name => name !== '');
+            const opponentsText = document.getElementById('opponents-textarea').value;
             
             if (!playerName) {
                 alert('Please enter your name');
                 return;
             }
+            
+            if (!opponentsText.trim()) {
+                alert('Please add at least one opponent');
+                return;
+            }
+            
+            // Split opponents by new lines and filter out empty lines
+            const opponentNames = opponentsText
+                .split('\n')
+                .map(name => name.trim())
+                .filter(name => name !== '');
             
             if (opponentNames.length === 0) {
                 alert('Please add at least one opponent');
@@ -933,28 +953,64 @@
             
             // Reset form
             form.reset();
-            // Reset opponent inputs to just one
-            opponentInputs.innerHTML = `
-                <div class="opponent-input">
-                    <input type="text" class="opponent-name" placeholder="Enter opponent name" required>
-                    <button type="button" class="remove-opponent"><i class="fas fa-times"></i></button>
-                </div>
-            `;
             
             // Update tournament count and display
             updateTournamentDisplay();
             
             // Switch to All Tournaments tab to show the new tournament
             switchTab('tournaments');
+        });
+        
+        // Edit tournament form submission
+        const editForm = document.getElementById('edit-form');
+        editForm.addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            // Add event listener to the new remove button
-            document.querySelector('.remove-opponent').addEventListener('click', () => {
-                if (opponentInputs.querySelectorAll('.opponent-input').length > 1) {
-                    document.querySelector('.opponent-input').remove();
-                } else {
-                    alert('At least one opponent is required');
-                }
-            });
+            const tournamentId = document.getElementById('edit-tournament-id').value;
+            const playerName = document.getElementById('edit-player-name').value;
+            const opponentsText = document.getElementById('edit-opponents-textarea').value;
+            
+            if (!playerName) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            if (!opponentsText.trim()) {
+                alert('Please add at least one opponent');
+                return;
+            }
+            
+            // Split opponents by new lines and filter out empty lines
+            const opponentNames = opponentsText
+                .split('\n')
+                .map(name => name.trim())
+                .filter(name => name !== '');
+            
+            if (opponentNames.length === 0) {
+                alert('Please add at least one opponent');
+                return;
+            }
+            
+            // Check for duplicate opponent names
+            const uniqueOpponents = new Set(opponentNames);
+            if (uniqueOpponents.size !== opponentNames.length) {
+                alert('Opponent names must be unique');
+                return;
+            }
+            
+            // Update tournament in localStorage
+            updateTournament(tournamentId, playerName, opponentNames);
+            
+            alert(`Tournament updated for ${playerName} with ${opponentNames.length} opponents!`);
+            
+            // Switch back to create form
+            showCreateForm();
+            
+            // Update tournament display
+            updateTournamentDisplay();
+            
+            // Switch to All Tournaments tab to show the updated tournament
+            switchTab('tournaments');
         });
         
         // Backup functionality
@@ -964,6 +1020,94 @@
             document.getElementById('backup-name').value = '';
             updateBackupDisplay();
         });
+        
+        // Upload backup functionality
+        document.getElementById('upload-backup-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('backup-upload');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a backup file to upload');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+                    
+                    if (!Array.isArray(backupData)) {
+                        alert('Invalid backup file format');
+                        return;
+                    }
+                    
+                    if (confirm('Are you sure you want to restore this backup? This will replace all current tournaments.')) {
+                        localStorage.setItem('tournaments', JSON.stringify(backupData));
+                        updateTournamentDisplay();
+                        alert('Backup restored successfully!');
+                        switchTab('tournaments');
+                        fileInput.value = ''; // Reset file input
+                    }
+                } catch (error) {
+                    alert('Error reading backup file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+        
+        // Show create form
+        function showCreateForm() {
+            document.querySelector('.create-form').classList.add('active');
+            document.querySelector('.edit-form').classList.remove('active');
+        }
+        
+        // Show edit form
+        function showEditForm() {
+            document.querySelector('.create-form').classList.remove('active');
+            document.querySelector('.edit-form').classList.add('active');
+        }
+        
+        // Edit tournament function
+        function editTournament(tournamentId) {
+            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const tournament = tournaments.find(t => t.id === tournamentId);
+            
+            if (!tournament) {
+                alert('Tournament not found!');
+                return;
+            }
+            
+            // Fill the edit form with tournament data
+            document.getElementById('edit-tournament-id').value = tournamentId;
+            document.getElementById('edit-player-name').value = tournament.playerName;
+            document.getElementById('edit-opponents-textarea').value = tournament.opponents.join('\n');
+            
+            // Show edit form and switch to create tab
+            showEditForm();
+            switchTab('create');
+        }
+        
+        // Update tournament function
+        function updateTournament(tournamentId, playerName, opponents) {
+            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const tournamentIndex = tournaments.findIndex(t => t.id === tournamentId);
+            
+            if (tournamentIndex === -1) {
+                alert('Tournament not found!');
+                return;
+            }
+            
+            // Update tournament data
+            tournaments[tournamentIndex].playerName = playerName;
+            tournaments[tournamentIndex].opponents = opponents;
+            
+            // Regenerate fixtures and table with new opponents
+            tournaments[tournamentIndex].fixtures = generateFixtures(playerName, opponents);
+            tournaments[tournamentIndex].table = generateTable(playerName, opponents);
+            
+            // Save updated tournaments
+            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+        }
         
         // Local Storage Functions
         function saveTournament(playerName, opponents) {
@@ -1058,6 +1202,27 @@
             alert(`Backup "${backupName}" created successfully!`);
         }
         
+        function downloadBackup(backupId) {
+            const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
+            const backup = backups.find(b => b.id === backupId);
+            
+            if (!backup) {
+                alert('Backup not found!');
+                return;
+            }
+            
+            // Create a blob and download link
+            const blob = new Blob([JSON.stringify(backup.data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tournament_backup_${backup.name.replace(/\s+/g, '_')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
         function restoreBackup(backupId) {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
@@ -1118,6 +1283,9 @@
                         <p>Created: ${new Date(backup.date).toLocaleString()}</p>
                     </div>
                     <div class="backup-actions">
+                        <button class="backup-action-btn download-btn" data-id="${backup.id}">
+                            <i class="fas fa-download"></i> Download
+                        </button>
                         <button class="backup-action-btn restore-btn" data-id="${backup.id}">
                             <i class="fas fa-undo"></i> Restore
                         </button>
@@ -1130,6 +1298,13 @@
             });
             
             // Add event listeners to backup buttons
+            document.querySelectorAll('.download-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const backupId = this.getAttribute('data-id');
+                    downloadBackup(backupId);
+                });
+            });
+            
             document.querySelectorAll('.restore-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const backupId = this.getAttribute('data-id');
@@ -1420,7 +1595,7 @@
             document.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const tournamentId = this.getAttribute('data-id');
-                    alert(`Editing tournament ${tournamentId} - This feature would open an edit form in a real application`);
+                    editTournament(tournamentId);
                 });
             });
             
