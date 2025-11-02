@@ -737,6 +737,7 @@
             <div class="tab active" data-tab="create"><i class="fas fa-plus-circle"></i> Create Tournament</div>
             <div class="tab" data-tab="tournaments"><i class="fas fa-list"></i> All Tournaments</div>
             <div class="tab" data-tab="tournament-view" style="display:none;"><i class="fas fa-eye"></i> Tournament View</div>
+            <div class="tab" data-tab="player-stats"><i class="fas fa-chart-bar"></i> Player Stats</div>
             <div class="tab" data-tab="backups"><i class="fas fa-database"></i> Backups</div>
         </div>
         
@@ -834,6 +835,31 @@
             </table>
         </div>
         
+        <div class="tab-content" id="player-stats">
+            <h2><i class="fas fa-chart-bar"></i> Player Statistics</h2>
+            <p>Aggregated statistics for all players across all tournaments</p>
+            
+            <table id="player-stats-table">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Tournaments</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GF</th>
+                        <th>GA</th>
+                        <th>GD</th>
+                        <th>Pts</th>
+                    </tr>
+                </thead>
+                <tbody id="player-stats-body">
+                    <!-- Player stats will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+        
         <div class="tab-content" id="backups">
             <h2><i class="fas fa-database"></i> Tournament Backups</h2>
             
@@ -885,6 +911,11 @@
             // Add active class to clicked tab and corresponding content
             document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
             document.getElementById(tabName).classList.add('active');
+            
+            // Update player stats when the tab is activated
+            if (tabName === 'player-stats') {
+                updatePlayerStatsTable();
+            }
         }
 
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1535,6 +1566,88 @@
             if (n % 10 === 2 && n % 100 !== 12) return 'nd';
             if (n % 10 === 3 && n % 100 !== 13) return 'rd';
             return 'th';
+        }
+        
+        // Update player stats table
+        function updatePlayerStatsTable() {
+            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const playerStatsBody = document.getElementById('player-stats-body');
+            
+            // Clear current table
+            playerStatsBody.innerHTML = '';
+            
+            if (tournaments.length === 0) {
+                playerStatsBody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-bar"></i>
+                                <h3>No Player Data</h3>
+                                <p>Create tournaments to see player statistics</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Aggregate player statistics
+            const playerStatsMap = {};
+            
+            tournaments.forEach(tournament => {
+                const playerData = tournament.table.find(team => team.isPlayer);
+                if (playerData) {
+                    const playerName = playerData.name;
+                    
+                    if (!playerStatsMap[playerName]) {
+                        playerStatsMap[playerName] = {
+                            name: playerName,
+                            tournaments: 1,
+                            played: playerData.played,
+                            won: playerData.won,
+                            drawn: playerData.drawn,
+                            lost: playerData.lost,
+                            goalsFor: playerData.goalsFor,
+                            goalsAgainst: playerData.goalsAgainst,
+                            goalDifference: playerData.goalDifference,
+                            points: playerData.points
+                        };
+                    } else {
+                        playerStatsMap[playerName].tournaments += 1;
+                        playerStatsMap[playerName].played += playerData.played;
+                        playerStatsMap[playerName].won += playerData.won;
+                        playerStatsMap[playerName].drawn += playerData.drawn;
+                        playerStatsMap[playerName].lost += playerData.lost;
+                        playerStatsMap[playerName].goalsFor += playerData.goalsFor;
+                        playerStatsMap[playerName].goalsAgainst += playerData.goalsAgainst;
+                        playerStatsMap[playerName].goalDifference += playerData.goalDifference;
+                        playerStatsMap[playerName].points += playerData.points;
+                    }
+                }
+            });
+            
+            // Convert to array and sort by points (descending)
+            const playerStatsArray = Object.values(playerStatsMap);
+            playerStatsArray.sort((a, b) => b.points - a.points);
+            
+            // Add rows to the table
+            playerStatsArray.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.className = 'player-row';
+                row.innerHTML = `
+                    <td><i class="fas fa-user"></i> ${player.name}</td>
+                    <td>${player.tournaments}</td>
+                    <td>${player.played}</td>
+                    <td>${player.won}</td>
+                    <td>${player.drawn}</td>
+                    <td>${player.lost}</td>
+                    <td>${player.goalsFor}</td>
+                    <td>${player.goalsAgainst}</td>
+                    <td>${player.goalDifference > 0 ? '+' : ''}${player.goalDifference}</td>
+                    <td>${player.points}</td>
+                `;
+                playerStatsBody.appendChild(row);
+            });
         }
         
         function updateTournamentDisplay() {
