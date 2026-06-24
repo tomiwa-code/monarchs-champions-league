@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tournament Manager Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         * {
             margin: 0;
@@ -12,20 +12,20 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: #fff;
             line-height: 1.6;
             min-height: 100vh;
         }
-        
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         header {
             text-align: center;
             padding: 30px 0;
@@ -39,13 +39,19 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        
+
         header::before {
             content: '';
             position: absolute;
@@ -56,7 +62,7 @@
             background: rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
-        
+
         h1 {
             font-size: 3rem;
             margin-bottom: 10px;
@@ -64,14 +70,14 @@
             position: relative;
             z-index: 2;
         }
-        
+
         .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
             position: relative;
             z-index: 2;
         }
-        
+
         .tabs {
             display: flex;
             background: rgba(30, 30, 46, 0.8);
@@ -81,8 +87,9 @@
             margin-bottom: 25px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
         }
-        
+
         .tab {
             padding: 18px 20px;
             cursor: pointer;
@@ -94,19 +101,21 @@
             color: #b0b0b0;
             position: relative;
             overflow: hidden;
+            min-width: 120px;
+            user-select: none;
         }
-        
+
         .tab:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
-        
+
         .tab.active {
             background: rgba(255, 255, 255, 0.15);
             border-bottom: 3px solid #6a98f0;
             color: #fff;
         }
-        
+
         .tab.active::before {
             content: '';
             position: absolute;
@@ -118,11 +127,11 @@
             background-size: 400% 400%;
             animation: gradientShift 8s ease infinite;
         }
-        
+
         .tab i {
             margin-right: 8px;
         }
-        
+
         .tab-content {
             display: none;
             padding: 30px;
@@ -133,16 +142,22 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .tab-content.active {
             display: block;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        
+
         h2 {
             font-size: 2rem;
             margin-bottom: 20px;
@@ -150,14 +165,14 @@
             display: flex;
             align-items: center;
         }
-        
+
         h2 i {
             margin-right: 12px;
             background: linear-gradient(135deg, #6a98f0, #9d65c9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         h3 {
             font-size: 1.5rem;
             margin: 25px 0 15px;
@@ -165,11 +180,11 @@
             border-bottom: 2px solid rgba(106, 152, 240, 0.3);
             color: #ffde7d;
         }
-        
+
         .form-group {
             margin-bottom: 25px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 10px;
@@ -177,8 +192,10 @@
             color: #a3de83;
             font-size: 1.1rem;
         }
-        
-        input[type="text"], input[type="number"], textarea {
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
             width: 100%;
             padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -190,13 +207,15 @@
             resize: vertical;
             min-height: 120px;
         }
-        
-        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
             border-color: #6a98f0;
             outline: none;
             box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.3);
         }
-        
+
         button {
             background: #4a6cf7;
             color: white;
@@ -209,23 +228,27 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
             background: #5a7cff;
         }
-        
+
+        button:active {
+            transform: translateY(0px);
+        }
+
         .opponent-inputs {
             margin-top: 15px;
         }
-        
+
         .opponents-textarea {
             min-height: 150px;
             font-family: monospace;
             line-height: 1.5;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -235,31 +258,32 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        
-        th, td {
+
+        th,
+        td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         th {
             background: linear-gradient(135deg, rgba(106, 152, 240, 0.3), rgba(157, 101, 201, 0.3));
             font-weight: 600;
             color: #ffde7d;
         }
-        
+
         tr:hover {
             background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .player-row {
             background: rgba(106, 152, 240, 0.2);
         }
-        
+
         .player-row:hover {
             background: rgba(106, 152, 240, 0.3);
         }
-        
+
         .form-indicator {
             display: inline-flex;
             align-items: center;
@@ -273,20 +297,20 @@
             background-color: #6c757d;
             color: white;
         }
-        
+
         .form-win {
             background-color: #4CAF50;
         }
-        
+
         .form-draw {
             background-color: #FFC107;
             color: #333;
         }
-        
+
         .form-loss {
             background-color: #F44336;
         }
-        
+
         .position-change {
             display: inline-flex;
             align-items: center;
@@ -296,23 +320,23 @@
             margin-right: 8px;
             font-size: 16px;
         }
-        
+
         .position-up {
             color: #4CAF50;
         }
-        
+
         .position-down {
             color: #F44336;
         }
-        
+
         .position-same {
             color: #FFC107;
         }
-        
+
         .fixtures-list {
             margin-top: 20px;
         }
-        
+
         .fixture {
             display: flex;
             justify-content: space-between;
@@ -325,20 +349,22 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .fixture:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             background: rgba(30, 30, 50, 0.7);
         }
-        
+
         .match {
             display: flex;
             align-items: center;
             flex: 1;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        
+
         .player-name {
             font-weight: 600;
             color: #ffde7d;
@@ -346,11 +372,11 @@
             display: flex;
             align-items: center;
         }
-        
+
         .player-name i {
             margin-right: 12px;
         }
-        
+
         .versus {
             margin: 0 8px;
             color: #6a98f0;
@@ -358,14 +384,14 @@
             display: flex;
             align-items: center;
         }
-        
+
         .score-inputs {
             display: flex;
             align-items: center;
             gap: 8px;
             margin: 0 12px;
         }
-        
+
         .score-inputs input {
             width: 60px;
             text-align: center;
@@ -373,8 +399,17 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             font-weight: bold;
+            padding: 6px;
+            border-radius: 6px;
+            min-height: 40px;
         }
-        
+
+        .score-inputs input:focus {
+            border-color: #6a98f0;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.3);
+        }
+
         .date {
             background: #e67e22;
             padding: 6px 12px;
@@ -382,15 +417,16 @@
             font-size: 0.9rem;
             font-weight: 600;
             margin-left: 15px;
+            white-space: nowrap;
         }
-        
+
         .tournament-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-top: 25px;
         }
-        
+
         .tournament-card {
             background: linear-gradient(135deg, rgba(30, 30, 46, 0.8), rgba(20, 20, 35, 0.9));
             border-radius: 15px;
@@ -401,7 +437,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .tournament-card::before {
             content: '';
             position: absolute;
@@ -413,12 +449,12 @@
             background-size: 400% 400%;
             animation: gradientShift 8s ease infinite;
         }
-        
+
         .tournament-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
         }
-        
+
         .tournament-card h3 {
             color: #ffde7d;
             margin-bottom: 20px;
@@ -426,44 +462,46 @@
             padding-bottom: 12px;
             display: flex;
             align-items: center;
+            font-size: 1.3rem;
         }
-        
+
         .tournament-card h3 i {
             margin-right: 10px;
             color: #a3de83;
         }
-        
+
         .tournament-card ul {
             list-style-type: none;
             margin-bottom: 20px;
         }
-        
+
         .tournament-card li {
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
         }
-        
+
         .tournament-card li:first-child i {
             margin-right: 10px;
             color: #6a98f0;
         }
-        
+
         .tournament-card li:not(:first-child) {
-            padding-left: 28px; /* Align with the first item's text */
+            padding-left: 28px;
         }
-        
+
         .tournament-card li:last-child {
             border-bottom: none;
         }
-        
+
         .tournament-actions {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
+            gap: 8px;
         }
-        
+
         .action-btn {
             padding: 8px 15px;
             border-radius: 6px;
@@ -472,61 +510,90 @@
             align-items: center;
             justify-content: center;
             flex: 1;
-            margin: 0 5px;
+            margin: 0;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #fff;
         }
-        
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(0px);
+        }
+
         .view-btn {
             background: #4a6cf7;
         }
-        
+
+        .view-btn:hover {
+            background: #5a7cff;
+        }
+
         .edit-btn {
             background: #ff9f43;
         }
-        
+
+        .edit-btn:hover {
+            background: #ffb56b;
+        }
+
         .delete-btn {
             background: #ff6b6b;
         }
-        
+
+        .delete-btn:hover {
+            background: #ff8a8a;
+        }
+
         .empty-state {
             text-align: center;
             padding: 50px;
             color: #b0b0b0;
         }
-        
+
         .empty-state i {
             font-size: 64px;
             margin-bottom: 20px;
             color: rgba(255, 255, 255, 0.1);
         }
-        
+
         .stats {
             display: flex;
             justify-content: space-around;
             margin: 25px 0;
             text-align: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        
+
         .stat-card {
             background: rgba(20, 20, 35, 0.7);
             padding: 20px;
             border-radius: 12px;
             flex: 1;
+            min-width: 140px;
             margin: 0 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
-        
+
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
-        
+
         .stat-card h4 {
             color: #ffa36c;
             margin-bottom: 10px;
             font-size: 1.1rem;
         }
-        
+
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
@@ -534,23 +601,27 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
         .back-btn {
             background: #6c757d;
             margin-bottom: 20px;
         }
-        
+
+        .back-btn:hover {
+            background: #7e8790;
+        }
+
         .backup-section {
             background: rgba(20, 20, 35, 0.5);
             padding: 20px;
             border-radius: 12px;
             margin-top: 20px;
         }
-        
+
         .backup-list {
             margin-top: 15px;
         }
-        
+
         .backup-item {
             display: flex;
             justify-content: space-between;
@@ -560,44 +631,67 @@
             background: rgba(30, 30, 50, 0.7);
             border-radius: 8px;
             border-left: 4px solid #36b37e;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        
+
         .backup-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
-        
+
         .backup-action-btn {
             padding: 6px 12px;
             border-radius: 5px;
             font-size: 12px;
             cursor: pointer;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-        
+
+        .backup-action-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .restore-btn {
             background: #4a6cf7;
         }
-        
+
+        .restore-btn:hover {
+            background: #5a7cff;
+        }
+
         .delete-backup-btn {
             background: #ff6b6b;
         }
-        
+
+        .delete-backup-btn:hover {
+            background: #ff8a8a;
+        }
+
         .download-btn {
             background: #36b37e;
         }
-        
+
+        .download-btn:hover {
+            background: #48c98f;
+        }
+
         .upload-section {
             background: rgba(20, 20, 35, 0.5);
             padding: 20px;
             border-radius: 12px;
             margin-top: 20px;
         }
-        
+
         .file-input-wrapper {
             position: relative;
             margin: 15px 0;
         }
-        
+
         .file-input-wrapper input[type="file"] {
             position: absolute;
             left: 0;
@@ -607,7 +701,7 @@
             height: 100%;
             cursor: pointer;
         }
-        
+
         .file-input-label {
             display: block;
             padding: 12px 20px;
@@ -618,110 +712,191 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
+
         .file-input-label:hover {
             background: rgba(106, 152, 240, 0.4);
             border-color: rgba(106, 152, 240, 0.7);
         }
-        
+
         .file-input-label i {
             margin-right: 8px;
         }
-        
+
         .edit-form {
             display: none;
         }
-        
+
         .edit-form.active {
             display: block;
         }
-        
+
         .create-form.active {
             display: block;
         }
-        
+
         .create-form {
             display: none;
         }
-        
+
         .form-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        
+
         .cancel-edit-btn {
             background: #6c757d;
         }
-        
+
+        .cancel-edit-btn:hover {
+            background: #7e8790;
+        }
+
+        /* scrollable table wrapper */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        /* toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(20, 20, 35, 0.95);
+            color: #fff;
+            padding: 16px 28px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            border-left: 5px solid #6a98f0;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+            max-width: 90vw;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: #4CAF50;
+        }
+
+        .toast.error {
+            border-left-color: #F44336;
+        }
+
+        .toast.warning {
+            border-left-color: #FFC107;
+        }
+
+        .toast i {
+            margin-right: 12px;
+        }
+
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
             }
-            
+
             .tournament-list {
                 grid-template-columns: 1fr;
             }
-            
-            table {
-                display: block;
+
+            .table-wrapper {
                 overflow-x: auto;
             }
-            
+
             .fixture {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 gap: 15px;
             }
-            
+
             .match {
                 width: 100%;
-                justify-content: space-between;
+                justify-content: center;
+                flex-direction: column;
             }
-            
+
             .score-inputs {
                 align-self: center;
                 margin: 10px 0;
             }
-            
+
             .date {
-                align-self: flex-end;
+                align-self: center;
                 margin-left: 0;
             }
-            
+
             .stats {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             .stat-card {
                 margin: 0;
             }
-            
+
             .tournament-actions {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .action-btn {
                 margin: 0;
             }
-            
+
             .backup-item {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 gap: 10px;
             }
-            
+
             .backup-actions {
-                align-self: flex-end;
+                align-self: center;
+                justify-content: center;
             }
-            
+
             .form-header {
                 flex-direction: column;
                 gap: 15px;
-                align-items: flex-start;
+                align-items: stretch;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .tab {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+                min-width: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .tab-content {
+                padding: 15px;
+            }
+
+            .tournament-card {
+                padding: 18px;
+            }
+
+            .score-inputs input {
+                width: 50px;
             }
         }
     </style>
@@ -732,7 +907,7 @@
             <h1><i class="fas fa-trophy"></i> Tournament Manager Pro</h1>
             <p class="subtitle">Create, manage and track your tournaments with style</p>
         </header>
-        
+
         <div class="tabs">
             <div class="tab active" data-tab="create"><i class="fas fa-plus-circle"></i> Create Tournament</div>
             <div class="tab" data-tab="tournaments"><i class="fas fa-list"></i> All Tournaments</div>
@@ -740,11 +915,11 @@
             <div class="tab" data-tab="player-stats"><i class="fas fa-chart-bar"></i> Player Stats</div>
             <div class="tab" data-tab="backups"><i class="fas fa-database"></i> Backups</div>
         </div>
-        
+
         <div class="tab-content active" id="create">
             <div class="create-form active">
                 <h2><i class="fas fa-plus-circle"></i> Create New Tournament</h2>
-                
+
                 <div class="stats">
                     <div class="stat-card">
                         <h4>Active Players</h4>
@@ -759,56 +934,56 @@
                         <div class="stat-value" id="matches-played">0</div>
                     </div>
                 </div>
-                
+
                 <form id="tournament-form">
                     <div class="form-group">
                         <label for="player-name"><i class="fas fa-user"></i> Your Name</label>
-                        <input type="text" id="player-name" placeholder="Enter your name" required>
+                        <input type="text" id="player-name" placeholder="Enter your name" required />
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="opponents-textarea"><i class="fas fa-users"></i> Add Opponents (One per line)</label>
                         <textarea id="opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line&#10;Example:&#10;John&#10;Mike&#10;Sarah" required></textarea>
                     </div>
-                    
+
                     <button type="submit"><i class="fas fa-rocket"></i> Create Tournament</button>
                 </form>
             </div>
-            
+
             <div class="edit-form" id="edit-tournament-form">
                 <div class="form-header">
                     <h2><i class="fas fa-edit"></i> Edit Tournament</h2>
                     <button class="cancel-edit-btn" id="cancel-edit-btn"><i class="fas fa-times"></i> Cancel Edit</button>
                 </div>
-                
+
                 <form id="edit-form">
-                    <input type="hidden" id="edit-tournament-id">
+                    <input type="hidden" id="edit-tournament-id" />
                     <div class="form-group">
                         <label for="edit-player-name"><i class="fas fa-user"></i> Your Name</label>
-                        <input type="text" id="edit-player-name" placeholder="Enter your name" required>
+                        <input type="text" id="edit-player-name" placeholder="Enter your name" required />
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="edit-opponents-textarea"><i class="fas fa-users"></i> Edit Opponents (One per line)</label>
                         <textarea id="edit-opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line" required></textarea>
                     </div>
-                    
+
                     <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
                 </form>
             </div>
         </div>
-        
+
         <div class="tab-content" id="tournaments">
             <h2><i class="fas fa-list"></i> All Tournaments</h2>
             <div class="tournament-list" id="tournaments-list">
                 <!-- Tournaments will be dynamically added here -->
             </div>
         </div>
-        
+
         <div class="tab-content" id="tournament-view">
             <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back to All Tournaments</button>
             <h2 id="tournament-view-title"><i class="fas fa-trophy"></i> Tournament View</h2>
-            
+
             <div class="stats" id="tournament-stats">
                 <div class="stat-card">
                     <h4>Current Position</h4>
@@ -823,67 +998,71 @@
                     <div class="stat-value" id="current-gd">0</div>
                 </div>
             </div>
-            
+
             <h3><i class="fas fa-calendar-alt"></i> Daily Fixtures</h3>
             <div class="fixtures-list" id="tournament-fixtures">
                 <!-- Fixtures will be dynamically added here -->
             </div>
-            
+
             <h3><i class="fas fa-table"></i> League Table</h3>
-            <table id="tournament-table">
-                <!-- Table will be dynamically added here -->
-            </table>
+            <div class="table-wrapper">
+                <table id="tournament-table">
+                    <!-- Table will be dynamically added here -->
+                </table>
+            </div>
         </div>
-        
+
         <div class="tab-content" id="player-stats">
             <h2><i class="fas fa-chart-bar"></i> Player Statistics</h2>
             <p>Aggregated statistics for all players across all tournaments</p>
-            
-            <table id="player-stats-table">
-                <thead>
-                    <tr>
-                        <th>Player</th>
-                        <th>Tournaments</th>
-                        <th>P</th>
-                        <th>W</th>
-                        <th>D</th>
-                        <th>L</th>
-                        <th>GF</th>
-                        <th>GA</th>
-                        <th>GD</th>
-                        <th>Pts</th>
-                    </tr>
-                </thead>
-                <tbody id="player-stats-body">
-                    <!-- Player stats will be dynamically added here -->
-                </tbody>
-            </table>
+
+            <div class="table-wrapper">
+                <table id="player-stats-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Tournaments</th>
+                            <th>P</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>GD</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody id="player-stats-body">
+                        <!-- Player stats will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-        
+
         <div class="tab-content" id="backups">
             <h2><i class="fas fa-database"></i> Tournament Backups</h2>
-            
+
             <div class="backup-section">
                 <h3><i class="fas fa-plus-circle"></i> Create New Backup</h3>
                 <div class="form-group">
                     <label for="backup-name"><i class="fas fa-tag"></i> Backup Name</label>
-                    <input type="text" id="backup-name" placeholder="Enter a name for this backup">
+                    <input type="text" id="backup-name" placeholder="Enter a name for this backup" />
                 </div>
                 <button id="create-backup-btn"><i class="fas fa-save"></i> Create Backup</button>
             </div>
-            
+
             <div class="upload-section">
                 <h3><i class="fas fa-upload"></i> Upload Backup</h3>
                 <p>Upload a previously downloaded backup file to restore your tournaments.</p>
                 <div class="file-input-wrapper">
-                    <input type="file" id="backup-upload" accept=".json">
+                    <input type="file" id="backup-upload" accept=".json" />
                     <label for="backup-upload" class="file-input-label">
                         <i class="fas fa-cloud-upload-alt"></i> Choose Backup File
                     </label>
                 </div>
                 <button id="upload-backup-btn"><i class="fas fa-upload"></i> Upload and Restore</button>
             </div>
-            
+
             <div class="backup-section">
                 <h3><i class="fas fa-history"></i> Existing Backups</h3>
                 <div class="backup-list" id="backup-list">
@@ -893,26 +1072,53 @@
         </div>
     </div>
 
+    <!-- Toast notification -->
+    <div class="toast" id="toast"><i class="fas fa-info-circle"></i> <span id="toast-message">Message</span></div>
+
     <script>
-        // Tab switching functionality
+        // ─── TOAST SYSTEM ───────────────────────────────────────────────
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+
+            // remove previous classes
+            toast.classList.remove('success', 'error', 'warning', 'show');
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            icon.className = 'fas ' + (icons[type] || icons.info);
+            msg.textContent = message;
+            toast.classList.add(type, 'show');
+
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // ─── TAB SWITCHING ──────────────────────────────────────────────
         function switchTab(tabName) {
-            // Remove active class from all tabs and contents
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            // Show/hide tournament view tab
+
             const tournamentViewTab = document.querySelector('.tab[data-tab="tournament-view"]');
             if (tabName === 'tournament-view') {
                 tournamentViewTab.style.display = 'flex';
             } else {
                 tournamentViewTab.style.display = 'none';
             }
-            
-            // Add active class to clicked tab and corresponding content
-            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-            
-            // Update player stats when the tab is activated
+
+            const targetTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            if (targetTab) targetTab.classList.add('active');
+
+            const targetContent = document.getElementById(tabName);
+            if (targetContent) targetContent.classList.add('active');
+
             if (tabName === 'player-stats') {
                 updatePlayerStatsTable();
             }
@@ -922,227 +1128,168 @@
             tab.addEventListener('click', () => {
                 if (tab.dataset.tab !== 'tournament-view') {
                     switchTab(tab.dataset.tab);
-                    
-                    // Reset to create form when switching to create tab
                     if (tab.dataset.tab === 'create') {
                         showCreateForm();
                     }
                 }
             });
         });
-        
-        // Back button functionality
+
+        // ─── BACK / CANCEL BUTTONS ──────────────────────────────────────
         document.getElementById('back-to-tournaments').addEventListener('click', () => {
             switchTab('tournaments');
         });
-        
-        // Cancel edit button functionality
+
         document.getElementById('cancel-edit-btn').addEventListener('click', () => {
             showCreateForm();
         });
-        
-        // Form validation for tournament creation
+
+        // ─── CREATE TOURNAMENT ──────────────────────────────────────────
         const form = document.getElementById('tournament-form');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const playerName = document.getElementById('player-name').value;
+
+            const playerName = document.getElementById('player-name').value.trim();
             const opponentsText = document.getElementById('opponents-textarea').value;
-            
+
             if (!playerName) {
-                alert('Please enter your name');
+                showToast('Please enter your name', 'error');
                 return;
             }
-            
-            if (!opponentsText.trim()) {
-                alert('Please add at least one opponent');
-                return;
-            }
-            
-            // Split opponents by new lines and filter out empty lines
+
             const opponentNames = opponentsText
                 .split('\n')
                 .map(name => name.trim())
                 .filter(name => name !== '');
-            
+
             if (opponentNames.length === 0) {
-                alert('Please add at least one opponent');
+                showToast('Please add at least one opponent', 'error');
                 return;
             }
-            
-            // Check for duplicate opponent names
-            const uniqueOpponents = new Set(opponentNames);
-            if (uniqueOpponents.size !== opponentNames.length) {
-                alert('Opponent names must be unique');
+
+            const unique = new Set(opponentNames);
+            if (unique.size !== opponentNames.length) {
+                showToast('Opponent names must be unique', 'error');
                 return;
             }
-            
-            // Save tournament to localStorage
+
             const tournamentId = saveTournament(playerName, opponentNames);
-            
-            alert(`Tournament created for ${playerName} with ${opponentNames.length} opponents!`);
-            
-            // Reset form
+            showToast(`Tournament created for ${playerName} with ${opponentNames.length} opponents!`, 'success');
             form.reset();
-            
-            // Update tournament count and display
             updateTournamentDisplay();
-            
-            // Switch to All Tournaments tab to show the new tournament
             switchTab('tournaments');
         });
-        
-        // Edit tournament form submission
+
+        // ─── EDIT TOURNAMENT ────────────────────────────────────────────
         const editForm = document.getElementById('edit-form');
         editForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const tournamentId = document.getElementById('edit-tournament-id').value;
-            const playerName = document.getElementById('edit-player-name').value;
+            const playerName = document.getElementById('edit-player-name').value.trim();
             const opponentsText = document.getElementById('edit-opponents-textarea').value;
-            
+
             if (!playerName) {
-                alert('Please enter your name');
+                showToast('Please enter your name', 'error');
                 return;
             }
-            
-            if (!opponentsText.trim()) {
-                alert('Please add at least one opponent');
-                return;
-            }
-            
-            // Split opponents by new lines and filter out empty lines
+
             const opponentNames = opponentsText
                 .split('\n')
                 .map(name => name.trim())
                 .filter(name => name !== '');
-            
+
             if (opponentNames.length === 0) {
-                alert('Please add at least one opponent');
+                showToast('Please add at least one opponent', 'error');
                 return;
             }
-            
-            // Check for duplicate opponent names
-            const uniqueOpponents = new Set(opponentNames);
-            if (uniqueOpponents.size !== opponentNames.length) {
-                alert('Opponent names must be unique');
+
+            const unique = new Set(opponentNames);
+            if (unique.size !== opponentNames.length) {
+                showToast('Opponent names must be unique', 'error');
                 return;
             }
-            
-            // Update tournament in localStorage
+
             updateTournament(tournamentId, playerName, opponentNames);
-            
-            alert(`Tournament updated for ${playerName} with ${opponentNames.length} opponents!`);
-            
-            // Switch back to create form
+            showToast(`Tournament updated for ${playerName}!`, 'success');
             showCreateForm();
-            
-            // Update tournament display
             updateTournamentDisplay();
-            
-            // Switch to All Tournaments tab to show the updated tournament
             switchTab('tournaments');
         });
-        
-        // Backup functionality
+
+        // ─── BACKUP ─────────────────────────────────────────────────────
         document.getElementById('create-backup-btn').addEventListener('click', function() {
-            const backupName = document.getElementById('backup-name').value || `Backup_${new Date().toLocaleDateString()}`;
+            const backupName = document.getElementById('backup-name').value.trim() || `Backup_${new Date().toLocaleDateString()}`;
             createBackup(backupName);
             document.getElementById('backup-name').value = '';
             updateBackupDisplay();
         });
-        
-        // Upload backup functionality
+
         document.getElementById('upload-backup-btn').addEventListener('click', function() {
             const fileInput = document.getElementById('backup-upload');
             const file = fileInput.files[0];
-            
             if (!file) {
-                alert('Please select a backup file to upload');
+                showToast('Please select a backup file to upload', 'error');
                 return;
             }
-            
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const backupData = JSON.parse(e.target.result);
-                    
                     if (!Array.isArray(backupData)) {
-                        alert('Invalid backup file format');
+                        showToast('Invalid backup file format', 'error');
                         return;
                     }
-                    
                     if (confirm('Are you sure you want to restore this backup? This will replace all current tournaments.')) {
                         localStorage.setItem('tournaments', JSON.stringify(backupData));
                         updateTournamentDisplay();
-                        alert('Backup restored successfully!');
+                        showToast('Backup restored successfully!', 'success');
                         switchTab('tournaments');
-                        fileInput.value = ''; // Reset file input
+                        fileInput.value = '';
                     }
                 } catch (error) {
-                    alert('Error reading backup file: ' + error.message);
+                    showToast('Error reading backup file: ' + error.message, 'error');
                 }
             };
             reader.readAsText(file);
         });
-        
-        // Show create form
+
+        // ─── SHOW / HIDE FORMS ──────────────────────────────────────────
         function showCreateForm() {
             document.querySelector('.create-form').classList.add('active');
             document.querySelector('.edit-form').classList.remove('active');
         }
-        
-        // Show edit form
+
         function showEditForm() {
             document.querySelector('.create-form').classList.remove('active');
             document.querySelector('.edit-form').classList.add('active');
         }
-        
-        // Edit tournament function
+
         function editTournament(tournamentId) {
             const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
             const tournament = tournaments.find(t => t.id === tournamentId);
-            
             if (!tournament) {
-                alert('Tournament not found!');
+                showToast('Tournament not found!', 'error');
                 return;
             }
-            
-            // Fill the edit form with tournament data
             document.getElementById('edit-tournament-id').value = tournamentId;
             document.getElementById('edit-player-name').value = tournament.playerName;
             document.getElementById('edit-opponents-textarea').value = tournament.opponents.join('\n');
-            
-            // Show edit form and switch to create tab
             showEditForm();
             switchTab('create');
         }
-        
-        // Update tournament function
-        function updateTournament(tournamentId, playerName, opponents) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-            const tournamentIndex = tournaments.findIndex(t => t.id === tournamentId);
-            
-            if (tournamentIndex === -1) {
-                alert('Tournament not found!');
-                return;
-            }
-            
-            // Update tournament data
-            tournaments[tournamentIndex].playerName = playerName;
-            tournaments[tournamentIndex].opponents = opponents;
-            
-            // Regenerate fixtures and table with new opponents
-            tournaments[tournamentIndex].fixtures = generateFixtures(playerName, opponents);
-            tournaments[tournamentIndex].table = generateTable(playerName, opponents);
-            
-            // Save updated tournaments
-            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+
+        // ─── DATA LAYER ──────────────────────────────────────────────────
+        function getTournaments() {
+            return JSON.parse(localStorage.getItem('tournaments')) || [];
         }
-        
-        // Local Storage Functions
+
+        function setTournaments(data) {
+            localStorage.setItem('tournaments', JSON.stringify(data));
+        }
+
         function saveTournament(playerName, opponents) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const tournaments = getTournaments();
             const tournamentId = 'tournament_' + Date.now();
             const newTournament = {
                 id: tournamentId,
@@ -1153,27 +1300,22 @@
                 table: generateTable(playerName, opponents)
             };
             tournaments.push(newTournament);
-            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+            setTournaments(tournaments);
             return tournamentId;
         }
-        
+
         function generateFixtures(playerName, opponents) {
-            const fixtures = [];
-            for (let i = 0; i < opponents.length; i++) {
-                fixtures.push({
-                    day: i + 1,
-                    home: playerName,
-                    away: opponents[i],
-                    homeScore: "",
-                    awayScore: ""
-                });
-            }
-            return fixtures;
+            return opponents.map((opp, i) => ({
+                day: i + 1,
+                home: playerName,
+                away: opp,
+                homeScore: "",
+                awayScore: ""
+            }));
         }
-        
+
         function generateTable(playerName, opponents) {
             const table = [];
-            // Add player
             table.push({
                 name: playerName,
                 isPlayer: true,
@@ -1188,13 +1330,11 @@
                 points: 0,
                 form: []
             });
-            
-            // Add opponents
-            opponents.forEach((opponent, index) => {
+            opponents.forEach((opp, idx) => {
                 table.push({
-                    name: opponent,
+                    name: opp,
                     isPlayer: false,
-                    position: index + 2,
+                    position: idx + 2,
                     played: 0,
                     won: 0,
                     drawn: 0,
@@ -1206,43 +1346,51 @@
                     form: []
                 });
             });
-            
             return table;
         }
-        
+
         function deleteTournament(tournamentId) {
-            let tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            let tournaments = getTournaments();
             tournaments = tournaments.filter(t => t.id !== tournamentId);
-            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+            setTournaments(tournaments);
             updateTournamentDisplay();
         }
-        
+
+        function updateTournament(tournamentId, playerName, opponents) {
+            const tournaments = getTournaments();
+            const idx = tournaments.findIndex(t => t.id === tournamentId);
+            if (idx === -1) {
+                showToast('Tournament not found!', 'error');
+                return;
+            }
+            tournaments[idx].playerName = playerName;
+            tournaments[idx].opponents = opponents;
+            tournaments[idx].fixtures = generateFixtures(playerName, opponents);
+            tournaments[idx].table = generateTable(playerName, opponents);
+            setTournaments(tournaments);
+        }
+
         function createBackup(backupName) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const tournaments = getTournaments();
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
-            
             const backup = {
                 id: 'backup_' + Date.now(),
                 name: backupName,
                 date: new Date().toISOString(),
-                data: JSON.parse(JSON.stringify(tournaments)) // Deep clone
+                data: JSON.parse(JSON.stringify(tournaments))
             };
-            
             backups.push(backup);
             localStorage.setItem('tournamentBackups', JSON.stringify(backups));
-            alert(`Backup "${backupName}" created successfully!`);
+            showToast(`Backup "${backupName}" created successfully!`, 'success');
         }
-        
+
         function downloadBackup(backupId) {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            
             if (!backup) {
-                alert('Backup not found!');
+                showToast('Backup not found!', 'error');
                 return;
             }
-            
-            // Create a blob and download link
             const blob = new Blob([JSON.stringify(backup.data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1252,181 +1400,41 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+            showToast(`Downloading backup "${backup.name}"...`, 'success');
         }
-        
+
         function restoreBackup(backupId) {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            
             if (!backup) {
-                alert('Backup not found!');
+                showToast('Backup not found!', 'error');
                 return;
             }
-            
             if (confirm(`Are you sure you want to restore backup "${backup.name}"? This will replace all current tournaments.`)) {
-                localStorage.setItem('tournaments', JSON.stringify(backup.data));
+                setTournaments(backup.data);
                 updateTournamentDisplay();
-                alert(`Backup "${backup.name}" restored successfully!`);
+                showToast(`Backup "${backup.name}" restored successfully!`, 'success');
                 switchTab('tournaments');
             }
         }
-        
+
         function deleteBackup(backupId) {
             let backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            
             if (!backup) {
-                alert('Backup not found!');
+                showToast('Backup not found!', 'error');
                 return;
             }
-            
             if (confirm(`Are you sure you want to delete backup "${backup.name}"?`)) {
                 backups = backups.filter(b => b.id !== backupId);
                 localStorage.setItem('tournamentBackups', JSON.stringify(backups));
                 updateBackupDisplay();
-                alert(`Backup "${backup.name}" deleted successfully!`);
+                showToast(`Backup "${backup.name}" deleted`, 'warning');
             }
         }
-        
-        function updateBackupDisplay() {
-            const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
-            const backupList = document.getElementById('backup-list');
-            
-            backupList.innerHTML = '';
-            
-            if (backups.length === 0) {
-                backupList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-database"></i>
-                        <h3>No Backups Yet</h3>
-                        <p>Create your first backup to protect your tournament data</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            backups.forEach(backup => {
-                const backupItem = document.createElement('div');
-                backupItem.className = 'backup-item';
-                backupItem.innerHTML = `
-                    <div>
-                        <h4>${backup.name}</h4>
-                        <p>Created: ${new Date(backup.date).toLocaleString()}</p>
-                    </div>
-                    <div class="backup-actions">
-                        <button class="backup-action-btn download-btn" data-id="${backup.id}">
-                            <i class="fas fa-download"></i> Download
-                        </button>
-                        <button class="backup-action-btn restore-btn" data-id="${backup.id}">
-                            <i class="fas fa-undo"></i> Restore
-                        </button>
-                        <button class="backup-action-btn delete-backup-btn" data-id="${backup.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                `;
-                backupList.appendChild(backupItem);
-            });
-            
-            // Add event listeners to backup buttons
-            document.querySelectorAll('.download-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const backupId = this.getAttribute('data-id');
-                    downloadBackup(backupId);
-                });
-            });
-            
-            document.querySelectorAll('.restore-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const backupId = this.getAttribute('data-id');
-                    restoreBackup(backupId);
-                });
-            });
-            
-            document.querySelectorAll('.delete-backup-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const backupId = this.getAttribute('data-id');
-                    deleteBackup(backupId);
-                });
-            });
-        }
-        
-        function displayTournament(tournamentId) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-            const tournament = tournaments.find(t => t.id === tournamentId);
-            if (!tournament) return;
-            
-            // Update tournament view title
-            document.getElementById('tournament-view-title').innerHTML = `<i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament`;
-            
-            // Display fixtures
-            const fixturesContainer = document.getElementById('tournament-fixtures');
-            fixturesContainer.innerHTML = '';
-            
-            tournament.fixtures.forEach((fixture, index) => {
-                const fixtureElement = document.createElement('div');
-                fixtureElement.className = 'fixture';
-                fixtureElement.innerHTML = `
-                    <div class="match">
-                        <span class="player-name"><i class="fas fa-user"></i> ${fixture.home}</span>
-                        <div class="score-inputs">
-                            <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${index}">
-                            <span class="versus">VS</span>
-                            <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${index}">
-                        </div>
-                        <span class="player-name">${fixture.away}</span>
-                    </div>
-                    <div class="date">Day ${fixture.day}</div>
-                `;
-                fixturesContainer.appendChild(fixtureElement);
-            });
-            
-            // Add event listeners to score inputs for real-time updates
-            document.querySelectorAll('.score-home, .score-away').forEach(input => {
-                input.addEventListener('input', function() {
-                    const fixtureIndex = this.getAttribute('data-fixture-index');
-                    updateFixtureScore(tournamentId, fixtureIndex);
-                });
-            });
-            
-            // Update table display
-            updateTableDisplay(tournament);
-            
-            // Switch to tournament view
-            switchTab('tournament-view');
-        }
-        
-        function updateFixtureScore(tournamentId, fixtureIndex) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-            const tournamentIndex = tournaments.findIndex(t => t.id === tournamentId);
-            if (tournamentIndex === -1) return;
-            
-            const tournament = tournaments[tournamentIndex];
-            const fixture = tournament.fixtures[fixtureIndex];
-            
-            // Get current score values
-            const homeScoreInput = document.querySelector(`.score-home[data-fixture-index="${fixtureIndex}"]`);
-            const awayScoreInput = document.querySelector(`.score-away[data-fixture-index="${fixtureIndex}"]`);
-            
-            // Update fixture with current values (empty string if cleared)
-            fixture.homeScore = homeScoreInput.value === "" ? "" : parseInt(homeScoreInput.value) || 0;
-            fixture.awayScore = awayScoreInput.value === "" ? "" : parseInt(awayScoreInput.value) || 0;
-            
-            // Update table based on new scores
-            tournament.table = calculateTable(tournament);
-            
-            // Save updated tournament
-            localStorage.setItem('tournaments', JSON.stringify(tournaments));
-            
-            // Update table display
-            updateTableDisplay(tournament);
-            
-            // Update global stats
-            updateTournamentDisplay();
-        }
-        
+
+        // ─── CALCULATE TABLE ────────────────────────────────────────────
         function calculateTable(tournament) {
-            // Reset all stats
             tournament.table.forEach(team => {
                 team.played = 0;
                 team.won = 0;
@@ -1438,34 +1446,24 @@
                 team.points = 0;
                 team.form = [];
             });
-            
-            // Process each fixture
+
             tournament.fixtures.forEach(fixture => {
                 const homeScore = fixture.homeScore === "" ? 0 : parseInt(fixture.homeScore);
                 const awayScore = fixture.awayScore === "" ? 0 : parseInt(fixture.awayScore);
-                
-                // Only process if both scores are filled
+
                 if (fixture.homeScore !== "" && fixture.awayScore !== "") {
-                    // Find home and away teams in table
-                    const homeTeam = tournament.table.find(team => team.name === fixture.home);
-                    const awayTeam = tournament.table.find(team => team.name === fixture.away);
-                    
+                    const homeTeam = tournament.table.find(t => t.name === fixture.home);
+                    const awayTeam = tournament.table.find(t => t.name === fixture.away);
                     if (homeTeam && awayTeam) {
-                        // Update played matches
                         homeTeam.played++;
                         awayTeam.played++;
-                        
-                        // Update goals
                         homeTeam.goalsFor += homeScore;
                         homeTeam.goalsAgainst += awayScore;
                         awayTeam.goalsFor += awayScore;
                         awayTeam.goalsAgainst += homeScore;
-                        
-                        // Update goal difference
                         homeTeam.goalDifference = homeTeam.goalsFor - homeTeam.goalsAgainst;
                         awayTeam.goalDifference = awayTeam.goalsFor - awayTeam.goalsAgainst;
-                        
-                        // Determine result and update points
+
                         if (homeScore > awayScore) {
                             homeTeam.won++;
                             awayTeam.lost++;
@@ -1486,28 +1484,87 @@
                             homeTeam.form.unshift('D');
                             awayTeam.form.unshift('D');
                         }
-                        
-                        // Keep only last 5 form results
                         if (homeTeam.form.length > 5) homeTeam.form = homeTeam.form.slice(0, 5);
                         if (awayTeam.form.length > 5) awayTeam.form = awayTeam.form.slice(0, 5);
                     }
                 }
             });
-            
-            // Sort table by points, then goal difference
+
             tournament.table.sort((a, b) => {
                 if (b.points !== a.points) return b.points - a.points;
                 return b.goalDifference - a.goalDifference;
             });
-            
-            // Update positions
-            tournament.table.forEach((team, index) => {
-                team.position = index + 1;
-            });
-            
+            tournament.table.forEach((team, idx) => team.position = idx + 1);
             return tournament.table;
         }
-        
+
+        function updateFixtureScore(tournamentId, fixtureIndex) {
+            const tournaments = getTournaments();
+            const tIdx = tournaments.findIndex(t => t.id === tournamentId);
+            if (tIdx === -1) return;
+            const tournament = tournaments[tIdx];
+
+            const homeInput = document.querySelector(`.score-home[data-fixture-index="${fixtureIndex}"]`);
+            const awayInput = document.querySelector(`.score-away[data-fixture-index="${fixtureIndex}"]`);
+            if (!homeInput || !awayInput) return;
+
+            const hVal = homeInput.value.trim();
+            const aVal = awayInput.value.trim();
+            tournament.fixtures[fixtureIndex].homeScore = hVal === "" ? "" : parseInt(hVal) || 0;
+            tournament.fixtures[fixtureIndex].awayScore = aVal === "" ? "" : parseInt(aVal) || 0;
+
+            tournament.table = calculateTable(tournament);
+            setTournaments(tournaments);
+            updateTableDisplay(tournament);
+            updateTournamentDisplay();
+        }
+
+        // ─── RENDER: TOURNAMENT VIEW ────────────────────────────────────
+        function displayTournament(tournamentId) {
+            const tournaments = getTournaments();
+            const tournament = tournaments.find(t => t.id === tournamentId);
+            if (!tournament) {
+                showToast('Tournament not found!', 'error');
+                return;
+            }
+
+            document.getElementById('tournament-view-title').innerHTML =
+                `<i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament`;
+
+            const container = document.getElementById('tournament-fixtures');
+            container.innerHTML = '';
+
+            tournament.fixtures.forEach((fixture, idx) => {
+                const div = document.createElement('div');
+                div.className = 'fixture';
+                div.innerHTML = `
+                    <div class="match">
+                        <span class="player-name"><i class="fas fa-user"></i> ${fixture.home}</span>
+                        <div class="score-inputs">
+                            <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${idx}">
+                            <span class="versus">VS</span>
+                            <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${idx}">
+                        </div>
+                        <span class="player-name">${fixture.away}</span>
+                    </div>
+                    <div class="date">Day ${fixture.day}</div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.querySelectorAll('.score-home, .score-away').forEach(input => {
+                input.addEventListener('input', function() {
+                    const idx = parseInt(this.getAttribute('data-fixture-index'));
+                    updateFixtureScore(tournamentId, idx);
+                });
+            });
+
+            tournament.table = calculateTable(tournament);
+            setTournaments(tournaments);
+            updateTableDisplay(tournament);
+            switchTab('tournament-view');
+        }
+
         function updateTableDisplay(tournament) {
             const tableContainer = document.getElementById('tournament-table');
             tableContainer.innerHTML = `
@@ -1527,7 +1584,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    ${tournament.table.map((team, index) => `
+                    ${tournament.table.map(team => `
                         <tr class="${team.isPlayer ? 'player-row' : ''}">
                             <td>${team.position}</td>
                             <td>${team.isPlayer ? '<i class="fas fa-user"></i> ' : ''}${team.name}</td>
@@ -1540,46 +1597,101 @@
                             <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
                             <td>${team.points}</td>
                             <td>
-                                ${team.form.length === 0 ? 
-                                    Array(5).fill('<span class="form-indicator">-</span>').join('') : 
-                                    team.form.map(result => `
-                                        <span class="form-indicator ${result === 'W' ? 'form-win' : result === 'D' ? 'form-draw' : 'form-loss'}">${result}</span>
-                                    `).join('')
+                                ${team.form.length === 0 ?
+                                    Array(5).fill('<span class="form-indicator">-</span>').join('') :
+                                    team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('')
                                 }
                             </td>
                         </tr>
                     `).join('')}
                 </tbody>
             `;
-            
-            // Update stats
-            const playerStats = tournament.table.find(team => team.isPlayer);
-            if (playerStats) {
-                document.getElementById('current-position').textContent = playerStats.position + getOrdinalSuffix(playerStats.position);
-                document.getElementById('current-points').textContent = playerStats.points;
-                document.getElementById('current-gd').textContent = (playerStats.goalDifference > 0 ? '+' : '') + playerStats.goalDifference;
+
+            const player = tournament.table.find(t => t.isPlayer);
+            if (player) {
+                document.getElementById('current-position').textContent = player.position + getOrdinalSuffix(player.position);
+                document.getElementById('current-points').textContent = player.points;
+                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player.goalDifference;
             }
         }
-        
+
         function getOrdinalSuffix(n) {
             if (n % 10 === 1 && n % 100 !== 11) return 'st';
             if (n % 10 === 2 && n % 100 !== 12) return 'nd';
             if (n % 10 === 3 && n % 100 !== 13) return 'rd';
             return 'th';
         }
-        
-        // Update player stats table
-        function updatePlayerStatsTable() {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-            const playerStatsBody = document.getElementById('player-stats-body');
-            
-            // Clear current table
-            playerStatsBody.innerHTML = '';
-            
+
+        // ─── RENDER: ALL TOURNAMENTS (with event delegation) ──────────
+        function updateTournamentDisplay() {
+            const tournaments = getTournaments();
+            const list = document.getElementById('tournaments-list');
+
+            // Update stats
+            document.getElementById('tournament-count').textContent = tournaments.length;
+            document.getElementById('active-players').textContent = tournaments.reduce((sum, t) => sum + 1 + t.opponents.length, 0);
+            document.getElementById('matches-played').textContent = tournaments.reduce((sum, t) =>
+                sum + t.fixtures.filter(f => f.homeScore !== "" && f.awayScore !== "").length, 0);
+
             if (tournaments.length === 0) {
-                playerStatsBody.innerHTML = `
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-trophy"></i>
+                        <h3>No Tournaments Yet</h3>
+                        <p>Create your first tournament to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = tournaments.map(t => `
+                <div class="tournament-card" data-id="${t.id}">
+                    <h3><i class="fas fa-trophy"></i> ${t.playerName}'s Tournament</h3>
+                    <ul>
+                        <li><i class="fas fa-user"></i> ${t.playerName}</li>
+                        ${t.opponents.map(opp => `<li>${opp}</li>`).join('')}
+                    </ul>
+                    <div class="tournament-actions">
+                        <button class="action-btn view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
+                        <button class="action-btn edit-btn" data-id="${t.id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn" data-id="${t.id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ─── EVENT DELEGATION for tournament actions ──────────────────
+        document.getElementById('tournaments-list').addEventListener('click', function(e) {
+            const target = e.target.closest('.action-btn');
+            if (!target) return;
+
+            const tournamentId = target.getAttribute('data-id');
+            if (!tournamentId) return;
+
+            if (target.classList.contains('view-btn')) {
+                displayTournament(tournamentId);
+            } else if (target.classList.contains('edit-btn')) {
+                editTournament(tournamentId);
+            } else if (target.classList.contains('delete-btn')) {
+                const card = target.closest('.tournament-card');
+                const name = card ? card.querySelector('h3')?.textContent || 'Tournament' : 'Tournament';
+                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                    deleteTournament(tournamentId);
+                    showToast(`${name} has been deleted permanently`, 'warning');
+                }
+            }
+        });
+
+        // ─── PLAYER STATS ───────────────────────────────────────────────
+        function updatePlayerStatsTable() {
+            const tournaments = getTournaments();
+            const tbody = document.getElementById('player-stats-body');
+            tbody.innerHTML = '';
+
+            if (tournaments.length === 0) {
+                tbody.innerHTML = `
                     <tr>
-                        <td colspan="10" style="text-align: center; padding: 40px;">
+                        <td colspan="10" style="text-align:center;padding:40px;">
                             <div class="empty-state">
                                 <i class="fas fa-chart-bar"></i>
                                 <h3>No Player Data</h3>
@@ -1590,51 +1702,33 @@
                 `;
                 return;
             }
-            
-            // Aggregate player statistics
-            const playerStatsMap = {};
-            
-            tournaments.forEach(tournament => {
-                const playerData = tournament.table.find(team => team.isPlayer);
-                if (playerData) {
-                    const playerName = playerData.name;
-                    
-                    if (!playerStatsMap[playerName]) {
-                        playerStatsMap[playerName] = {
-                            name: playerName,
-                            tournaments: 1,
-                            played: playerData.played,
-                            won: playerData.won,
-                            drawn: playerData.drawn,
-                            lost: playerData.lost,
-                            goalsFor: playerData.goalsFor,
-                            goalsAgainst: playerData.goalsAgainst,
-                            goalDifference: playerData.goalDifference,
-                            points: playerData.points
-                        };
-                    } else {
-                        playerStatsMap[playerName].tournaments += 1;
-                        playerStatsMap[playerName].played += playerData.played;
-                        playerStatsMap[playerName].won += playerData.won;
-                        playerStatsMap[playerName].drawn += playerData.drawn;
-                        playerStatsMap[playerName].lost += playerData.lost;
-                        playerStatsMap[playerName].goalsFor += playerData.goalsFor;
-                        playerStatsMap[playerName].goalsAgainst += playerData.goalsAgainst;
-                        playerStatsMap[playerName].goalDifference += playerData.goalDifference;
-                        playerStatsMap[playerName].points += playerData.points;
-                    }
+
+            const map = {};
+            tournaments.forEach(t => {
+                const p = t.table.find(team => team.isPlayer);
+                if (!p) return;
+                const name = p.name;
+                if (!map[name]) {
+                    map[name] = { name, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0,
+                        goalDifference: 0, points: 0 };
+                } else {
+                    map[name].tournaments += 1;
                 }
+                map[name].played += p.played;
+                map[name].won += p.won;
+                map[name].drawn += p.drawn;
+                map[name].lost += p.lost;
+                map[name].goalsFor += p.goalsFor;
+                map[name].goalsAgainst += p.goalsAgainst;
+                map[name].goalDifference += p.goalDifference;
+                map[name].points += p.points;
             });
-            
-            // Convert to array and sort by points (descending)
-            const playerStatsArray = Object.values(playerStatsMap);
-            playerStatsArray.sort((a, b) => b.points - a.points);
-            
-            // Add rows to the table
-            playerStatsArray.forEach((player, index) => {
-                const row = document.createElement('tr');
-                row.className = 'player-row';
-                row.innerHTML = `
+
+            const arr = Object.values(map).sort((a, b) => b.points - a.points);
+            arr.forEach(player => {
+                const tr = document.createElement('tr');
+                tr.className = 'player-row';
+                tr.innerHTML = `
                     <td><i class="fas fa-user"></i> ${player.name}</td>
                     <td>${player.tournaments}</td>
                     <td>${player.played}</td>
@@ -1646,89 +1740,62 @@
                     <td>${player.goalDifference > 0 ? '+' : ''}${player.goalDifference}</td>
                     <td>${player.points}</td>
                 `;
-                playerStatsBody.appendChild(row);
+                tbody.appendChild(tr);
             });
         }
-        
-        function updateTournamentDisplay() {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
-            const tournamentsList = document.getElementById('tournaments-list');
-            const tournamentCount = document.getElementById('tournament-count');
-            const activePlayers = document.getElementById('active-players');
-            const matchesPlayed = document.getElementById('matches-played');
-            
-            // Update counts
-            tournamentCount.textContent = tournaments.length;
-            activePlayers.textContent = tournaments.reduce((total, t) => total + 1 + t.opponents.length, 0);
-            matchesPlayed.textContent = tournaments.reduce((total, t) => {
-                return total + t.fixtures.filter(f => f.homeScore !== "" && f.awayScore !== "").length;
-            }, 0);
-            
-            // Clear current list
-            tournamentsList.innerHTML = '';
-            
-            if (tournaments.length === 0) {
-                tournamentsList.innerHTML = `
+
+        // ─── BACKUP DISPLAY ─────────────────────────────────────────────
+        function updateBackupDisplay() {
+            const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
+            const list = document.getElementById('backup-list');
+            if (backups.length === 0) {
+                list.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-trophy"></i>
-                        <h3>No Tournaments Yet</h3>
-                        <p>Create your first tournament to get started!</p>
+                        <i class="fas fa-database"></i>
+                        <h3>No Backups Yet</h3>
+                        <p>Create your first backup to protect your tournament data</p>
                     </div>
                 `;
                 return;
             }
-            
-            // Add each tournament to the list
-            tournaments.forEach(tournament => {
-                const tournamentCard = document.createElement('div');
-                tournamentCard.className = 'tournament-card';
-                tournamentCard.innerHTML = `
-                    <h3><i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament</h3>
-                    <ul>
-                        <li><i class="fas fa-user"></i> ${tournament.playerName}</li>
-                        ${tournament.opponents.map(opponent => `<li>${opponent}</li>`).join('')}
-                    </ul>
-                    <div class="tournament-actions">
-                        <button class="action-btn view-btn" data-id="${tournament.id}"><i class="fas fa-eye"></i> View</button>
-                        <button class="action-btn edit-btn" data-id="${tournament.id}"><i class="fas fa-edit"></i> Edit</button>
-                        <button class="action-btn delete-btn" data-id="${tournament.id}"><i class="fas fa-trash"></i> Delete</button>
+            list.innerHTML = backups.map(b => `
+                <div class="backup-item" data-id="${b.id}">
+                    <div>
+                        <h4>${b.name}</h4>
+                        <p>Created: ${new Date(b.date).toLocaleString()}</p>
                     </div>
-                `;
-                tournamentsList.appendChild(tournamentCard);
-            });
-            
-            // Add event listeners to action buttons
-            document.querySelectorAll('.view-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const tournamentId = this.getAttribute('data-id');
-                    displayTournament(tournamentId);
-                });
-            });
-            
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const tournamentId = this.getAttribute('data-id');
-                    editTournament(tournamentId);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const tournamentId = this.getAttribute('data-id');
-                    const tournamentName = this.closest('.tournament-card').querySelector('h3').textContent;
-                    
-                    if (confirm(`Are you sure you want to delete ${tournamentName}?`)) {
-                        deleteTournament(tournamentId);
-                        alert(`${tournamentName} has been deleted permanently`);
-                    }
-                });
-            });
+                    <div class="backup-actions">
+                        <button class="backup-action-btn download-btn" data-id="${b.id}"><i class="fas fa-download"></i> Download</button>
+                        <button class="backup-action-btn restore-btn" data-id="${b.id}"><i class="fas fa-undo"></i> Restore</button>
+                        <button class="backup-action-btn delete-backup-btn" data-id="${b.id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
         }
-        
-        // Initialize the app
+
+        // Event delegation for backup actions
+        document.getElementById('backup-list').addEventListener('click', function(e) {
+            const btn = e.target.closest('.backup-action-btn');
+            if (!btn) return;
+            const id = btn.getAttribute('data-id');
+            if (!id) return;
+
+            if (btn.classList.contains('download-btn')) downloadBackup(id);
+            else if (btn.classList.contains('restore-btn')) restoreBackup(id);
+            else if (btn.classList.contains('delete-backup-btn')) deleteBackup(id);
+        });
+
+        // ─── INIT ────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             updateTournamentDisplay();
             updateBackupDisplay();
+
+            // If there's a stored tournament, update player stats on load
+            setTimeout(() => {
+                if (document.getElementById('player-stats').classList.contains('active')) {
+                    updatePlayerStatsTable();
+                }
+            }, 100);
         });
     </script>
 </body>
