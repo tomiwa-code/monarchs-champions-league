@@ -239,6 +239,13 @@
             transform: translateY(0px);
         }
 
+        button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
         .opponent-inputs {
             margin-top: 15px;
         }
@@ -309,28 +316,6 @@
 
         .form-loss {
             background-color: #F44336;
-        }
-
-        .position-change {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
-        .position-up {
-            color: #4CAF50;
-        }
-
-        .position-down {
-            color: #F44336;
-        }
-
-        .position-same {
-            color: #FFC107;
         }
 
         .fixtures-list {
@@ -530,7 +515,6 @@
         .view-btn {
             background: #4a6cf7;
         }
-
         .view-btn:hover {
             background: #5a7cff;
         }
@@ -538,7 +522,6 @@
         .edit-btn {
             background: #ff9f43;
         }
-
         .edit-btn:hover {
             background: #ffb56b;
         }
@@ -546,7 +529,6 @@
         .delete-btn {
             background: #ff6b6b;
         }
-
         .delete-btn:hover {
             background: #ff8a8a;
         }
@@ -602,9 +584,73 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* ----- NAVIGATION ROW (Back + Prev/Next) ----- */
+        .view-nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .view-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .view-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: rgba(106, 152, 240, 0.25);
+            color: #fff;
+            border: 1px solid rgba(106, 152, 240, 0.4);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(106, 152, 240, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .nav-btn i {
+            font-size: 14px;
+        }
+
+        .tournament-counter {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0 6px;
+            min-width: 60px;
+            text-align: center;
+        }
+
         .back-btn {
             background: #6c757d;
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
 
         .back-btn:hover {
@@ -659,7 +705,6 @@
         .restore-btn {
             background: #4a6cf7;
         }
-
         .restore-btn:hover {
             background: #5a7cff;
         }
@@ -667,7 +712,6 @@
         .delete-backup-btn {
             background: #ff6b6b;
         }
-
         .delete-backup-btn:hover {
             background: #ff8a8a;
         }
@@ -675,7 +719,6 @@
         .download-btn {
             background: #36b37e;
         }
-
         .download-btn:hover {
             background: #48c98f;
         }
@@ -725,7 +768,6 @@
         .edit-form {
             display: none;
         }
-
         .edit-form.active {
             display: block;
         }
@@ -733,7 +775,6 @@
         .create-form.active {
             display: block;
         }
-
         .create-form {
             display: none;
         }
@@ -750,17 +791,14 @@
         .cancel-edit-btn {
             background: #6c757d;
         }
-
         .cancel-edit-btn:hover {
             background: #7e8790;
         }
 
-        /* scrollable table wrapper */
         .table-wrapper {
             overflow-x: auto;
         }
 
-        /* toast notification */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -784,19 +822,15 @@
             transform: translateY(0);
             opacity: 1;
         }
-
         .toast.success {
             border-left-color: #4CAF50;
         }
-
         .toast.error {
             border-left-color: #F44336;
         }
-
         .toast.warning {
             border-left-color: #FFC107;
         }
-
         .toast i {
             margin-right: 12px;
         }
@@ -880,6 +914,20 @@
                 font-size: 0.9rem;
                 min-width: 80px;
             }
+
+            .view-nav-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .view-nav-left,
+            .view-nav-right {
+                justify-content: center;
+            }
+
+            .view-nav-left {
+                flex-wrap: wrap;
+            }
         }
 
         @media (max-width: 480px) {
@@ -897,6 +945,11 @@
 
             .score-inputs input {
                 width: 50px;
+            }
+
+            .nav-btn {
+                padding: 8px 14px;
+                font-size: 13px;
             }
         }
     </style>
@@ -981,7 +1034,18 @@
         </div>
 
         <div class="tab-content" id="tournament-view">
-            <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back to All Tournaments</button>
+            <!-- Navigation Row: Back + Prev/Next -->
+            <div class="view-nav-row">
+                <div class="view-nav-left">
+                    <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back to All</button>
+                </div>
+                <div class="view-nav-right">
+                    <button class="nav-btn" id="prev-tournament-btn" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                    <span class="tournament-counter" id="tournament-counter">1 / 1</span>
+                    <button class="nav-btn" id="next-tournament-btn" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
             <h2 id="tournament-view-title"><i class="fas fa-trophy"></i> Tournament View</h2>
 
             <div class="stats" id="tournament-stats">
@@ -1082,7 +1146,6 @@
             const msg = document.getElementById('toast-message');
             const icon = toast.querySelector('i');
 
-            // remove previous classes
             toast.classList.remove('success', 'error', 'warning', 'show');
 
             const icons = {
@@ -1219,7 +1282,8 @@
 
         // ─── BACKUP ─────────────────────────────────────────────────────
         document.getElementById('create-backup-btn').addEventListener('click', function() {
-            const backupName = document.getElementById('backup-name').value.trim() || `Backup_${new Date().toLocaleDateString()}`;
+            const backupName = document.getElementById('backup-name').value.trim() ||
+                `Backup_${new Date().toLocaleDateString()}`;
             createBackup(backupName);
             document.getElementById('backup-name').value = '';
             updateBackupDisplay();
@@ -1240,7 +1304,9 @@
                         showToast('Invalid backup file format', 'error');
                         return;
                     }
-                    if (confirm('Are you sure you want to restore this backup? This will replace all current tournaments.')) {
+                    if (confirm(
+                            'Are you sure you want to restore this backup? This will replace all current tournaments.'
+                            )) {
                         localStorage.setItem('tournaments', JSON.stringify(backupData));
                         updateTournamentDisplay();
                         showToast('Backup restored successfully!', 'success');
@@ -1266,7 +1332,7 @@
         }
 
         function editTournament(tournamentId) {
-            const tournaments = JSON.parse(localStorage.getItem('tournaments')) || [];
+            const tournaments = getTournaments();
             const tournament = tournaments.find(t => t.id === tournamentId);
             if (!tournament) {
                 showToast('Tournament not found!', 'error');
@@ -1410,7 +1476,9 @@
                 showToast('Backup not found!', 'error');
                 return;
             }
-            if (confirm(`Are you sure you want to restore backup "${backup.name}"? This will replace all current tournaments.`)) {
+            if (confirm(
+                    `Are you sure you want to restore backup "${backup.name}"? This will replace all current tournaments.`
+                    )) {
                 setTournaments(backup.data);
                 updateTournamentDisplay();
                 showToast(`Backup "${backup.name}" restored successfully!`, 'success');
@@ -1517,33 +1585,107 @@
             setTournaments(tournaments);
             updateTableDisplay(tournament);
             updateTournamentDisplay();
+
+            // Update the stored current tournament ID so navigation stays in sync
+            const allTournaments = getTournaments();
+            const updatedIdx = allTournaments.findIndex(t => t.id === tournamentId);
+            if (updatedIdx !== -1) {
+                window._currentTournamentIndex = updatedIdx;
+            }
         }
+
+        // ─── NAVIGATION STATE ───────────────────────────────────────────
+        // We store the current tournament index in a global so we can navigate.
+        window._currentTournamentIndex = 0;
+
+        function getTournamentIndexById(tournamentId) {
+            const tournaments = getTournaments();
+            return tournaments.findIndex(t => t.id === tournamentId);
+        }
+
+        function navigateToTournamentByIndex(index) {
+            const tournaments = getTournaments();
+            if (tournaments.length === 0) return;
+            if (index < 0) index = 0;
+            if (index >= tournaments.length) index = tournaments.length - 1;
+            window._currentTournamentIndex = index;
+            const tournament = tournaments[index];
+            if (tournament) {
+                displayTournament(tournament.id);
+            }
+        }
+
+        function updateNavButtons() {
+            const tournaments = getTournaments();
+            const total = tournaments.length;
+            const current = window._currentTournamentIndex;
+
+            const prevBtn = document.getElementById('prev-tournament-btn');
+            const nextBtn = document.getElementById('next-tournament-btn');
+            const counter = document.getElementById('tournament-counter');
+
+            if (total === 0) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                counter.textContent = '0 / 0';
+                return;
+            }
+
+            prevBtn.disabled = (current <= 0);
+            nextBtn.disabled = (current >= total - 1);
+            counter.textContent = `${current + 1} / ${total}`;
+        }
+
+        // ─── PREV / NEXT EVENT BINDING ──────────────────────────────────
+        document.getElementById('prev-tournament-btn').addEventListener('click', function() {
+            const tournaments = getTournaments();
+            if (tournaments.length === 0) return;
+            const newIndex = Math.max(0, window._currentTournamentIndex - 1);
+            if (newIndex !== window._currentTournamentIndex) {
+                navigateToTournamentByIndex(newIndex);
+            }
+        });
+
+        document.getElementById('next-tournament-btn').addEventListener('click', function() {
+            const tournaments = getTournaments();
+            if (tournaments.length === 0) return;
+            const newIndex = Math.min(tournaments.length - 1, window._currentTournamentIndex + 1);
+            if (newIndex !== window._currentTournamentIndex) {
+                navigateToTournamentByIndex(newIndex);
+            }
+        });
 
         // ─── RENDER: TOURNAMENT VIEW ────────────────────────────────────
         function displayTournament(tournamentId) {
             const tournaments = getTournaments();
-            const tournament = tournaments.find(t => t.id === tournamentId);
-            if (!tournament) {
+            const idx = tournaments.findIndex(t => t.id === tournamentId);
+            if (idx === -1) {
                 showToast('Tournament not found!', 'error');
                 return;
             }
 
+            // Update current index
+            window._currentTournamentIndex = idx;
+            const tournament = tournaments[idx];
+
+            // Update title
             document.getElementById('tournament-view-title').innerHTML =
                 `<i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament`;
 
+            // Render fixtures
             const container = document.getElementById('tournament-fixtures');
             container.innerHTML = '';
 
-            tournament.fixtures.forEach((fixture, idx) => {
+            tournament.fixtures.forEach((fixture, i) => {
                 const div = document.createElement('div');
                 div.className = 'fixture';
                 div.innerHTML = `
                     <div class="match">
                         <span class="player-name"><i class="fas fa-user"></i> ${fixture.home}</span>
                         <div class="score-inputs">
-                            <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${idx}">
+                            <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${i}">
                             <span class="versus">VS</span>
-                            <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${idx}">
+                            <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${i}">
                         </div>
                         <span class="player-name">${fixture.away}</span>
                     </div>
@@ -1552,16 +1694,21 @@
                 container.appendChild(div);
             });
 
+            // Attach score input listeners
             document.querySelectorAll('.score-home, .score-away').forEach(input => {
                 input.addEventListener('input', function() {
-                    const idx = parseInt(this.getAttribute('data-fixture-index'));
-                    updateFixtureScore(tournamentId, idx);
+                    const fi = parseInt(this.getAttribute('data-fixture-index'));
+                    updateFixtureScore(tournamentId, fi);
                 });
             });
 
+            // Calculate and display table
             tournament.table = calculateTable(tournament);
             setTournaments(tournaments);
             updateTableDisplay(tournament);
+            updateNavButtons();
+
+            // Switch to view tab
             switchTab('tournament-view');
         }
 
@@ -1609,9 +1756,11 @@
 
             const player = tournament.table.find(t => t.isPlayer);
             if (player) {
-                document.getElementById('current-position').textContent = player.position + getOrdinalSuffix(player.position);
+                document.getElementById('current-position').textContent = player.position + getOrdinalSuffix(player
+                .position);
                 document.getElementById('current-points').textContent = player.points;
-                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player.goalDifference;
+                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player
+                    .goalDifference;
             }
         }
 
@@ -1622,14 +1771,14 @@
             return 'th';
         }
 
-        // ─── RENDER: ALL TOURNAMENTS (with event delegation) ──────────
+        // ─── RENDER: ALL TOURNAMENTS ────────────────────────────────────
         function updateTournamentDisplay() {
             const tournaments = getTournaments();
             const list = document.getElementById('tournaments-list');
 
-            // Update stats
             document.getElementById('tournament-count').textContent = tournaments.length;
-            document.getElementById('active-players').textContent = tournaments.reduce((sum, t) => sum + 1 + t.opponents.length, 0);
+            document.getElementById('active-players').textContent = tournaments.reduce((sum, t) => sum + 1 + t.opponents
+                .length, 0);
             document.getElementById('matches-played').textContent = tournaments.reduce((sum, t) =>
                 sum + t.fixtures.filter(f => f.homeScore !== "" && f.awayScore !== "").length, 0);
 
@@ -1658,7 +1807,43 @@
                     </div>
                 </div>
             `).join('');
+
+            // If we're currently in tournament view and the viewed tournament was deleted, update nav
+            const viewTab = document.getElementById('tournament-view');
+            if (viewTab.classList.contains('active')) {
+                const currentId = getCurrentTournamentId();
+                if (currentId) {
+                    const stillExists = tournaments.some(t => t.id === currentId);
+                    if (!stillExists && tournaments.length > 0) {
+                        // Navigate to the first tournament
+                        navigateToTournamentByIndex(0);
+                    } else if (tournaments.length > 0) {
+                        // Keep the same tournament if it exists, but refresh its data
+                        const existing = tournaments.find(t => t.id === currentId);
+                        if (existing) {
+                            displayTournament(existing.id);
+                        } else {
+                            navigateToTournamentByIndex(0);
+                        }
+                    }
+                } else if (tournaments.length > 0) {
+                    navigateToTournamentByIndex(0);
+                }
+            }
         }
+
+        function getCurrentTournamentId() {
+            const title = document.getElementById('tournament-view-title');
+            // Not a perfect method, but we store the ID in a data attribute when displaying
+            return document.getElementById('tournament-view-title').dataset.tournamentId || null;
+        }
+
+        // Override displayTournament to store the ID
+        const originalDisplay = displayTournament;
+        displayTournament = function(tournamentId) {
+            document.getElementById('tournament-view-title').dataset.tournamentId = tournamentId;
+            originalDisplay(tournamentId);
+        };
 
         // ─── EVENT DELEGATION for tournament actions ──────────────────
         document.getElementById('tournaments-list').addEventListener('click', function(e) {
@@ -1709,8 +1894,8 @@
                 if (!p) return;
                 const name = p.name;
                 if (!map[name]) {
-                    map[name] = { name, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0,
-                        goalDifference: 0, points: 0 };
+                    map[name] = { name, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0,
+                        goalsAgainst: 0, goalDifference: 0, points: 0 };
                 } else {
                     map[name].tournaments += 1;
                 }
@@ -1773,7 +1958,6 @@
             `).join('');
         }
 
-        // Event delegation for backup actions
         document.getElementById('backup-list').addEventListener('click', function(e) {
             const btn = e.target.closest('.backup-action-btn');
             if (!btn) return;
@@ -1790,7 +1974,13 @@
             updateTournamentDisplay();
             updateBackupDisplay();
 
-            // If there's a stored tournament, update player stats on load
+            // If tournaments exist, set the current index to 0 so navigation works
+            const tournaments = getTournaments();
+            if (tournaments.length > 0) {
+                window._currentTournamentIndex = 0;
+                updateNavButtons();
+            }
+
             setTimeout(() => {
                 if (document.getElementById('player-stats').classList.contains('active')) {
                     updatePlayerStatsTable();
