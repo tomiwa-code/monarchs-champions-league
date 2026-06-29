@@ -6,26 +6,24 @@
     <title>Tournament Manager Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
+        /* --- all styles unchanged from your original --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: #fff;
             line-height: 1.6;
             min-height: 100vh;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
-
         header {
             text-align: center;
             padding: 30px 0;
@@ -39,19 +37,11 @@
             position: relative;
             overflow: hidden;
         }
-
         @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
         header::before {
             content: '';
             position: absolute;
@@ -62,7 +52,6 @@
             background: rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
-
         h1 {
             font-size: 3rem;
             margin-bottom: 10px;
@@ -70,14 +59,12 @@
             position: relative;
             z-index: 2;
         }
-
         .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
             position: relative;
             z-index: 2;
         }
-
         .tabs {
             display: flex;
             background: rgba(30, 30, 46, 0.8);
@@ -89,7 +76,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             flex-wrap: wrap;
         }
-
         .tab {
             padding: 18px 20px;
             cursor: pointer;
@@ -104,18 +90,15 @@
             min-width: 120px;
             user-select: none;
         }
-
         .tab:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
-
         .tab.active {
             background: rgba(255, 255, 255, 0.15);
             border-bottom: 3px solid #6a98f0;
             color: #fff;
         }
-
         .tab.active::before {
             content: '';
             position: absolute;
@@ -127,11 +110,7 @@
             background-size: 400% 400%;
             animation: gradientShift 8s ease infinite;
         }
-
-        .tab i {
-            margin-right: 8px;
-        }
-
+        .tab i { margin-right: 8px; }
         .tab-content {
             display: none;
             padding: 30px;
@@ -142,22 +121,11 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .tab-content.active {
-            display: block;
-        }
-
+        .tab-content.active { display: block; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         h2 {
             font-size: 2rem;
             margin-bottom: 20px;
@@ -165,14 +133,12 @@
             display: flex;
             align-items: center;
         }
-
         h2 i {
             margin-right: 12px;
             background: linear-gradient(135deg, #6a98f0, #9d65c9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         h3 {
             font-size: 1.5rem;
             margin: 25px 0 15px;
@@ -180,11 +146,7 @@
             border-bottom: 2px solid rgba(106, 152, 240, 0.3);
             color: #ffde7d;
         }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
+        .form-group { margin-bottom: 25px; }
         label {
             display: block;
             margin-bottom: 10px;
@@ -192,10 +154,7 @@
             color: #a3de83;
             font-size: 1.1rem;
         }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
+        input[type="text"], input[type="number"], textarea {
             width: 100%;
             padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -207,15 +166,11 @@
             resize: vertical;
             min-height: 120px;
         }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        textarea:focus {
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
             border-color: #6a98f0;
             outline: none;
             box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.3);
         }
-
         button {
             background: #4a6cf7;
             color: white;
@@ -228,34 +183,23 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
             background: #5a7cff;
         }
-
-        button:active {
-            transform: translateY(0px);
-        }
-
+        button:active { transform: translateY(0px); }
         button:disabled {
             opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
             box-shadow: none !important;
         }
-
-        .opponent-inputs {
-            margin-top: 15px;
-        }
-
         .opponents-textarea {
             min-height: 150px;
             font-family: monospace;
             line-height: 1.5;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -265,32 +209,19 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-
-        th,
-        td {
+        th, td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         th {
             background: linear-gradient(135deg, rgba(106, 152, 240, 0.3), rgba(157, 101, 201, 0.3));
             font-weight: 600;
             color: #ffde7d;
         }
-
-        tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .player-row {
-            background: rgba(106, 152, 240, 0.2);
-        }
-
-        .player-row:hover {
-            background: rgba(106, 152, 240, 0.3);
-        }
-
+        tr:hover { background: rgba(255, 255, 255, 0.05); }
+        .player-row { background: rgba(106, 152, 240, 0.2); }
+        .player-row:hover { background: rgba(106, 152, 240, 0.3); }
         .form-indicator {
             display: inline-flex;
             align-items: center;
@@ -304,24 +235,10 @@
             background-color: #6c757d;
             color: white;
         }
-
-        .form-win {
-            background-color: #4CAF50;
-        }
-
-        .form-draw {
-            background-color: #FFC107;
-            color: #333;
-        }
-
-        .form-loss {
-            background-color: #F44336;
-        }
-
-        .fixtures-list {
-            margin-top: 20px;
-        }
-
+        .form-win { background-color: #4CAF50; }
+        .form-draw { background-color: #FFC107; color: #333; }
+        .form-loss { background-color: #F44336; }
+        .fixtures-list { margin-top: 20px; }
         .fixture {
             display: flex;
             justify-content: space-between;
@@ -334,13 +251,11 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         .fixture:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             background: rgba(30, 30, 50, 0.7);
         }
-
         .match {
             display: flex;
             align-items: center;
@@ -349,7 +264,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .player-name {
             font-weight: 600;
             color: #ffde7d;
@@ -357,11 +271,7 @@
             display: flex;
             align-items: center;
         }
-
-        .player-name i {
-            margin-right: 12px;
-        }
-
+        .player-name i { margin-right: 12px; }
         .versus {
             margin: 0 8px;
             color: #6a98f0;
@@ -369,14 +279,12 @@
             display: flex;
             align-items: center;
         }
-
         .score-inputs {
             display: flex;
             align-items: center;
             gap: 8px;
             margin: 0 12px;
         }
-
         .score-inputs input {
             width: 60px;
             text-align: center;
@@ -388,13 +296,11 @@
             border-radius: 6px;
             min-height: 40px;
         }
-
         .score-inputs input:focus {
             border-color: #6a98f0;
             outline: none;
             box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.3);
         }
-
         .date {
             background: #e67e22;
             padding: 6px 12px;
@@ -404,14 +310,12 @@
             margin-left: 15px;
             white-space: nowrap;
         }
-
         .tournament-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-top: 25px;
         }
-
         .tournament-card {
             background: linear-gradient(135deg, rgba(30, 30, 46, 0.8), rgba(20, 20, 35, 0.9));
             border-radius: 15px;
@@ -422,7 +326,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .tournament-card::before {
             content: '';
             position: absolute;
@@ -434,12 +337,10 @@
             background-size: 400% 400%;
             animation: gradientShift 8s ease infinite;
         }
-
         .tournament-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
         }
-
         .tournament-card h3 {
             color: #ffde7d;
             margin-bottom: 20px;
@@ -449,44 +350,26 @@
             align-items: center;
             font-size: 1.3rem;
         }
-
-        .tournament-card h3 i {
-            margin-right: 10px;
-            color: #a3de83;
-        }
-
+        .tournament-card h3 i { margin-right: 10px; color: #a3de83; }
         .tournament-card ul {
             list-style-type: none;
             margin-bottom: 20px;
         }
-
         .tournament-card li {
             padding: 10px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
         }
-
-        .tournament-card li:first-child i {
-            margin-right: 10px;
-            color: #6a98f0;
-        }
-
-        .tournament-card li:not(:first-child) {
-            padding-left: 28px;
-        }
-
-        .tournament-card li:last-child {
-            border-bottom: none;
-        }
-
+        .tournament-card li:first-child i { margin-right: 10px; color: #6a98f0; }
+        .tournament-card li:not(:first-child) { padding-left: 28px; }
+        .tournament-card li:last-child { border-bottom: none; }
         .tournament-actions {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
             gap: 8px;
         }
-
         .action-btn {
             padding: 8px 15px;
             border-radius: 6px;
@@ -502,49 +385,27 @@
             transition: all 0.3s ease;
             color: #fff;
         }
-
         .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-
-        .action-btn:active {
-            transform: translateY(0px);
-        }
-
-        .view-btn {
-            background: #4a6cf7;
-        }
-        .view-btn:hover {
-            background: #5a7cff;
-        }
-
-        .edit-btn {
-            background: #ff9f43;
-        }
-        .edit-btn:hover {
-            background: #ffb56b;
-        }
-
-        .delete-btn {
-            background: #ff6b6b;
-        }
-        .delete-btn:hover {
-            background: #ff8a8a;
-        }
-
+        .action-btn:active { transform: translateY(0px); }
+        .view-btn { background: #4a6cf7; }
+        .view-btn:hover { background: #5a7cff; }
+        .edit-btn { background: #ff9f43; }
+        .edit-btn:hover { background: #ffb56b; }
+        .delete-btn { background: #ff6b6b; }
+        .delete-btn:hover { background: #ff8a8a; }
         .empty-state {
             text-align: center;
             padding: 50px;
             color: #b0b0b0;
         }
-
         .empty-state i {
             font-size: 64px;
             margin-bottom: 20px;
             color: rgba(255, 255, 255, 0.1);
         }
-
         .stats {
             display: flex;
             justify-content: space-around;
@@ -553,7 +414,6 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-
         .stat-card {
             background: rgba(20, 20, 35, 0.7);
             padding: 20px;
@@ -564,18 +424,15 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
-
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
-
         .stat-card h4 {
             color: #ffa36c;
             margin-bottom: 10px;
             font-size: 1.1rem;
         }
-
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
@@ -584,7 +441,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ----- TOURNAMENTS HEADER WITH SEARCH ----- */
+        /* Tournaments header with search */
         .tournaments-header {
             display: flex;
             align-items: center;
@@ -593,12 +450,7 @@
             gap: 16px 20px;
             margin-bottom: 16px;
         }
-
-        .tournaments-header h2 {
-            margin-bottom: 0;
-            flex-shrink: 0;
-        }
-
+        .tournaments-header h2 { margin-bottom: 0; flex-shrink: 0; }
         .search-wrapper {
             display: flex;
             align-items: center;
@@ -611,19 +463,16 @@
             max-width: 340px;
             flex: 1;
         }
-
         .search-wrapper:focus-within {
             border-color: #6a98f0;
             box-shadow: 0 0 0 2px rgba(106, 152, 240, 0.25);
             background: rgba(20, 20, 35, 0.85);
         }
-
         .search-wrapper i {
             color: #8a8a9a;
             font-size: 1rem;
             margin-right: 10px;
         }
-
         .search-wrapper input {
             background: transparent;
             border: none;
@@ -634,11 +483,7 @@
             outline: none;
             min-height: 48px;
         }
-
-        .search-wrapper input::placeholder {
-            color: #6a6a7a;
-        }
-
+        .search-wrapper input::placeholder { color: #6a6a7a; }
         .search-clear {
             background: none;
             border: none;
@@ -650,25 +495,20 @@
             box-shadow: none;
             transform: none !important;
         }
-
         .search-clear:hover {
             color: #fff;
             background: none;
             transform: none !important;
             box-shadow: none !important;
         }
-
-        .search-clear.visible {
-            display: block;
-        }
-
+        .search-clear.visible { display: block; }
         .search-results-count {
             color: #b0b0b0;
             font-size: 0.9rem;
             margin-top: 4px;
         }
 
-        /* ----- NAVIGATION ROW (Back + Prev/Next) ----- */
+        /* Navigation row */
         .view-nav-row {
             display: flex;
             align-items: center;
@@ -677,20 +517,17 @@
             gap: 12px;
             margin-bottom: 20px;
         }
-
         .view-nav-left {
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
         }
-
         .view-nav-right {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
         .nav-btn {
             background: rgba(106, 152, 240, 0.25);
             color: #fff;
@@ -705,24 +542,18 @@
             align-items: center;
             gap: 6px;
         }
-
         .nav-btn:hover:not(:disabled) {
             background: rgba(106, 152, 240, 0.45);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-
         .nav-btn:disabled {
             opacity: 0.35;
             cursor: not-allowed;
             transform: none !important;
             box-shadow: none !important;
         }
-
-        .nav-btn i {
-            font-size: 14px;
-        }
-
+        .nav-btn i { font-size: 14px; }
         .tournament-counter {
             color: #b0b0b0;
             font-size: 0.95rem;
@@ -731,15 +562,11 @@
             min-width: 60px;
             text-align: center;
         }
-
         .back-btn {
             background: #6c757d;
             margin-bottom: 0;
         }
-
-        .back-btn:hover {
-            background: #7e8790;
-        }
+        .back-btn:hover { background: #7e8790; }
 
         .backup-section {
             background: rgba(20, 20, 35, 0.5);
@@ -747,11 +574,7 @@
             border-radius: 12px;
             margin-top: 20px;
         }
-
-        .backup-list {
-            margin-top: 15px;
-        }
-
+        .backup-list { margin-top: 15px; }
         .backup-item {
             display: flex;
             justify-content: space-between;
@@ -764,13 +587,11 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .backup-actions {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
-
         .backup-action-btn {
             padding: 6px 12px;
             border-radius: 5px;
@@ -781,31 +602,13 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
-
-        .backup-action-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .restore-btn {
-            background: #4a6cf7;
-        }
-        .restore-btn:hover {
-            background: #5a7cff;
-        }
-
-        .delete-backup-btn {
-            background: #ff6b6b;
-        }
-        .delete-backup-btn:hover {
-            background: #ff8a8a;
-        }
-
-        .download-btn {
-            background: #36b37e;
-        }
-        .download-btn:hover {
-            background: #48c98f;
-        }
+        .backup-action-btn:hover { transform: translateY(-2px); }
+        .restore-btn { background: #4a6cf7; }
+        .restore-btn:hover { background: #5a7cff; }
+        .delete-backup-btn { background: #ff6b6b; }
+        .delete-backup-btn:hover { background: #ff8a8a; }
+        .download-btn { background: #36b37e; }
+        .download-btn:hover { background: #48c98f; }
 
         .upload-section {
             background: rgba(20, 20, 35, 0.5);
@@ -813,12 +616,10 @@
             border-radius: 12px;
             margin-top: 20px;
         }
-
         .file-input-wrapper {
             position: relative;
             margin: 15px 0;
         }
-
         .file-input-wrapper input[type="file"] {
             position: absolute;
             left: 0;
@@ -828,7 +629,6 @@
             height: 100%;
             cursor: pointer;
         }
-
         .file-input-label {
             display: block;
             padding: 12px 20px;
@@ -839,30 +639,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .file-input-label:hover {
             background: rgba(106, 152, 240, 0.4);
             border-color: rgba(106, 152, 240, 0.7);
         }
+        .file-input-label i { margin-right: 8px; }
 
-        .file-input-label i {
-            margin-right: 8px;
-        }
-
-        .edit-form {
-            display: none;
-        }
-        .edit-form.active {
-            display: block;
-        }
-
-        .create-form.active {
-            display: block;
-        }
-        .create-form {
-            display: none;
-        }
-
+        .edit-form { display: none; }
+        .edit-form.active { display: block; }
+        .create-form.active { display: block; }
+        .create-form { display: none; }
         .form-header {
             display: flex;
             justify-content: space-between;
@@ -871,17 +657,9 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-
-        .cancel-edit-btn {
-            background: #6c757d;
-        }
-        .cancel-edit-btn:hover {
-            background: #7e8790;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
+        .cancel-edit-btn { background: #6c757d; }
+        .cancel-edit-btn:hover { background: #7e8790; }
+        .table-wrapper { overflow-x: auto; }
 
         .toast {
             position: fixed;
@@ -901,155 +679,45 @@
             font-weight: 500;
             backdrop-filter: blur(10px);
         }
-
         .toast.show {
             transform: translateY(0);
             opacity: 1;
         }
-        .toast.success {
-            border-left-color: #4CAF50;
-        }
-        .toast.error {
-            border-left-color: #F44336;
-        }
-        .toast.warning {
-            border-left-color: #FFC107;
-        }
-        .toast i {
-            margin-right: 12px;
-        }
+        .toast.success { border-left-color: #4CAF50; }
+        .toast.error { border-left-color: #F44336; }
+        .toast.warning { border-left-color: #FFC107; }
+        .toast i { margin-right: 12px; }
 
         @media (max-width: 768px) {
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tournament-list {
-                grid-template-columns: 1fr;
-            }
-
-            .table-wrapper {
-                overflow-x: auto;
-            }
-
-            .fixture {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-
-            .match {
-                width: 100%;
-                justify-content: center;
-                flex-direction: column;
-            }
-
-            .score-inputs {
-                align-self: center;
-                margin: 10px 0;
-            }
-
-            .date {
-                align-self: center;
-                margin-left: 0;
-            }
-
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .stat-card {
-                margin: 0;
-            }
-
-            .tournament-actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .action-btn {
-                margin: 0;
-            }
-
-            .backup-item {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-
-            .backup-actions {
-                align-self: center;
-                justify-content: center;
-            }
-
-            .form-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: stretch;
-            }
-
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .tab {
-                padding: 12px 10px;
-                font-size: 0.9rem;
-                min-width: 80px;
-            }
-
-            .view-nav-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .view-nav-left,
-            .view-nav-right {
-                justify-content: center;
-            }
-
-            .view-nav-left {
-                flex-wrap: wrap;
-            }
-
-            .tournaments-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-
-            .tournaments-header h2 {
-                text-align: center;
-            }
-
-            .search-wrapper {
-                max-width: 100%;
-                min-width: unset;
-            }
+            .tabs { flex-direction: column; }
+            .tournament-list { grid-template-columns: 1fr; }
+            .table-wrapper { overflow-x: auto; }
+            .fixture { flex-direction: column; align-items: stretch; gap: 15px; }
+            .match { width: 100%; justify-content: center; flex-direction: column; }
+            .score-inputs { align-self: center; margin: 10px 0; }
+            .date { align-self: center; margin-left: 0; }
+            .stats { flex-direction: column; gap: 15px; }
+            .stat-card { margin: 0; }
+            .tournament-actions { flex-direction: column; gap: 10px; }
+            .action-btn { margin: 0; }
+            .backup-item { flex-direction: column; align-items: stretch; gap: 10px; }
+            .backup-actions { align-self: center; justify-content: center; }
+            .form-header { flex-direction: column; gap: 15px; align-items: stretch; }
+            header h1 { font-size: 2rem; }
+            .tab { padding: 12px 10px; font-size: 0.9rem; min-width: 80px; }
+            .view-nav-row { flex-direction: column; align-items: stretch; }
+            .view-nav-left, .view-nav-right { justify-content: center; }
+            .view-nav-left { flex-wrap: wrap; }
+            .tournaments-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .tournaments-header h2 { text-align: center; }
+            .search-wrapper { max-width: 100%; min-width: unset; }
         }
-
         @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-
-            .tab-content {
-                padding: 15px;
-            }
-
-            .tournament-card {
-                padding: 18px;
-            }
-
-            .score-inputs input {
-                width: 50px;
-            }
-
-            .nav-btn {
-                padding: 8px 14px;
-                font-size: 13px;
-            }
+            .container { padding: 10px; }
+            .tab-content { padding: 15px; }
+            .tournament-card { padding: 18px; }
+            .score-inputs input { width: 50px; }
+            .nav-btn { padding: 8px 14px; font-size: 13px; }
         }
     </style>
 </head>
@@ -1068,63 +736,48 @@
             <div class="tab" data-tab="backups"><i class="fas fa-database"></i> Backups</div>
         </div>
 
+        <!-- CREATE TAB -->
         <div class="tab-content active" id="create">
             <div class="create-form active">
                 <h2><i class="fas fa-plus-circle"></i> Create New Tournament</h2>
-
                 <div class="stats">
-                    <div class="stat-card">
-                        <h4>Active Players</h4>
-                        <div class="stat-value" id="active-players">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Tournaments Created</h4>
-                        <div class="stat-value" id="tournament-count">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Matches Played</h4>
-                        <div class="stat-value" id="matches-played">0</div>
-                    </div>
+                    <div class="stat-card"><h4>Active Players</h4><div class="stat-value" id="active-players">0</div></div>
+                    <div class="stat-card"><h4>Tournaments Created</h4><div class="stat-value" id="tournament-count">0</div></div>
+                    <div class="stat-card"><h4>Matches Played</h4><div class="stat-value" id="matches-played">0</div></div>
                 </div>
-
                 <form id="tournament-form">
                     <div class="form-group">
                         <label for="player-name"><i class="fas fa-user"></i> Your Name</label>
                         <input type="text" id="player-name" placeholder="Enter your name" required />
                     </div>
-
                     <div class="form-group">
                         <label for="opponents-textarea"><i class="fas fa-users"></i> Add Opponents (One per line)</label>
                         <textarea id="opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line&#10;Example:&#10;John&#10;Mike&#10;Sarah" required></textarea>
                     </div>
-
                     <button type="submit"><i class="fas fa-rocket"></i> Create Tournament</button>
                 </form>
             </div>
-
             <div class="edit-form" id="edit-tournament-form">
                 <div class="form-header">
                     <h2><i class="fas fa-edit"></i> Edit Tournament</h2>
                     <button class="cancel-edit-btn" id="cancel-edit-btn"><i class="fas fa-times"></i> Cancel Edit</button>
                 </div>
-
                 <form id="edit-form">
                     <input type="hidden" id="edit-tournament-id" />
                     <div class="form-group">
                         <label for="edit-player-name"><i class="fas fa-user"></i> Your Name</label>
                         <input type="text" id="edit-player-name" placeholder="Enter your name" required />
                     </div>
-
                     <div class="form-group">
                         <label for="edit-opponents-textarea"><i class="fas fa-users"></i> Edit Opponents (One per line)</label>
                         <textarea id="edit-opponents-textarea" class="opponents-textarea" placeholder="Enter opponent names, one per line" required></textarea>
                     </div>
-
                     <button type="submit"><i class="fas fa-save"></i> Save Changes</button>
                 </form>
             </div>
         </div>
 
+        <!-- ALL TOURNAMENTS TAB with search -->
         <div class="tab-content" id="tournaments">
             <div class="tournaments-header">
                 <h2><i class="fas fa-list"></i> All Tournaments</h2>
@@ -1137,13 +790,11 @@
                 </div>
             </div>
             <div class="search-results-count" id="search-results-count"></div>
-            <div class="tournament-list" id="tournaments-list">
-                <!-- Tournaments will be dynamically added here -->
-            </div>
+            <div class="tournament-list" id="tournaments-list"></div>
         </div>
 
+        <!-- TOURNAMENT VIEW TAB -->
         <div class="tab-content" id="tournament-view">
-            <!-- Navigation Row: Back + Prev/Next -->
             <div class="view-nav-row">
                 <div class="view-nav-left">
                     <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back to All</button>
@@ -1154,67 +805,33 @@
                     <button class="nav-btn" id="next-tournament-btn" disabled>Next <i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
-
             <h2 id="tournament-view-title"><i class="fas fa-trophy"></i> Tournament View</h2>
-
             <div class="stats" id="tournament-stats">
-                <div class="stat-card">
-                    <h4>Current Position</h4>
-                    <div class="stat-value" id="current-position">-</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Points</h4>
-                    <div class="stat-value" id="current-points">0</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Goal Difference</h4>
-                    <div class="stat-value" id="current-gd">0</div>
-                </div>
+                <div class="stat-card"><h4>Current Position</h4><div class="stat-value" id="current-position">-</div></div>
+                <div class="stat-card"><h4>Points</h4><div class="stat-value" id="current-points">0</div></div>
+                <div class="stat-card"><h4>Goal Difference</h4><div class="stat-value" id="current-gd">0</div></div>
             </div>
-
             <h3><i class="fas fa-calendar-alt"></i> Daily Fixtures</h3>
-            <div class="fixtures-list" id="tournament-fixtures">
-                <!-- Fixtures will be dynamically added here -->
-            </div>
-
+            <div class="fixtures-list" id="tournament-fixtures"></div>
             <h3><i class="fas fa-table"></i> League Table</h3>
-            <div class="table-wrapper">
-                <table id="tournament-table">
-                    <!-- Table will be dynamically added here -->
-                </table>
-            </div>
+            <div class="table-wrapper"><table id="tournament-table"></table></div>
         </div>
 
+        <!-- PLAYER STATS TAB -->
         <div class="tab-content" id="player-stats">
             <h2><i class="fas fa-chart-bar"></i> Player Statistics</h2>
             <p>Aggregated statistics for all players across all tournaments</p>
-
             <div class="table-wrapper">
                 <table id="player-stats-table">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>Tournaments</th>
-                            <th>P</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>GF</th>
-                            <th>GA</th>
-                            <th>GD</th>
-                            <th>Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody id="player-stats-body">
-                        <!-- Player stats will be dynamically added here -->
-                    </tbody>
+                    <thead><tr><th>Player</th><th>Tournaments</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead>
+                    <tbody id="player-stats-body"></tbody>
                 </table>
             </div>
         </div>
 
+        <!-- BACKUPS TAB -->
         <div class="tab-content" id="backups">
             <h2><i class="fas fa-database"></i> Tournament Backups</h2>
-
             <div class="backup-section">
                 <h3><i class="fas fa-plus-circle"></i> Create New Backup</h3>
                 <div class="form-group">
@@ -1223,7 +840,6 @@
                 </div>
                 <button id="create-backup-btn"><i class="fas fa-save"></i> Create Backup</button>
             </div>
-
             <div class="upload-section">
                 <h3><i class="fas fa-upload"></i> Upload Backup</h3>
                 <p>Upload a previously downloaded backup file to restore your tournaments.</p>
@@ -1235,158 +851,83 @@
                 </div>
                 <button id="upload-backup-btn"><i class="fas fa-upload"></i> Upload and Restore</button>
             </div>
-
             <div class="backup-section">
                 <h3><i class="fas fa-history"></i> Existing Backups</h3>
-                <div class="backup-list" id="backup-list">
-                    <!-- Backups will be dynamically added here -->
-                </div>
+                <div class="backup-list" id="backup-list"></div>
             </div>
         </div>
     </div>
 
-    <!-- Toast notification -->
+    <!-- Toast -->
     <div class="toast" id="toast"><i class="fas fa-info-circle"></i> <span id="toast-message">Message</span></div>
 
     <script>
-        // ─── TOAST SYSTEM ───────────────────────────────────────────────
+        // ─── TOAST ──────────────────────────────────────────────────────────
         function showToast(message, type = 'info', duration = 3000) {
             const toast = document.getElementById('toast');
             const msg = document.getElementById('toast-message');
             const icon = toast.querySelector('i');
-
             toast.classList.remove('success', 'error', 'warning', 'show');
-
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
             icon.className = 'fas ' + (icons[type] || icons.info);
             msg.textContent = message;
             toast.classList.add(type, 'show');
-
             clearTimeout(toast._timer);
-            toast._timer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // ─── TAB SWITCHING ──────────────────────────────────────────────
+        // ─── TAB SWITCHING ──────────────────────────────────────────────────
         function switchTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            const tournamentViewTab = document.querySelector('.tab[data-tab="tournament-view"]');
-            if (tabName === 'tournament-view') {
-                tournamentViewTab.style.display = 'flex';
-            } else {
-                tournamentViewTab.style.display = 'none';
-            }
-
+            const viewTab = document.querySelector('.tab[data-tab="tournament-view"]');
+            viewTab.style.display = (tabName === 'tournament-view') ? 'flex' : 'none';
             const targetTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
             if (targetTab) targetTab.classList.add('active');
-
             const targetContent = document.getElementById(tabName);
             if (targetContent) targetContent.classList.add('active');
-
-            if (tabName === 'player-stats') {
-                updatePlayerStatsTable();
-            }
-
-            // When switching to tournaments, re-apply search filter
-            if (tabName === 'tournaments') {
-                applySearchFilter();
-            }
+            if (tabName === 'player-stats') updatePlayerStatsTable();
+            if (tabName === 'tournaments') applySearchFilter();
         }
-
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 if (tab.dataset.tab !== 'tournament-view') {
                     switchTab(tab.dataset.tab);
-                    if (tab.dataset.tab === 'create') {
-                        showCreateForm();
-                    }
+                    if (tab.dataset.tab === 'create') showCreateForm();
                 }
             });
         });
 
-        // ─── BACK / CANCEL BUTTONS ──────────────────────────────────────
-        document.getElementById('back-to-tournaments').addEventListener('click', () => {
-            switchTab('tournaments');
-        });
+        // ─── BACK / CANCEL ──────────────────────────────────────────────────
+        document.getElementById('back-to-tournaments').addEventListener('click', () => switchTab('tournaments'));
+        document.getElementById('cancel-edit-btn').addEventListener('click', showCreateForm);
 
-        document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-            showCreateForm();
-        });
-
-        // ─── CREATE TOURNAMENT ──────────────────────────────────────────
-        const form = document.getElementById('tournament-form');
-        form.addEventListener('submit', function(e) {
+        // ─── CREATE TOURNAMENT ─────────────────────────────────────────────
+        document.getElementById('tournament-form').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const playerName = document.getElementById('player-name').value.trim();
             const opponentsText = document.getElementById('opponents-textarea').value;
-
-            if (!playerName) {
-                showToast('Please enter your name', 'error');
-                return;
-            }
-
-            const opponentNames = opponentsText
-                .split('\n')
-                .map(name => name.trim())
-                .filter(name => name !== '');
-
-            if (opponentNames.length === 0) {
-                showToast('Please add at least one opponent', 'error');
-                return;
-            }
-
-            const unique = new Set(opponentNames);
-            if (unique.size !== opponentNames.length) {
-                showToast('Opponent names must be unique', 'error');
-                return;
-            }
-
-            const tournamentId = saveTournament(playerName, opponentNames);
+            if (!playerName) return showToast('Please enter your name', 'error');
+            const opponentNames = opponentsText.split('\n').map(n => n.trim()).filter(n => n !== '');
+            if (opponentNames.length === 0) return showToast('Please add at least one opponent', 'error');
+            if (new Set(opponentNames).size !== opponentNames.length) return showToast('Opponent names must be unique', 'error');
+            saveTournament(playerName, opponentNames);
             showToast(`Tournament created for ${playerName} with ${opponentNames.length} opponents!`, 'success');
-            form.reset();
+            this.reset();
             updateTournamentDisplay();
             switchTab('tournaments');
         });
 
-        // ─── EDIT TOURNAMENT ────────────────────────────────────────────
-        const editForm = document.getElementById('edit-form');
-        editForm.addEventListener('submit', function(e) {
+        // ─── EDIT TOURNAMENT ───────────────────────────────────────────────
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const tournamentId = document.getElementById('edit-tournament-id').value;
             const playerName = document.getElementById('edit-player-name').value.trim();
             const opponentsText = document.getElementById('edit-opponents-textarea').value;
-
-            if (!playerName) {
-                showToast('Please enter your name', 'error');
-                return;
-            }
-
-            const opponentNames = opponentsText
-                .split('\n')
-                .map(name => name.trim())
-                .filter(name => name !== '');
-
-            if (opponentNames.length === 0) {
-                showToast('Please add at least one opponent', 'error');
-                return;
-            }
-
-            const unique = new Set(opponentNames);
-            if (unique.size !== opponentNames.length) {
-                showToast('Opponent names must be unique', 'error');
-                return;
-            }
-
+            if (!playerName) return showToast('Please enter your name', 'error');
+            const opponentNames = opponentsText.split('\n').map(n => n.trim()).filter(n => n !== '');
+            if (opponentNames.length === 0) return showToast('Please add at least one opponent', 'error');
+            if (new Set(opponentNames).size !== opponentNames.length) return showToast('Opponent names must be unique', 'error');
             updateTournament(tournamentId, playerName, opponentNames);
             showToast(`Tournament updated for ${playerName}!`, 'success');
             showCreateForm();
@@ -1394,144 +935,29 @@
             switchTab('tournaments');
         });
 
-        // ─── BACKUP ─────────────────────────────────────────────────────
-        document.getElementById('create-backup-btn').addEventListener('click', function() {
-            const backupName = document.getElementById('backup-name').value.trim() ||
-                `Backup_${new Date().toLocaleDateString()}`;
-            createBackup(backupName);
-            document.getElementById('backup-name').value = '';
-            updateBackupDisplay();
-        });
-
-        document.getElementById('upload-backup-btn').addEventListener('click', function() {
-            const fileInput = document.getElementById('backup-upload');
-            const file = fileInput.files[0];
-            if (!file) {
-                showToast('Please select a backup file to upload', 'error');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const backupData = JSON.parse(e.target.result);
-                    if (!Array.isArray(backupData)) {
-                        showToast('Invalid backup file format', 'error');
-                        return;
-                    }
-                    if (confirm(
-                            'Are you sure you want to restore this backup? This will replace all current tournaments.'
-                            )) {
-                        localStorage.setItem('tournaments', JSON.stringify(backupData));
-                        updateTournamentDisplay();
-                        showToast('Backup restored successfully!', 'success');
-                        switchTab('tournaments');
-                        fileInput.value = '';
-                    }
-                } catch (error) {
-                    showToast('Error reading backup file: ' + error.message, 'error');
-                }
-            };
-            reader.readAsText(file);
-        });
-
-        // ─── SHOW / HIDE FORMS ──────────────────────────────────────────
-        function showCreateForm() {
-            document.querySelector('.create-form').classList.add('active');
-            document.querySelector('.edit-form').classList.remove('active');
-        }
-
-        function showEditForm() {
-            document.querySelector('.create-form').classList.remove('active');
-            document.querySelector('.edit-form').classList.add('active');
-        }
-
-        function editTournament(tournamentId) {
-            const tournaments = getTournaments();
-            const tournament = tournaments.find(t => t.id === tournamentId);
-            if (!tournament) {
-                showToast('Tournament not found!', 'error');
-                return;
-            }
-            document.getElementById('edit-tournament-id').value = tournamentId;
-            document.getElementById('edit-player-name').value = tournament.playerName;
-            document.getElementById('edit-opponents-textarea').value = tournament.opponents.join('\n');
-            showEditForm();
-            switchTab('create');
-        }
-
-        // ─── DATA LAYER ──────────────────────────────────────────────────
-        function getTournaments() {
-            return JSON.parse(localStorage.getItem('tournaments')) || [];
-        }
-
-        function setTournaments(data) {
-            localStorage.setItem('tournaments', JSON.stringify(data));
-        }
+        // ─── DATA LAYER ─────────────────────────────────────────────────────
+        function getTournaments() { return JSON.parse(localStorage.getItem('tournaments')) || []; }
+        function setTournaments(data) { localStorage.setItem('tournaments', JSON.stringify(data)); }
 
         function saveTournament(playerName, opponents) {
             const tournaments = getTournaments();
-            const tournamentId = 'tournament_' + Date.now();
+            const id = 'tournament_' + Date.now();
             const newTournament = {
-                id: tournamentId,
+                id,
                 playerName,
                 opponents,
                 created: new Date().toISOString(),
-                fixtures: generateFixtures(playerName, opponents),
-                table: generateTable(playerName, opponents)
+                fixtures: opponents.map((opp, i) => ({ day: i + 1, home: playerName, away: opp, homeScore: "", awayScore: "" })),
+                table: [{ name: playerName, isPlayer: true, position: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] }]
+                    .concat(opponents.map((opp, idx) => ({ name: opp, isPlayer: false, position: idx + 2, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] })))
             };
             tournaments.push(newTournament);
             setTournaments(tournaments);
-            return tournamentId;
-        }
-
-        function generateFixtures(playerName, opponents) {
-            return opponents.map((opp, i) => ({
-                day: i + 1,
-                home: playerName,
-                away: opp,
-                homeScore: "",
-                awayScore: ""
-            }));
-        }
-
-        function generateTable(playerName, opponents) {
-            const table = [];
-            table.push({
-                name: playerName,
-                isPlayer: true,
-                position: 1,
-                played: 0,
-                won: 0,
-                drawn: 0,
-                lost: 0,
-                goalsFor: 0,
-                goalsAgainst: 0,
-                goalDifference: 0,
-                points: 0,
-                form: []
-            });
-            opponents.forEach((opp, idx) => {
-                table.push({
-                    name: opp,
-                    isPlayer: false,
-                    position: idx + 2,
-                    played: 0,
-                    won: 0,
-                    drawn: 0,
-                    lost: 0,
-                    goalsFor: 0,
-                    goalsAgainst: 0,
-                    goalDifference: 0,
-                    points: 0,
-                    form: []
-                });
-            });
-            return table;
+            return id;
         }
 
         function deleteTournament(tournamentId) {
-            let tournaments = getTournaments();
-            tournaments = tournaments.filter(t => t.id !== tournamentId);
+            let tournaments = getTournaments().filter(t => t.id !== tournamentId);
             setTournaments(tournaments);
             updateTournamentDisplay();
         }
@@ -1539,26 +965,326 @@
         function updateTournament(tournamentId, playerName, opponents) {
             const tournaments = getTournaments();
             const idx = tournaments.findIndex(t => t.id === tournamentId);
-            if (idx === -1) {
-                showToast('Tournament not found!', 'error');
-                return;
-            }
+            if (idx === -1) return showToast('Tournament not found!', 'error');
             tournaments[idx].playerName = playerName;
             tournaments[idx].opponents = opponents;
-            tournaments[idx].fixtures = generateFixtures(playerName, opponents);
-            tournaments[idx].table = generateTable(playerName, opponents);
+            tournaments[idx].fixtures = opponents.map((opp, i) => ({ day: i + 1, home: playerName, away: opp, homeScore: "", awayScore: "" }));
+            tournaments[idx].table = [{ name: playerName, isPlayer: true, position: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] }]
+                .concat(opponents.map((opp, idx) => ({ name: opp, isPlayer: false, position: idx + 2, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] })));
             setTournaments(tournaments);
         }
 
+        // ─── CALCULATE TABLE ───────────────────────────────────────────────
+        function calculateTable(tournament) {
+            tournament.table.forEach(team => { team.played = 0; team.won = 0; team.drawn = 0; team.lost = 0; team.goalsFor = 0; team.goalsAgainst = 0; team.goalDifference = 0; team.points = 0; team.form = []; });
+            tournament.fixtures.forEach(fixture => {
+                const homeScore = fixture.homeScore === "" ? 0 : parseInt(fixture.homeScore);
+                const awayScore = fixture.awayScore === "" ? 0 : parseInt(fixture.awayScore);
+                if (fixture.homeScore !== "" && fixture.awayScore !== "") {
+                    const homeTeam = tournament.table.find(t => t.name === fixture.home);
+                    const awayTeam = tournament.table.find(t => t.name === fixture.away);
+                    if (homeTeam && awayTeam) {
+                        homeTeam.played++; awayTeam.played++;
+                        homeTeam.goalsFor += homeScore; homeTeam.goalsAgainst += awayScore;
+                        awayTeam.goalsFor += awayScore; awayTeam.goalsAgainst += homeScore;
+                        homeTeam.goalDifference = homeTeam.goalsFor - homeTeam.goalsAgainst;
+                        awayTeam.goalDifference = awayTeam.goalsFor - awayTeam.goalsAgainst;
+                        if (homeScore > awayScore) {
+                            homeTeam.won++; awayTeam.lost++;
+                            homeTeam.points += 3; homeTeam.form.unshift('W'); awayTeam.form.unshift('L');
+                        } else if (homeScore < awayScore) {
+                            homeTeam.lost++; awayTeam.won++;
+                            awayTeam.points += 3; homeTeam.form.unshift('L'); awayTeam.form.unshift('W');
+                        } else {
+                            homeTeam.drawn++; awayTeam.drawn++;
+                            homeTeam.points += 1; awayTeam.points += 1;
+                            homeTeam.form.unshift('D'); awayTeam.form.unshift('D');
+                        }
+                        if (homeTeam.form.length > 5) homeTeam.form = homeTeam.form.slice(0, 5);
+                        if (awayTeam.form.length > 5) awayTeam.form = awayTeam.form.slice(0, 5);
+                    }
+                }
+            });
+            tournament.table.sort((a, b) => b.points - a.points || b.goalDifference - a.goalDifference);
+            tournament.table.forEach((team, idx) => team.position = idx + 1);
+            return tournament.table;
+        }
+
+        function updateFixtureScore(tournamentId, fixtureIndex) {
+            const tournaments = getTournaments();
+            const tIdx = tournaments.findIndex(t => t.id === tournamentId);
+            if (tIdx === -1) return;
+            const tournament = tournaments[tIdx];
+            const homeInput = document.querySelector(`.score-home[data-fixture-index="${fixtureIndex}"]`);
+            const awayInput = document.querySelector(`.score-away[data-fixture-index="${fixtureIndex}"]`);
+            if (!homeInput || !awayInput) return;
+            const hVal = homeInput.value.trim();
+            const aVal = awayInput.value.trim();
+            tournament.fixtures[fixtureIndex].homeScore = hVal === "" ? "" : parseInt(hVal) || 0;
+            tournament.fixtures[fixtureIndex].awayScore = aVal === "" ? "" : parseInt(aVal) || 0;
+            tournament.table = calculateTable(tournament);
+            setTournaments(tournaments);
+            updateTableDisplay(tournament);
+            updateTournamentDisplay();
+            const all = getTournaments();
+            const updatedIdx = all.findIndex(t => t.id === tournamentId);
+            if (updatedIdx !== -1) window._currentTournamentIndex = updatedIdx;
+        }
+
+        // ─── NAVIGATION ─────────────────────────────────────────────────────
+        window._currentTournamentIndex = 0;
+
+        function navigateToTournamentByIndex(index) {
+            const tournaments = getTournaments();
+            if (!tournaments.length) return;
+            if (index < 0) index = 0;
+            if (index >= tournaments.length) index = tournaments.length - 1;
+            window._currentTournamentIndex = index;
+            displayTournament(tournaments[index].id);
+        }
+
+        function updateNavButtons() {
+            const tournaments = getTournaments();
+            const total = tournaments.length;
+            const current = window._currentTournamentIndex;
+            const prevBtn = document.getElementById('prev-tournament-btn');
+            const nextBtn = document.getElementById('next-tournament-btn');
+            const counter = document.getElementById('tournament-counter');
+            if (total === 0) { prevBtn.disabled = true; nextBtn.disabled = true; counter.textContent = '0 / 0'; return; }
+            prevBtn.disabled = (current <= 0);
+            nextBtn.disabled = (current >= total - 1);
+            counter.textContent = `${current + 1} / ${total}`;
+        }
+
+        document.getElementById('prev-tournament-btn').addEventListener('click', () => {
+            const tournaments = getTournaments();
+            if (!tournaments.length) return;
+            const newIndex = Math.max(0, window._currentTournamentIndex - 1);
+            if (newIndex !== window._currentTournamentIndex) navigateToTournamentByIndex(newIndex);
+        });
+        document.getElementById('next-tournament-btn').addEventListener('click', () => {
+            const tournaments = getTournaments();
+            if (!tournaments.length) return;
+            const newIndex = Math.min(tournaments.length - 1, window._currentTournamentIndex + 1);
+            if (newIndex !== window._currentTournamentIndex) navigateToTournamentByIndex(newIndex);
+        });
+
+        // ─── DISPLAY TOURNAMENT VIEW ──────────────────────────────────────
+        function displayTournament(tournamentId) {
+            const tournaments = getTournaments();
+            const idx = tournaments.findIndex(t => t.id === tournamentId);
+            if (idx === -1) { showToast('Tournament not found!', 'error'); return; }
+            window._currentTournamentIndex = idx;
+            const tournament = tournaments[idx];
+            document.getElementById('tournament-view-title').innerHTML = `<i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament`;
+            document.getElementById('tournament-view-title').dataset.tournamentId = tournamentId;
+
+            // Fixtures
+            const container = document.getElementById('tournament-fixtures');
+            container.innerHTML = '';
+            tournament.fixtures.forEach((fixture, i) => {
+                const div = document.createElement('div');
+                div.className = 'fixture';
+                div.innerHTML = `
+                    <div class="match">
+                        <span class="player-name"><i class="fas fa-user"></i> ${fixture.home}</span>
+                        <div class="score-inputs">
+                            <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${i}">
+                            <span class="versus">VS</span>
+                            <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${i}">
+                        </div>
+                        <span class="player-name">${fixture.away}</span>
+                    </div>
+                    <div class="date">Day ${fixture.day}</div>
+                `;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.score-home, .score-away').forEach(input => {
+                input.addEventListener('input', function() {
+                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-fixture-index')));
+                });
+            });
+
+            tournament.table = calculateTable(tournament);
+            setTournaments(tournaments);
+            updateTableDisplay(tournament);
+            updateNavButtons();
+            switchTab('tournament-view');
+        }
+
+        function updateTableDisplay(tournament) {
+            const tableContainer = document.getElementById('tournament-table');
+            tableContainer.innerHTML = `
+                <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
+                <tbody>${tournament.table.map(team => `
+                    <tr class="${team.isPlayer ? 'player-row' : ''}">
+                        <td>${team.position}</td>
+                        <td>${team.isPlayer ? '<i class="fas fa-user"></i> ' : ''}${team.name}</td>
+                        <td>${team.played}</td>
+                        <td>${team.won}</td>
+                        <td>${team.drawn}</td>
+                        <td>${team.lost}</td>
+                        <td>${team.goalsFor}</td>
+                        <td>${team.goalsAgainst}</td>
+                        <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
+                        <td>${team.points}</td>
+                        <td>${team.form.length === 0 ? Array(5).fill('<span class="form-indicator">-</span>').join('') : team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('')}</td>
+                    </tr>
+                `).join('')}</tbody>
+            `;
+            const player = tournament.table.find(t => t.isPlayer);
+            if (player) {
+                const suffix = n => { if (n % 10 === 1 && n % 100 !== 11) return 'st'; if (n % 10 === 2 && n % 100 !== 12) return 'nd'; if (n % 10 === 3 && n % 100 !== 13) return 'rd'; return 'th'; };
+                document.getElementById('current-position').textContent = player.position + suffix(player.position);
+                document.getElementById('current-points').textContent = player.points;
+                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player.goalDifference;
+            }
+        }
+
+        // ─── SEARCH / FILTER ──────────────────────────────────────────────
+        let _searchTerm = '';
+
+        function applySearchFilter() {
+            const tournaments = getTournaments();
+            const searchInput = document.getElementById('tournament-search');
+            const term = searchInput.value.trim().toLowerCase();
+            _searchTerm = term;
+            const list = document.getElementById('tournaments-list');
+            const countEl = document.getElementById('search-results-count');
+            const clearBtn = document.getElementById('search-clear-btn');
+
+            if (term.length > 0) clearBtn.classList.add('visible');
+            else clearBtn.classList.remove('visible');
+
+            let filtered = tournaments;
+            if (term !== '') filtered = tournaments.filter(t => t.playerName.toLowerCase().includes(term));
+
+            if (tournaments.length === 0) countEl.textContent = '';
+            else if (term === '') countEl.textContent = `Showing ${tournaments.length} tournament${tournaments.length !== 1 ? 's' : ''}`;
+            else countEl.textContent = `Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''} for "${term}"`;
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-search"></i><h3>No Tournaments Found</h3><p>${term !== '' ? `No tournaments match "${term}"` : 'Create your first tournament to get started!'}</p></div>`;
+                return;
+            }
+            list.innerHTML = filtered.map(t => `
+                <div class="tournament-card" data-id="${t.id}">
+                    <h3><i class="fas fa-trophy"></i> ${t.playerName}'s Tournament</h3>
+                    <ul>
+                        <li><i class="fas fa-user"></i> ${t.playerName}</li>
+                        ${t.opponents.map(opp => `<li>${opp}</li>`).join('')}
+                    </ul>
+                    <div class="tournament-actions">
+                        <button class="action-btn view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
+                        <button class="action-btn edit-btn" data-id="${t.id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="action-btn delete-btn" data-id="${t.id}"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search event listeners
+        document.getElementById('tournament-search').addEventListener('input', applySearchFilter);
+        document.getElementById('search-clear-btn').addEventListener('click', function() {
+            document.getElementById('tournament-search').value = '';
+            applySearchFilter();
+            document.getElementById('tournament-search').focus();
+        });
+
+        // ─── RENDER ALL TOURNAMENTS (with stats and search) ──────────────
+        function updateTournamentDisplay() {
+            const tournaments = getTournaments();
+            document.getElementById('tournament-count').textContent = tournaments.length;
+            document.getElementById('active-players').textContent = tournaments.reduce((sum, t) => sum + 1 + t.opponents.length, 0);
+            document.getElementById('matches-played').textContent = tournaments.reduce((sum, t) => sum + t.fixtures.filter(f => f.homeScore !== "" && f.awayScore !== "").length, 0);
+            applySearchFilter();
+
+            // Update view tab if active
+            const viewTab = document.getElementById('tournament-view');
+            if (viewTab.classList.contains('active')) {
+                const currentId = document.getElementById('tournament-view-title').dataset.tournamentId || null;
+                if (currentId) {
+                    const exists = tournaments.some(t => t.id === currentId);
+                    if (!exists && tournaments.length) navigateToTournamentByIndex(0);
+                    else if (exists) displayTournament(currentId);
+                    else if (tournaments.length) navigateToTournamentByIndex(0);
+                } else if (tournaments.length) navigateToTournamentByIndex(0);
+            }
+        }
+
+        // ─── EVENT DELEGATION FOR TOURNAMENT ACTIONS ────────────────────
+        document.getElementById('tournaments-list').addEventListener('click', function(e) {
+            const target = e.target.closest('.action-btn');
+            if (!target) return;
+            const tournamentId = target.getAttribute('data-id');
+            if (!tournamentId) return;
+            if (target.classList.contains('view-btn')) displayTournament(tournamentId);
+            else if (target.classList.contains('edit-btn')) {
+                const tournament = getTournaments().find(t => t.id === tournamentId);
+                if (!tournament) return showToast('Tournament not found', 'error');
+                document.getElementById('edit-tournament-id').value = tournamentId;
+                document.getElementById('edit-player-name').value = tournament.playerName;
+                document.getElementById('edit-opponents-textarea').value = tournament.opponents.join('\n');
+                showEditForm();
+                switchTab('create');
+            } else if (target.classList.contains('delete-btn')) {
+                const card = target.closest('.tournament-card');
+                const name = card ? card.querySelector('h3')?.textContent || 'Tournament' : 'Tournament';
+                if (confirm(`Are you sure you want to delete ${name}?`)) {
+                    deleteTournament(tournamentId);
+                    showToast(`${name} has been deleted permanently`, 'warning');
+                }
+            }
+        });
+
+        function showCreateForm() {
+            document.querySelector('.create-form').classList.add('active');
+            document.querySelector('.edit-form').classList.remove('active');
+        }
+        function showEditForm() {
+            document.querySelector('.create-form').classList.remove('active');
+            document.querySelector('.edit-form').classList.add('active');
+        }
+
+        // ─── PLAYER STATS ──────────────────────────────────────────────────
+        function updatePlayerStatsTable() {
+            const tournaments = getTournaments();
+            const tbody = document.getElementById('player-stats-body');
+            tbody.innerHTML = '';
+            if (!tournaments.length) {
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:40px;"><div class="empty-state"><i class="fas fa-chart-bar"></i><h3>No Player Data</h3><p>Create tournaments to see player statistics</p></div></td></tr>`;
+                return;
+            }
+            const map = {};
+            tournaments.forEach(t => {
+                const p = t.table.find(team => team.isPlayer);
+                if (!p) return;
+                const name = p.name;
+                if (!map[name]) map[name] = { name, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0 };
+                else map[name].tournaments += 1;
+                map[name].played += p.played;
+                map[name].won += p.won;
+                map[name].drawn += p.drawn;
+                map[name].lost += p.lost;
+                map[name].goalsFor += p.goalsFor;
+                map[name].goalsAgainst += p.goalsAgainst;
+                map[name].goalDifference += p.goalDifference;
+                map[name].points += p.points;
+            });
+            const arr = Object.values(map).sort((a, b) => b.points - a.points);
+            arr.forEach(player => {
+                const tr = document.createElement('tr');
+                tr.className = 'player-row';
+                tr.innerHTML = `<td><i class="fas fa-user"></i> ${player.name}</td><td>${player.tournaments}</td><td>${player.played}</td><td>${player.won}</td><td>${player.drawn}</td><td>${player.lost}</td><td>${player.goalsFor}</td><td>${player.goalsAgainst}</td><td>${player.goalDifference > 0 ? '+' : ''}${player.goalDifference}</td><td>${player.points}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ─── BACKUPS ──────────────────────────────────────────────────────
         function createBackup(backupName) {
             const tournaments = getTournaments();
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
-            const backup = {
-                id: 'backup_' + Date.now(),
-                name: backupName,
-                date: new Date().toISOString(),
-                data: JSON.parse(JSON.stringify(tournaments))
-            };
+            const backup = { id: 'backup_' + Date.now(), name: backupName, date: new Date().toISOString(), data: JSON.parse(JSON.stringify(tournaments)) };
             backups.push(backup);
             localStorage.setItem('tournamentBackups', JSON.stringify(backups));
             showToast(`Backup "${backupName}" created successfully!`, 'success');
@@ -1567,10 +1293,7 @@
         function downloadBackup(backupId) {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            if (!backup) {
-                showToast('Backup not found!', 'error');
-                return;
-            }
+            if (!backup) return showToast('Backup not found!', 'error');
             const blob = new Blob([JSON.stringify(backup.data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1586,13 +1309,8 @@
         function restoreBackup(backupId) {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            if (!backup) {
-                showToast('Backup not found!', 'error');
-                return;
-            }
-            if (confirm(
-                    `Are you sure you want to restore backup "${backup.name}"? This will replace all current tournaments.`
-                    )) {
+            if (!backup) return showToast('Backup not found!', 'error');
+            if (confirm(`Are you sure you want to restore backup "${backup.name}"? This will replace all current tournaments.`)) {
                 setTournaments(backup.data);
                 updateTournamentDisplay();
                 showToast(`Backup "${backup.name}" restored successfully!`, 'success');
@@ -1603,10 +1321,7 @@
         function deleteBackup(backupId) {
             let backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const backup = backups.find(b => b.id === backupId);
-            if (!backup) {
-                showToast('Backup not found!', 'error');
-                return;
-            }
+            if (!backup) return showToast('Backup not found!', 'error');
             if (confirm(`Are you sure you want to delete backup "${backup.name}"?`)) {
                 backups = backups.filter(b => b.id !== backupId);
                 localStorage.setItem('tournamentBackups', JSON.stringify(backups));
@@ -1615,555 +1330,73 @@
             }
         }
 
-        // ─── CALCULATE TABLE ────────────────────────────────────────────
-        function calculateTable(tournament) {
-            tournament.table.forEach(team => {
-                team.played = 0;
-                team.won = 0;
-                team.drawn = 0;
-                team.lost = 0;
-                team.goalsFor = 0;
-                team.goalsAgainst = 0;
-                team.goalDifference = 0;
-                team.points = 0;
-                team.form = [];
-            });
-
-            tournament.fixtures.forEach(fixture => {
-                const homeScore = fixture.homeScore === "" ? 0 : parseInt(fixture.homeScore);
-                const awayScore = fixture.awayScore === "" ? 0 : parseInt(fixture.awayScore);
-
-                if (fixture.homeScore !== "" && fixture.awayScore !== "") {
-                    const homeTeam = tournament.table.find(t => t.name === fixture.home);
-                    const awayTeam = tournament.table.find(t => t.name === fixture.away);
-                    if (homeTeam && awayTeam) {
-                        homeTeam.played++;
-                        awayTeam.played++;
-                        homeTeam.goalsFor += homeScore;
-                        homeTeam.goalsAgainst += awayScore;
-                        awayTeam.goalsFor += awayScore;
-                        awayTeam.goalsAgainst += homeScore;
-                        homeTeam.goalDifference = homeTeam.goalsFor - homeTeam.goalsAgainst;
-                        awayTeam.goalDifference = awayTeam.goalsFor - awayTeam.goalsAgainst;
-
-                        if (homeScore > awayScore) {
-                            homeTeam.won++;
-                            awayTeam.lost++;
-                            homeTeam.points += 3;
-                            homeTeam.form.unshift('W');
-                            awayTeam.form.unshift('L');
-                        } else if (homeScore < awayScore) {
-                            homeTeam.lost++;
-                            awayTeam.won++;
-                            awayTeam.points += 3;
-                            homeTeam.form.unshift('L');
-                            awayTeam.form.unshift('W');
-                        } else {
-                            homeTeam.drawn++;
-                            awayTeam.drawn++;
-                            homeTeam.points += 1;
-                            awayTeam.points += 1;
-                            homeTeam.form.unshift('D');
-                            awayTeam.form.unshift('D');
-                        }
-                        if (homeTeam.form.length > 5) homeTeam.form = homeTeam.form.slice(0, 5);
-                        if (awayTeam.form.length > 5) awayTeam.form = awayTeam.form.slice(0, 5);
-                    }
-                }
-            });
-
-            tournament.table.sort((a, b) => {
-                if (b.points !== a.points) return b.points - a.points;
-                return b.goalDifference - a.goalDifference;
-            });
-            tournament.table.forEach((team, idx) => team.position = idx + 1);
-            return tournament.table;
-        }
-
-        function updateFixtureScore(tournamentId, fixtureIndex) {
-            const tournaments = getTournaments();
-            const tIdx = tournaments.findIndex(t => t.id === tournamentId);
-            if (tIdx === -1) return;
-            const tournament = tournaments[tIdx];
-
-            const homeInput = document.querySelector(`.score-home[data-fixture-index="${fixtureIndex}"]`);
-            const awayInput = document.querySelector(`.score-away[data-fixture-index="${fixtureIndex}"]`);
-            if (!homeInput || !awayInput) return;
-
-            const hVal = homeInput.value.trim();
-            const aVal = awayInput.value.trim();
-            tournament.fixtures[fixtureIndex].homeScore = hVal === "" ? "" : parseInt(hVal) || 0;
-            tournament.fixtures[fixtureIndex].awayScore = aVal === "" ? "" : parseInt(aVal) || 0;
-
-            tournament.table = calculateTable(tournament);
-            setTournaments(tournaments);
-            updateTableDisplay(tournament);
-            updateTournamentDisplay();
-
-            // Update the stored current tournament ID so navigation stays in sync
-            const allTournaments = getTournaments();
-            const updatedIdx = allTournaments.findIndex(t => t.id === tournamentId);
-            if (updatedIdx !== -1) {
-                window._currentTournamentIndex = updatedIdx;
-            }
-        }
-
-        // ─── NAVIGATION STATE ───────────────────────────────────────────
-        // We store the current tournament index in a global so we can navigate.
-        window._currentTournamentIndex = 0;
-
-        function getTournamentIndexById(tournamentId) {
-            const tournaments = getTournaments();
-            return tournaments.findIndex(t => t.id === tournamentId);
-        }
-
-        function navigateToTournamentByIndex(index) {
-            const tournaments = getTournaments();
-            if (tournaments.length === 0) return;
-            if (index < 0) index = 0;
-            if (index >= tournaments.length) index = tournaments.length - 1;
-            window._currentTournamentIndex = index;
-            const tournament = tournaments[index];
-            if (tournament) {
-                displayTournament(tournament.id);
-            }
-        }
-
-        function updateNavButtons() {
-            const tournaments = getTournaments();
-            const total = tournaments.length;
-            const current = window._currentTournamentIndex;
-
-            const prevBtn = document.getElementById('prev-tournament-btn');
-            const nextBtn = document.getElementById('next-tournament-btn');
-            const counter = document.getElementById('tournament-counter');
-
-            if (total === 0) {
-                prevBtn.disabled = true;
-                nextBtn.disabled = true;
-                counter.textContent = '0 / 0';
-                return;
-            }
-
-            prevBtn.disabled = (current <= 0);
-            nextBtn.disabled = (current >= total - 1);
-            counter.textContent = `${current + 1} / ${total}`;
-        }
-
-        // ─── PREV / NEXT EVENT BINDING ──────────────────────────────────
-        document.getElementById('prev-tournament-btn').addEventListener('click', function() {
-            const tournaments = getTournaments();
-            if (tournaments.length === 0) return;
-            const newIndex = Math.max(0, window._currentTournamentIndex - 1);
-            if (newIndex !== window._currentTournamentIndex) {
-                navigateToTournamentByIndex(newIndex);
-            }
-        });
-
-        document.getElementById('next-tournament-btn').addEventListener('click', function() {
-            const tournaments = getTournaments();
-            if (tournaments.length === 0) return;
-            const newIndex = Math.min(tournaments.length - 1, window._currentTournamentIndex + 1);
-            if (newIndex !== window._currentTournamentIndex) {
-                navigateToTournamentByIndex(newIndex);
-            }
-        });
-
-        // ─── RENDER: TOURNAMENT VIEW ────────────────────────────────────
-        function displayTournament(tournamentId) {
-            const tournaments = getTournaments();
-            const idx = tournaments.findIndex(t => t.id === tournamentId);
-            if (idx === -1) {
-                showToast('Tournament not found!', 'error');
-                return;
-            }
-
-            // Update current index
-            window._currentTournamentIndex = idx;
-            const tournament = tournaments[idx];
-
-            // Update title
-            document.getElementById('tournament-view-title').innerHTML =
-                `<i class="fas fa-trophy"></i> ${tournament.playerName}'s Tournament`;
-
-            // Render fixtures
-            const container = document.getElementById('tournament-fixtures');
-            container.innerHTML = '';
-
-            tournament.fixtures.forEach((fixture, i) => {
-                const div = document.createElement('div');
-                div.className = 'fixture';
-                div.innerHTML = `
-                        <div class="match">
-                            <span class="player-name"><i class="fas fa-user"></i> ${fixture.home}</span>
-                            <div class="score-inputs">
-                                <input type="number" min="0" value="${fixture.homeScore}" class="score-home" data-fixture-index="${i}">
-                                <span class="versus">VS</span>
-                                <input type="number" min="0" value="${fixture.awayScore}" class="score-away" data-fixture-index="${i}">
-                            </div>
-                            <span class="player-name">${fixture.away}</span>
-                        </div>
-                        <div class="date">Day ${fixture.day}</div>
-                    `;
-                container.appendChild(div);
-            });
-
-            // Attach score input listeners
-            document.querySelectorAll('.score-home, .score-away').forEach(input => {
-                input.addEventListener('input', function() {
-                    const fi = parseInt(this.getAttribute('data-fixture-index'));
-                    updateFixtureScore(tournamentId, fi);
-                });
-            });
-
-            // Calculate and display table
-            tournament.table = calculateTable(tournament);
-            setTournaments(tournaments);
-            updateTableDisplay(tournament);
-            updateNavButtons();
-
-            // Switch to view tab
-            switchTab('tournament-view');
-        }
-
-        function updateTableDisplay(tournament) {
-            const tableContainer = document.getElementById('tournament-table');
-            tableContainer.innerHTML = `
-                    <thead>
-                        <tr>
-                            <th>Pos</th>
-                            <th>Team</th>
-                            <th>P</th>
-                            <th>W</th>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>GF</th>
-                            <th>GA</th>
-                            <th>GD</th>
-                            <th>Pts</th>
-                            <th>Form</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${tournament.table.map(team => `
-                            <tr class="${team.isPlayer ? 'player-row' : ''}">
-                                <td>${team.position}</td>
-                                <td>${team.isPlayer ? '<i class="fas fa-user"></i> ' : ''}${team.name}</td>
-                                <td>${team.played}</td>
-                                <td>${team.won}</td>
-                                <td>${team.drawn}</td>
-                                <td>${team.lost}</td>
-                                <td>${team.goalsFor}</td>
-                                <td>${team.goalsAgainst}</td>
-                                <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
-                                <td>${team.points}</td>
-                                <td>
-                                    ${team.form.length === 0 ?
-                                        Array(5).fill('<span class="form-indicator">-</span>').join('') :
-                                        team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('')
-                                    }
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                `;
-
-            const player = tournament.table.find(t => t.isPlayer);
-            if (player) {
-                document.getElementById('current-position').textContent = player.position + getOrdinalSuffix(player
-                    .position);
-                document.getElementById('current-points').textContent = player.points;
-                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player
-                    .goalDifference;
-            }
-        }
-
-        function getOrdinalSuffix(n) {
-            if (n % 10 === 1 && n % 100 !== 11) return 'st';
-            if (n % 10 === 2 && n % 100 !== 12) return 'nd';
-            if (n % 10 === 3 && n % 100 !== 13) return 'rd';
-            return 'th';
-        }
-
-        // ─── SEARCH / FILTER ────────────────────────────────────────────
-        let _searchTerm = '';
-
-        function applySearchFilter() {
-            const tournaments = getTournaments();
-            const searchInput = document.getElementById('tournament-search');
-            const term = searchInput.value.trim().toLowerCase();
-            _searchTerm = term;
-
-            const list = document.getElementById('tournaments-list');
-            const countEl = document.getElementById('search-results-count');
-            const clearBtn = document.getElementById('search-clear-btn');
-
-            // Show/hide clear button
-            if (term.length > 0) {
-                clearBtn.classList.add('visible');
-            } else {
-                clearBtn.classList.remove('visible');
-            }
-
-            // Filter tournaments
-            let filtered = tournaments;
-            if (term !== '') {
-                filtered = tournaments.filter(t =>
-                    t.playerName.toLowerCase().includes(term)
-                );
-            }
-
-            // Update count
-            if (tournaments.length === 0) {
-                countEl.textContent = '';
-            } else if (term === '') {
-                countEl.textContent = `Showing ${tournaments.length} tournament${tournaments.length !== 1 ? 's' : ''}`;
-            } else {
-                countEl.textContent = `Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''} for "${term}"`;
-            }
-
-            // Render filtered list
-            if (filtered.length === 0) {
-                list.innerHTML = `
-                        <div class="empty-state" style="grid-column:1/-1;">
-                            <i class="fas fa-search"></i>
-                            <h3>No Tournaments Found</h3>
-                            <p>${term !== '' ? `No tournaments match "${term}"` : 'Create your first tournament to get started!'}</p>
-                        </div>
-                    `;
-                return;
-            }
-
-            list.innerHTML = filtered.map(t => `
-                    <div class="tournament-card" data-id="${t.id}">
-                        <h3><i class="fas fa-trophy"></i> ${t.playerName}'s Tournament</h3>
-                        <ul>
-                            <li><i class="fas fa-user"></i> ${t.playerName}</li>
-                            ${t.opponents.map(opp => `<li>${opp}</li>`).join('')}
-                        </ul>
-                        <div class="tournament-actions">
-                            <button class="action-btn view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
-                            <button class="action-btn edit-btn" data-id="${t.id}"><i class="fas fa-edit"></i> Edit</button>
-                            <button class="action-btn delete-btn" data-id="${t.id}"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
-                    </div>
-                `).join('');
-        }
-
-        // ─── SEARCH EVENT BINDING ──────────────────────────────────────
-        const searchInput = document.getElementById('tournament-search');
-        const searchClearBtn = document.getElementById('search-clear-btn');
-
-        searchInput.addEventListener('input', function() {
-            applySearchFilter();
-        });
-
-        searchClearBtn.addEventListener('click', function() {
-            searchInput.value = '';
-            applySearchFilter();
-            searchInput.focus();
-        });
-
-        // Also re-apply search when tournaments change
-        const originalUpdateTournamentDisplay = updateTournamentDisplay;
-        updateTournamentDisplay = function() {
-            originalUpdateTournamentDisplay();
-            // Re-apply search filter after tournament data changes
-            applySearchFilter();
-        };
-
-        // ─── RENDER: ALL TOURNAMENTS ────────────────────────────────────
-        // We override the original updateTournamentDisplay with our search-aware version.
-        // But we need to keep the original logic for the stats and other parts.
-        // We'll wrap it.
-
-        // Store the original function
-        const _origUpdateTournamentDisplay = updateTournamentDisplay;
-
-        // Override to include search
-        updateTournamentDisplay = function() {
-            // Call original for stats and other side effects
-            const tournaments = getTournaments();
-
-            document.getElementById('tournament-count').textContent = tournaments.length;
-            document.getElementById('active-players').textContent = tournaments.reduce((sum, t) => sum + 1 + t.opponents
-                .length, 0);
-            document.getElementById('matches-played').textContent = tournaments.reduce((sum, t) =>
-                sum + t.fixtures.filter(f => f.homeScore !== "" && f.awayScore !== "").length, 0);
-
-            // Apply search filter to render the list
-            applySearchFilter();
-
-            // If we're in tournament view and the viewed tournament was deleted, update nav
-            const viewTab = document.getElementById('tournament-view');
-            if (viewTab.classList.contains('active')) {
-                const currentId = document.getElementById('tournament-view-title').dataset.tournamentId || null;
-                if (currentId) {
-                    const stillExists = tournaments.some(t => t.id === currentId);
-                    if (!stillExists && tournaments.length > 0) {
-                        navigateToTournamentByIndex(0);
-                    } else if (tournaments.length > 0) {
-                        const existing = tournaments.find(t => t.id === currentId);
-                        if (existing) {
-                            displayTournament(existing.id);
-                        } else {
-                            navigateToTournamentByIndex(0);
-                        }
-                    }
-                } else if (tournaments.length > 0) {
-                    navigateToTournamentByIndex(0);
-                }
-            }
-        };
-
-        // Override displayTournament to store the ID
-        const originalDisplay = displayTournament;
-        displayTournament = function(tournamentId) {
-            document.getElementById('tournament-view-title').dataset.tournamentId = tournamentId;
-            originalDisplay(tournamentId);
-        };
-
-        // ─── EVENT DELEGATION for tournament actions ──────────────────
-        document.getElementById('tournaments-list').addEventListener('click', function(e) {
-            const target = e.target.closest('.action-btn');
-            if (!target) return;
-
-            const tournamentId = target.getAttribute('data-id');
-            if (!tournamentId) return;
-
-            if (target.classList.contains('view-btn')) {
-                displayTournament(tournamentId);
-            } else if (target.classList.contains('edit-btn')) {
-                editTournament(tournamentId);
-            } else if (target.classList.contains('delete-btn')) {
-                const card = target.closest('.tournament-card');
-                const name = card ? card.querySelector('h3')?.textContent || 'Tournament' : 'Tournament';
-                if (confirm(`Are you sure you want to delete ${name}?`)) {
-                    deleteTournament(tournamentId);
-                    showToast(`${name} has been deleted permanently`, 'warning');
-                }
-            }
-        });
-
-        // ─── PLAYER STATS ───────────────────────────────────────────────
-        function updatePlayerStatsTable() {
-            const tournaments = getTournaments();
-            const tbody = document.getElementById('player-stats-body');
-            tbody.innerHTML = '';
-
-            if (tournaments.length === 0) {
-                tbody.innerHTML = `
-                        <tr>
-                            <td colspan="10" style="text-align:center;padding:40px;">
-                                <div class="empty-state">
-                                    <i class="fas fa-chart-bar"></i>
-                                    <h3>No Player Data</h3>
-                                    <p>Create tournaments to see player statistics</p>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                return;
-            }
-
-            const map = {};
-            tournaments.forEach(t => {
-                const p = t.table.find(team => team.isPlayer);
-                if (!p) return;
-                const name = p.name;
-                if (!map[name]) {
-                    map[name] = { name, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0,
-                        goalsAgainst: 0, goalDifference: 0, points: 0 };
-                } else {
-                    map[name].tournaments += 1;
-                }
-                map[name].played += p.played;
-                map[name].won += p.won;
-                map[name].drawn += p.drawn;
-                map[name].lost += p.lost;
-                map[name].goalsFor += p.goalsFor;
-                map[name].goalsAgainst += p.goalsAgainst;
-                map[name].goalDifference += p.goalDifference;
-                map[name].points += p.points;
-            });
-
-            const arr = Object.values(map).sort((a, b) => b.points - a.points);
-            arr.forEach(player => {
-                const tr = document.createElement('tr');
-                tr.className = 'player-row';
-                tr.innerHTML = `
-                        <td><i class="fas fa-user"></i> ${player.name}</td>
-                        <td>${player.tournaments}</td>
-                        <td>${player.played}</td>
-                        <td>${player.won}</td>
-                        <td>${player.drawn}</td>
-                        <td>${player.lost}</td>
-                        <td>${player.goalsFor}</td>
-                        <td>${player.goalsAgainst}</td>
-                        <td>${player.goalDifference > 0 ? '+' : ''}${player.goalDifference}</td>
-                        <td>${player.points}</td>
-                    `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // ─── BACKUP DISPLAY ─────────────────────────────────────────────
         function updateBackupDisplay() {
             const backups = JSON.parse(localStorage.getItem('tournamentBackups')) || [];
             const list = document.getElementById('backup-list');
-            if (backups.length === 0) {
-                list.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-database"></i>
-                            <h3>No Backups Yet</h3>
-                            <p>Create your first backup to protect your tournament data</p>
-                        </div>
-                    `;
+            if (!backups.length) {
+                list.innerHTML = `<div class="empty-state"><i class="fas fa-database"></i><h3>No Backups Yet</h3><p>Create your first backup to protect your tournament data</p></div>`;
                 return;
             }
             list.innerHTML = backups.map(b => `
-                    <div class="backup-item" data-id="${b.id}">
-                        <div>
-                            <h4>${b.name}</h4>
-                            <p>Created: ${new Date(b.date).toLocaleString()}</p>
-                        </div>
-                        <div class="backup-actions">
-                            <button class="backup-action-btn download-btn" data-id="${b.id}"><i class="fas fa-download"></i> Download</button>
-                            <button class="backup-action-btn restore-btn" data-id="${b.id}"><i class="fas fa-undo"></i> Restore</button>
-                            <button class="backup-action-btn delete-backup-btn" data-id="${b.id}"><i class="fas fa-trash"></i> Delete</button>
-                        </div>
+                <div class="backup-item" data-id="${b.id}">
+                    <div><h4>${b.name}</h4><p>Created: ${new Date(b.date).toLocaleString()}</p></div>
+                    <div class="backup-actions">
+                        <button class="backup-action-btn download-btn" data-id="${b.id}"><i class="fas fa-download"></i> Download</button>
+                        <button class="backup-action-btn restore-btn" data-id="${b.id}"><i class="fas fa-undo"></i> Restore</button>
+                        <button class="backup-action-btn delete-backup-btn" data-id="${b.id}"><i class="fas fa-trash"></i> Delete</button>
                     </div>
-                `).join('');
+                </div>
+            `).join('');
         }
+
+        // Backup event listeners
+        document.getElementById('create-backup-btn').addEventListener('click', function() {
+            const name = document.getElementById('backup-name').value.trim() || `Backup_${new Date().toLocaleDateString()}`;
+            createBackup(name);
+            document.getElementById('backup-name').value = '';
+            updateBackupDisplay();
+        });
+
+        document.getElementById('upload-backup-btn').addEventListener('click', function() {
+            const fileInput = document.getElementById('backup-upload');
+            const file = fileInput.files[0];
+            if (!file) return showToast('Please select a backup file to upload', 'error');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+                    if (!Array.isArray(backupData)) return showToast('Invalid backup file format', 'error');
+                    if (confirm('Are you sure you want to restore this backup? This will replace all current tournaments.')) {
+                        setTournaments(backupData);
+                        updateTournamentDisplay();
+                        showToast('Backup restored successfully!', 'success');
+                        switchTab('tournaments');
+                        fileInput.value = '';
+                    }
+                } catch (error) {
+                    showToast('Error reading backup file: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        });
 
         document.getElementById('backup-list').addEventListener('click', function(e) {
             const btn = e.target.closest('.backup-action-btn');
             if (!btn) return;
             const id = btn.getAttribute('data-id');
             if (!id) return;
-
             if (btn.classList.contains('download-btn')) downloadBackup(id);
             else if (btn.classList.contains('restore-btn')) restoreBackup(id);
             else if (btn.classList.contains('delete-backup-btn')) deleteBackup(id);
         });
 
-        // ─── INIT ────────────────────────────────────────────────────────
+        // ─── INIT ──────────────────────────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             updateTournamentDisplay();
             updateBackupDisplay();
-
-            // If tournaments exist, set the current index to 0 so navigation works
             const tournaments = getTournaments();
-            if (tournaments.length > 0) {
-                window._currentTournamentIndex = 0;
-                updateNavButtons();
-            }
-
-            setTimeout(() => {
-                if (document.getElementById('player-stats').classList.contains('active')) {
-                    updatePlayerStatsTable();
-                }
-            }, 100);
+            if (tournaments.length) { window._currentTournamentIndex = 0; updateNavButtons(); }
+            if (document.getElementById('player-stats').classList.contains('active')) updatePlayerStatsTable();
         });
     </script>
 </body>
