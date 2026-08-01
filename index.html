@@ -430,7 +430,7 @@
         .match {
             display: flex;
             align-items: center;
-            justify-content: space-between;  /* spread names and score */
+            justify-content: space-between;
             flex: 1;
             gap: 12px;
             min-width: 0;
@@ -443,10 +443,10 @@
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            justify-content: center;   /* center the name text */
+            justify-content: center;
             gap: 5px;
             white-space: nowrap;
-            flex: 1;                   /* allow names to take space */
+            flex: 1;
             text-align: center;
         }
 
@@ -457,12 +457,12 @@
         }
 
         .player-name:first-child {
-            justify-content: flex-start; /* left align the first name */
+            justify-content: flex-start;
             flex: 1;
         }
 
         .player-name:last-child {
-            justify-content: flex-end;   /* right align the second name */
+            justify-content: flex-end;
             flex: 1;
         }
 
@@ -480,11 +480,11 @@
             align-items: center;
             gap: 6px;
             flex-shrink: 0;
-            margin: 0 16px;   /* spacing away from names */
+            margin: 0 16px;
         }
 
         .score-inputs input {
-            width: 48px;       /* Fixed width */
+            width: 48px;
             text-align: center;
             padding: 4px 2px;
             background: rgba(255, 255, 255, 0.04);
@@ -1722,7 +1722,7 @@
                 const tr = document.createElement('tr');
                 let rankClass = '';
                 if (index < 8) rankClass = 'top-eight';
-                else if (index < 16) rankClass = 'next-eight';
+                else if (index < 24) rankClass = 'next-eight';  // blue for 9–24
                 if (rankClass) tr.className = rankClass;
 
                 tr.innerHTML =
