@@ -402,7 +402,7 @@
             min-width: 50px;
         }
 
-        /* ─── Fixtures — single line, centered names ─── */
+        /* ─── Fixtures ─── */
         .fixtures-list {
             display: flex;
             flex-direction: column;
@@ -430,7 +430,7 @@
         .match {
             display: flex;
             align-items: center;
-            justify-content: center; /* Centers the group of items */
+            justify-content: center;
             flex: 1;
             gap: 8px;
             min-width: 0;
@@ -443,10 +443,10 @@
             font-size: 0.9rem;
             display: flex;
             align-items: center;
-            justify-content: center; /* Centers the text inside the expanded box */
+            justify-content: center;
             gap: 5px;
             white-space: nowrap;
-            flex: 1; /* Fills the left/right halves evenly */
+            flex: 1;
             text-align: center;
         }
 
@@ -457,12 +457,12 @@
         }
 
         .player-name:first-child {
-            justify-content: center; /* Ensure left name text centers */
+            justify-content: center;
             flex: 1;
         }
 
         .player-name:last-child {
-            justify-content: center; /* Ensure right name text centers */
+            justify-content: center;
             flex: 1;
         }
 
@@ -664,7 +664,7 @@
             background: rgba(255, 255, 255, 0.06);
         }
 
-        /* ─── Search ─── */
+        /* ─── Search & Delete All ─── */
         .tournaments-header {
             display: flex;
             align-items: center;
@@ -678,6 +678,13 @@
             margin-bottom: 0;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .search-wrapper {
             display: flex;
             align-items: center;
@@ -688,7 +695,6 @@
             transition: border 0.2s, box-shadow 0.2s;
             min-width: 180px;
             max-width: 300px;
-            flex: 1;
         }
 
         .search-wrapper:focus-within {
@@ -994,6 +1000,11 @@
                 min-width: unset;
             }
 
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
             .form-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -1184,10 +1195,13 @@
         <div class="tab-content" id="tournaments">
             <div class="tournaments-header">
                 <h2><i class="fas fa-list"></i> All Tournaments</h2>
-                <div class="search-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="tournament-search" placeholder="Search..." autocomplete="off" />
-                    <button class="search-clear" id="search-clear-btn" aria-label="Clear"><i class="fas fa-times-circle"></i></button>
+                <div class="header-actions">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="tournament-search" placeholder="Search..." autocomplete="off" />
+                        <button class="search-clear" id="search-clear-btn" aria-label="Clear"><i class="fas fa-times-circle"></i></button>
+                    </div>
+                    <button id="delete-all-btn" class="btn-danger btn-sm" style="white-space:nowrap;"><i class="fas fa-trash"></i> Delete All</button>
                 </div>
             </div>
             <div class="search-results-count" id="search-results-count"></div>
@@ -1598,6 +1612,23 @@
             document.getElementById('tournament-search').value = '';
             applySearchFilter();
             document.getElementById('tournament-search').focus();
+        });
+
+        // ─── Delete All Button Logic ───────────────────────────────────────
+        document.getElementById('delete-all-btn').addEventListener('click', function() {
+            const tournaments = getTournaments();
+            if (tournaments.length === 0) {
+                showToast('No tournaments to delete', 'info');
+                return;
+            }
+            if (confirm('Are you sure you want to delete ALL tournaments? This action cannot be undone.')) {
+                setTournaments([]);
+                updateTournamentDisplay();
+                if (document.getElementById('tournament-view').classList.contains('active')) {
+                    switchTab('tournaments');
+                }
+                showToast('All tournaments deleted', 'warning');
+            }
         });
 
         // ─── Update Display ───────────────────────────────────────────────
