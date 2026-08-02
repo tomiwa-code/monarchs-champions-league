@@ -387,19 +387,20 @@
             text-align: center;
         }
 
+        /* Very Compact Icon-Only Action Buttons */
         .tournament-actions {
             display: flex;
-            gap: 6px;
+            gap: 2px; /* Reduced from 4px */
             flex-wrap: wrap;
         }
 
         .tournament-actions button {
             flex: 1;
             justify-content: center;
-            padding: 6px 10px;
-            font-size: 0.75rem;
-            border-radius: 6px;
-            min-width: 50px;
+            padding: 4px 0; /* Reduced from 8px 0 */
+            font-size: 0.65rem; /* Reduced from 0.85rem */
+            border-radius: 4px; /* Reduced from 6px */
+            min-width: 24px; /* Reduced from 30px */
         }
 
         /* ─── Fixtures ─── */
@@ -1599,9 +1600,9 @@
                         ${t.opponents.map(opp => `<li><i class="fas fa-circle" style="font-size:0.3rem;color:#6c8cff;"></i> ${opp}</li>`).join('')}
                     </ul>
                     <div class="tournament-actions">
-                        <button class="view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
-                        <button class="edit-btn" data-id="${t.id}"><i class="fas fa-pen"></i> Edit</button>
-                        <button class="delete-btn btn-danger" data-id="${t.id}"><i class="fas fa-trash"></i></button>
+                        <button class="view-btn" data-id="${t.id}" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="edit-btn" data-id="${t.id}" title="Edit"><i class="fas fa-pen"></i></button>
+                        <button class="delete-btn btn-danger" data-id="${t.id}" title="Delete"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             `).join('');
