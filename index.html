@@ -43,12 +43,16 @@
             background: #4a4a5a;
         }
 
-        /* ─── Header ─── */
+        /* ─── Header (hidden in tournament view) ─── */
         header {
             text-align: center;
             padding: 28px 0 22px;
             margin-bottom: 28px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tournament-view-active header {
+            display: none;
         }
 
         header h1 {
@@ -535,7 +539,7 @@
             display: none;
         }
 
-        /* ─── League Table ─── */
+        /* ─── Table (only player row) ─── */
         .table-wrapper {
             overflow-x: auto;
             margin-top: 2px;
@@ -1219,9 +1223,9 @@
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" id="app-container">
 
-        <!-- Header -->
+        <!-- Header (hidden when tournament view is active) -->
         <header>
             <h1><i class="fas fa-trophy"></i> Tournament Manager</h1>
             <p class="subtitle">Create, track, and manage your tournaments</p>
@@ -1296,7 +1300,7 @@
         </div>
 
         <!-- ─── TOURNAMENT VIEW TAB ─── -->
-        <div class="tab-content" id="tournament-view">
+        <div class="tab-content" id="tournament-view" data-current-id="">
             <div class="view-nav-row">
                 <div class="view-nav-left">
                     <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back</button>
@@ -1308,18 +1312,23 @@
                 </div>
             </div>
 
-            <h2 id="tournament-view-title"><i class="fas fa-trophy"></i> Tournament</h2>
+            <!-- Tournament Title (just the player's name) -->
+            <h2>
+                <i class="fas fa-trophy" style="color: #6c8cff;"></i>
+                <span id="tournament-view-title">Samuel</span>
+            </h2>
 
+            <!-- Stats Row: Position, Points, Goal Diff (3 cards) -->
             <div class="stats" id="tournament-stats">
-                <div class="stat-card"><h4>Position</h4><div class="stat-value" id="current-position">—</div></div>
-                <div class="stat-card"><h4>Points</h4><div class="stat-value" id="current-points">0</div></div>
-                <div class="stat-card"><h4>Goal Diff</h4><div class="stat-value" id="current-gd">0</div></div>
+                <div class="stat-card"><h4>POSITION</h4><div class="stat-value" id="current-position">—</div></div>
+                <div class="stat-card"><h4>POINTS</h4><div class="stat-value" id="current-points">0</div></div>
+                <div class="stat-card"><h4>GOAL DIFF</h4><div class="stat-value" id="current-gd">0</div></div>
             </div>
 
             <h3><i class="fas fa-calendar"></i> Fixtures</h3>
             <div class="fixtures-list" id="tournament-fixtures"></div>
 
-            <h3><i class="fas fa-table"></i> League Table</h3>
+            <h3><i class="fas fa-table"></i> Table</h3>
             <div class="table-wrapper"><table id="tournament-table"></table></div>
         </div>
 
@@ -1396,6 +1405,14 @@
             if (targetContent) targetContent.classList.add('active');
             if (tabName === 'player-stats') updatePlayerStatsTable();
             if (tabName === 'tournaments') applySearchFilter();
+
+            // Toggle header visibility
+            const container = document.getElementById('app-container');
+            if (tabName === 'tournament-view') {
+                container.classList.add('tournament-view-active');
+            } else {
+                container.classList.remove('tournament-view-active');
+            }
         }
 
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1409,6 +1426,14 @@
 
         document.getElementById('back-to-tournaments').addEventListener('click', () => switchTab('tournaments'));
         document.getElementById('cancel-edit-btn').addEventListener('click', showCreateForm);
+
+        // ─── Helper: Ordinal Suffix ──────────────────────────────────────
+        function ordinalSuffix(n) {
+            if (n % 10 === 1 && n % 100 !== 11) return 'st';
+            if (n % 10 === 2 && n % 100 !== 12) return 'nd';
+            if (n % 10 === 3 && n % 100 !== 13) return 'rd';
+            return 'th';
+        }
 
         // ─── Data ──────────────────────────────────────────────────────────
         function getTournaments() { return JSON.parse(localStorage.getItem('tournaments')) || []; }
@@ -1574,6 +1599,31 @@
             if (ni !== window._currentTournamentIndex) navigateToTournamentByIndex(ni);
         });
 
+        // ─── Global Stats ──────────────────────────────────────────────────
+        function getGlobalStats() {
+            const tournaments = getTournaments();
+            const map = {};
+            tournaments.forEach(t => {
+                const p = t.table.find(team => team.isPlayer);
+                if (!p) return;
+                const n = p.name;
+                if (!map[n]) {
+                    map[n] = { name: n, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0 };
+                } else {
+                    map[n].tournaments += 1;
+                }
+                map[n].played += p.played;
+                map[n].won += p.won;
+                map[n].drawn += p.drawn;
+                map[n].lost += p.lost;
+                map[n].goalsFor += p.goalsFor;
+                map[n].goalsAgainst += p.goalsAgainst;
+                map[n].goalDifference += p.goalDifference;
+                map[n].points += p.points;
+            });
+            return Object.values(map).sort((a, b) => b.points - a.points || b.goalDifference - a.goalDifference);
+        }
+
         // ─── Display Tournament ────────────────────────────────────────────
         function displayTournament(tournamentId) {
             const tournaments = getTournaments();
@@ -1582,9 +1632,29 @@
             window._currentTournamentIndex = idx;
             const t = tournaments[idx];
 
-            document.getElementById('tournament-view-title').innerHTML =
-                `<i class="fas fa-trophy"></i> ${t.playerName}'s Tournament`;
-            document.getElementById('tournament-view-title').dataset.tournamentId = tournamentId;
+            // Store current id in view container
+            document.getElementById('tournament-view').dataset.currentId = tournamentId;
+
+            // Set the title (Remove the 's Tournament suffix)
+            document.getElementById('tournament-view-title').textContent = t.playerName;
+
+            // Update Global Position (Overall Player Stats)
+            const globalStats = getGlobalStats();
+            const globalPlayer = globalStats.find(p => p.name === t.playerName);
+            if (globalPlayer) {
+                const rank = globalStats.indexOf(globalPlayer) + 1;
+                document.getElementById('current-position').textContent = rank + ordinalSuffix(rank);
+            } else {
+                document.getElementById('current-position').textContent = '—';
+            }
+
+            // Update local Points and Goal Diff (From this specific tournament)
+            const localPlayer = t.table.find(team => team.isPlayer);
+            if (localPlayer) {
+                document.getElementById('current-points').textContent = localPlayer.points;
+                const gd = localPlayer.goalDifference;
+                document.getElementById('current-gd').textContent = (gd > 0 ? '+' : '') + gd;
+            }
 
             // Fixtures
             const container = document.getElementById('tournament-fixtures');
@@ -1621,12 +1691,23 @@
 
         function updateTableDisplay(t) {
             const table = document.getElementById('tournament-table');
+            // Filter only the player's row
+            const playerRow = t.table.filter(team => team.isPlayer);
+            if (playerRow.length === 0) {
+                table.innerHTML = `<thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
+                                  <tbody><tr><td colspan="11" style="text-align:center;padding:20px;color:#5a5a6e;">No player data</td></tr></tbody>`;
+                return;
+            }
+            const team = playerRow[0];
+            const formHtml = team.form.length === 0 ? 
+                Array(5).fill('<span class="form-indicator">—</span>').join('') :
+                team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('');
             table.innerHTML = `
                 <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
-                <tbody>${t.table.map(team => `
-                    <tr class="${team.isPlayer ? 'player-row' : ''}">
+                <tbody>
+                    <tr class="player-row">
                         <td>${team.position}</td>
-                        <td>${team.isPlayer ? '<i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>' : ''}${team.name}</td>
+                        <td><i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>${team.name}</td>
                         <td>${team.played}</td>
                         <td>${team.won}</td>
                         <td>${team.drawn}</td>
@@ -1635,19 +1716,10 @@
                         <td>${team.goalsAgainst}</td>
                         <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
                         <td>${team.points}</td>
-                        <td>${team.form.length === 0 ? Array(5).fill('<span class="form-indicator">—</span>').join('') : team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('')}</td>
+                        <td>${formHtml}</td>
                     </tr>
-                `).join('')}</tbody>
+                </tbody>
             `;
-            const player = t.table.find(t => t.isPlayer);
-            if (player) {
-                const suffix = n => { if (n % 10 === 1 && n % 100 !== 11) return 'st'; if (n % 10 === 2 && n % 100 !== 12)
-                        return 'nd'; if (n % 10 === 3 && n % 100 !== 13) return 'rd'; return 'th'; };
-                document.getElementById('current-position').textContent = player.position + suffix(player.position);
-                document.getElementById('current-points').textContent = player.points;
-                document.getElementById('current-gd').textContent = (player.goalDifference > 0 ? '+' : '') + player
-                    .goalDifference;
-            }
         }
 
         // ─── Search ────────────────────────────────────────────────────────
@@ -1729,7 +1801,7 @@
 
             const viewTab = document.getElementById('tournament-view');
             if (viewTab.classList.contains('active')) {
-                const currentId = document.getElementById('tournament-view-title').dataset.tournamentId || null;
+                const currentId = viewTab.dataset.currentId || null;
                 if (currentId) {
                     const exists = tournaments.some(t => t.id === currentId);
                     if (!exists && tournaments.length) navigateToTournamentByIndex(0);
@@ -1809,32 +1881,14 @@
 
         // ─── Player Stats ──────────────────────────────────────────────────
         function updatePlayerStatsTable() {
-            const tournaments = getTournaments();
+            const arr = getGlobalStats();
             const tbody = document.getElementById('player-stats-body');
             tbody.innerHTML = '';
-            if (!tournaments.length) {
+            if (!arr.length) {
                 tbody.innerHTML =
                     `<tr><td colspan="11" style="text-align:center;padding:40px;color:#5a5a6e;">No data yet</td></tr>`;
                 return;
             }
-            const map = {};
-            tournaments.forEach(t => {
-                const p = t.table.find(team => team.isPlayer);
-                if (!p) return;
-                const n = p.name;
-                if (!map[n]) map[n] = { name: n, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0,
-                    goalsAgainst: 0, goalDifference: 0, points: 0 };
-                else map[n].tournaments += 1;
-                map[n].played += p.played;
-                map[n].won += p.won;
-                map[n].drawn += p.drawn;
-                map[n].lost += p.lost;
-                map[n].goalsFor += p.goalsFor;
-                map[n].goalsAgainst += p.goalsAgainst;
-                map[n].goalDifference += p.goalDifference;
-                map[n].points += p.points;
-            });
-            const arr = Object.values(map).sort((a, b) => b.points - a.points);
             arr.forEach((p, index) => {
                 const tr = document.createElement('tr');
                 let rankClass = '';
