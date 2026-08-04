@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tournament Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
@@ -504,6 +504,7 @@
             margin: 0 4px;
         }
 
+        /* ─── Score inputs: numeric keyboard + no zoom ─── */
         .score-inputs input {
             width: 48px;
             text-align: center;
@@ -512,27 +513,31 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 6px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 16px;
+            /* 👈 prevents iOS zoom */
             font-weight: 450;
             min-height: 34px;
             font-family: inherit;
             transition: border 0.2s, box-shadow 0.2s;
             flex-shrink: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            -moz-appearance: textfield;
+            touch-action: manipulation;
+            /* prevents double-tap zoom */;
+        }
+
+        .score-inputs input::-webkit-outer-spin-button,
+        .score-inputs input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .score-inputs input:focus {
             border-color: #6c8cff;
             box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.08);
             background: rgba(255, 255, 255, 0.06);
-        }
-
-        .score-inputs input::-webkit-inner-spin-button,
-        .score-inputs input::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .score-inputs input[type="number"] {
-            -moz-appearance: textfield;
+            outline: none;
         }
 
         .fixture .date {
@@ -1017,7 +1022,8 @@
             .score-inputs input {
                 width: 40px;
                 min-height: 28px;
-                font-size: 0.8rem;
+                font-size: 16px;
+                /* keep 16px on mobile to prevent zoom */
                 padding: 2px 0;
             }
 
@@ -1163,7 +1169,8 @@
             .score-inputs input {
                 width: 32px;
                 min-height: 24px;
-                font-size: 0.7rem;
+                font-size: 16px;
+                /* keep 16px on mobile to prevent zoom */
                 padding: 1px 0;
                 border-radius: 4px;
             }
@@ -1546,10 +1553,23 @@
             const homeInput = document.querySelector(`.score-home[data-index="${fixtureIndex}"]`);
             const awayInput = document.querySelector(`.score-away[data-index="${fixtureIndex}"]`);
             if (!homeInput || !awayInput) return;
-            const h = homeInput.value.trim();
-            const a = awayInput.value.trim();
-            t.fixtures[fixtureIndex].homeScore = h === "" ? "" : parseInt(h) || 0;
-            t.fixtures[fixtureIndex].awayScore = a === "" ? "" : parseInt(a) || 0;
+            // Parse values: allow empty string for "not yet set"
+            const rawHome = homeInput.value.trim();
+            const rawAway = awayInput.value.trim();
+            // Only store numeric values if they are valid numbers, otherwise store empty string
+            const hVal = rawHome === '' ? '' : (parseInt(rawHome) >= 0 ? parseInt(rawHome) : '');
+            const aVal = rawAway === '' ? '' : (parseInt(rawAway) >= 0 ? parseInt(rawAway) : '');
+            // If invalid number was entered, revert to previous value
+            if (rawHome !== '' && hVal === '') {
+                homeInput.value = t.fixtures[fixtureIndex].homeScore;
+                return;
+            }
+            if (rawAway !== '' && aVal === '') {
+                awayInput.value = t.fixtures[fixtureIndex].awayScore;
+                return;
+            }
+            t.fixtures[fixtureIndex].homeScore = hVal !== '' ? hVal : '';
+            t.fixtures[fixtureIndex].awayScore = aVal !== '' ? aVal : '';
             t.table = calculateTable(t);
             setTournaments(tournaments);
             updateTableDisplay(t);
@@ -1663,21 +1683,38 @@
                 const div = document.createElement('div');
                 div.className = 'fixture';
                 div.innerHTML = `
-                    <div class="match">
-                        <span class="player-name"><i class="fas fa-user"></i> ${f.home}</span>
-                        <div class="score-inputs">
-                            <input type="number" min="0" value="${f.homeScore}" class="score-home" data-index="${i}" />
-                            <span class="versus">VS</span>
-                            <input type="number" min="0" value="${f.awayScore}" class="score-away" data-index="${i}" />
+                        <div class="match">
+                            <span class="player-name"><i class="fas fa-user"></i> ${f.home}</span>
+                            <div class="score-inputs">
+                                <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                       value="${f.homeScore}"
+                                       class="score-home" data-index="${i}"
+                                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                                <span class="versus">VS</span>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*"
+                                       value="${f.awayScore}"
+                                       class="score-away" data-index="${i}"
+                                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                            </div>
+                            <span class="player-name">${f.away}</span>
                         </div>
-                        <span class="player-name">${f.away}</span>
-                    </div>
-                `;
+                    `;
                 container.appendChild(div);
             });
 
             document.querySelectorAll('.score-home, .score-away').forEach(inp => {
                 inp.addEventListener('input', function() {
+                    // Allow only digits
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
+                });
+                // Also handle blur to clean up
+                inp.addEventListener('blur', function() {
+                    if (this.value === '') return;
+                    const num = parseInt(this.value);
+                    if (isNaN(num) || num < 0) {
+                        this.value = '';
+                    }
                     updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
                 });
             });
@@ -1695,31 +1732,31 @@
             const playerRow = t.table.filter(team => team.isPlayer);
             if (playerRow.length === 0) {
                 table.innerHTML = `<thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
-                                  <tbody><tr><td colspan="11" style="text-align:center;padding:20px;color:#5a5a6e;">No player data</td></tr></tbody>`;
+                                      <tbody><tr><td colspan="11" style="text-align:center;padding:20px;color:#5a5a6e;">No player data</td></tr></tbody>`;
                 return;
             }
             const team = playerRow[0];
-            const formHtml = team.form.length === 0 ? 
+            const formHtml = team.form.length === 0 ?
                 Array(5).fill('<span class="form-indicator">—</span>').join('') :
                 team.form.map(r => `<span class="form-indicator ${r === 'W' ? 'form-win' : r === 'D' ? 'form-draw' : 'form-loss'}">${r}</span>`).join('');
             table.innerHTML = `
-                <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
-                <tbody>
-                    <tr class="player-row">
-                        <td>${team.position}</td>
-                        <td><i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>${team.name}</td>
-                        <td>${team.played}</td>
-                        <td>${team.won}</td>
-                        <td>${team.drawn}</td>
-                        <td>${team.lost}</td>
-                        <td>${team.goalsFor}</td>
-                        <td>${team.goalsAgainst}</td>
-                        <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
-                        <td>${team.points}</td>
-                        <td>${formHtml}</td>
-                    </tr>
-                </tbody>
-            `;
+                    <thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
+                    <tbody>
+                        <tr class="player-row">
+                            <td>${team.position}</td>
+                            <td><i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>${team.name}</td>
+                            <td>${team.played}</td>
+                            <td>${team.won}</td>
+                            <td>${team.drawn}</td>
+                            <td>${team.lost}</td>
+                            <td>${team.goalsFor}</td>
+                            <td>${team.goalsAgainst}</td>
+                            <td>${team.goalDifference > 0 ? '+' : ''}${team.goalDifference}</td>
+                            <td>${team.points}</td>
+                            <td>${formHtml}</td>
+                        </tr>
+                    </tbody>
+                `;
         }
 
         // ─── Search ────────────────────────────────────────────────────────
@@ -1751,18 +1788,18 @@
             }
 
             list.innerHTML = filtered.map(t => `
-                <div class="tournament-card" data-id="${t.id}">
-                    <h3><i class="fas fa-trophy"></i> ${t.playerName}</h3>
-                    <ul>
-                        ${t.opponents.map(opp => `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${opp}</li>`).join('')}
-                    </ul>
-                    <div class="tournament-actions">
-                        <button class="view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
-                        <button class="edit-btn" data-id="${t.id}"><i class="fas fa-pen"></i> Edit</button>
-                        <button class="delete-btn btn-danger" data-id="${t.id}"><i class="fas fa-trash"></i></button>
+                    <div class="tournament-card" data-id="${t.id}">
+                        <h3><i class="fas fa-trophy"></i> ${t.playerName}</h3>
+                        <ul>
+                            ${t.opponents.map(opp => `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${opp}</li>`).join('')}
+                        </ul>
+                        <div class="tournament-actions">
+                            <button class="view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
+                            <button class="edit-btn" data-id="${t.id}"><i class="fas fa-pen"></i> Edit</button>
+                            <button class="delete-btn btn-danger" data-id="${t.id}"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
         }
 
         document.getElementById('tournament-search').addEventListener('input', applySearchFilter);
@@ -1794,7 +1831,7 @@
             const tournaments = getTournaments();
             document.getElementById('tournament-count').textContent = tournaments.length;
             document.getElementById('active-players').textContent = tournaments.reduce((s, t) => s + 1 + t.opponents.length,
-            0);
+                0);
             document.getElementById('matches-played').textContent = tournaments.reduce((s, t) => s + t.fixtures.filter(f =>
                 f.homeScore !== "" && f.awayScore !== "").length, 0);
             applySearchFilter();
