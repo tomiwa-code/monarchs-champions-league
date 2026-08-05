@@ -27,7 +27,6 @@
             padding: 24px 20px 60px;
         }
 
-        /* ─── Scrollbar ─── */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -43,7 +42,6 @@
             background: #4a4a5a;
         }
 
-        /* ─── Header (hidden in tournament view) ─── */
         header {
             text-align: center;
             padding: 28px 0 22px;
@@ -78,7 +76,6 @@
             font-weight: 400;
         }
 
-        /* ─── Tabs ─── */
         .tabs {
             display: flex;
             gap: 4px;
@@ -121,7 +118,6 @@
             font-size: 0.85rem;
         }
 
-        /* ─── Tab Content ─── */
         .tab-content {
             display: none;
             animation: fade 0.2s ease;
@@ -142,7 +138,6 @@
             }
         }
 
-        /* ─── Typography ─── */
         h2 {
             font-size: 1.4rem;
             font-weight: 500;
@@ -176,7 +171,6 @@
             font-size: 0.9rem;
         }
 
-        /* ─── Stats Row ─── */
         .stats {
             display: flex;
             gap: 12px;
@@ -215,7 +209,6 @@
             letter-spacing: -0.2px;
         }
 
-        /* ─── Forms ─── */
         .form-group {
             margin-bottom: 18px;
         }
@@ -332,7 +325,6 @@
             border-radius: 6px;
         }
 
-        /* ─── Tournament Cards (4 per row, compact) ─── */
         .tournament-list {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -423,7 +415,6 @@
             font-size: 0.6rem;
         }
 
-        /* ─── Fixtures ─── */
         .fixtures-list {
             display: flex;
             flex-direction: column;
@@ -504,7 +495,6 @@
             margin: 0 4px;
         }
 
-        /* ─── Score inputs: numeric keyboard + no zoom ─── */
         .score-inputs input {
             width: 48px;
             text-align: center;
@@ -514,7 +504,6 @@
             border-radius: 6px;
             color: #fff;
             font-size: 16px;
-            /* 👈 prevents iOS zoom */
             font-weight: 450;
             min-height: 34px;
             font-family: inherit;
@@ -524,7 +513,6 @@
             appearance: none;
             -moz-appearance: textfield;
             touch-action: manipulation;
-            /* prevents double-tap zoom */;
         }
 
         .score-inputs input::-webkit-outer-spin-button,
@@ -544,7 +532,6 @@
             display: none;
         }
 
-        /* ─── Table (only player row) ─── */
         .table-wrapper {
             overflow-x: auto;
             margin-top: 2px;
@@ -616,7 +603,6 @@
             color: #fff;
         }
 
-        /* ─── Player Stats Table Highlighting ─── */
         .top-eight {
             background-color: rgba(60, 180, 100, 0.15) !important;
         }
@@ -631,7 +617,6 @@
             background-color: rgba(60, 140, 220, 0.15) !important;
         }
 
-        /* ─── View Navigation ─── */
         .view-nav-row {
             display: flex;
             align-items: center;
@@ -690,7 +675,6 @@
             background: rgba(255, 255, 255, 0.06);
         }
 
-        /* ─── Search & Delete All ─── */
         .tournaments-header {
             display: flex;
             align-items: center;
@@ -772,7 +756,6 @@
             margin-bottom: 10px;
         }
 
-        /* ─── Empty State ─── */
         .empty-state {
             text-align: center;
             padding: 50px 20px;
@@ -800,7 +783,6 @@
             color: #5a5a6e;
         }
 
-        /* ─── Backups (simplified) ─── */
         .backup-section {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.04);
@@ -854,7 +836,6 @@
             color: #6c8cff;
         }
 
-        /* ─── Edit / Create toggle ─── */
         .edit-form {
             display: none;
         }
@@ -884,7 +865,6 @@
             margin-bottom: 18px;
         }
 
-        /* ─── Toast ─── */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -930,9 +910,6 @@
             font-size: 1rem;
         }
 
-        /* ─── Responsive ─── */
-
-        /* 3 columns on tablets */
         @media (max-width: 1024px) {
             .tournament-list {
                 grid-template-columns: repeat(3, 1fr);
@@ -940,132 +917,104 @@
             }
         }
 
-        /* 2 columns on smaller tablets */
         @media (max-width: 768px) {
             .container {
                 padding: 16px 12px 40px;
             }
-
             header h1 {
                 font-size: 1.5rem;
             }
-
             .tabs {
                 gap: 3px;
                 padding: 3px;
             }
-
             .tab {
                 padding: 8px 12px;
                 font-size: 0.75rem;
                 min-width: 60px;
             }
-
             .tab i {
                 font-size: 0.75rem;
             }
-
             .stats {
                 gap: 8px;
             }
-
             .stat-card {
                 padding: 12px 16px;
                 min-width: 70px;
             }
-
             .stat-value {
                 font-size: 1.2rem;
             }
-
             .tournament-list {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-
             .tournament-card {
                 padding: 10px 12px 10px;
             }
-
             .tournament-card h3 {
                 font-size: 0.8rem;
             }
-
             .tournament-card ul li {
                 font-size: 0.65rem;
             }
-
             .tournament-actions button {
                 font-size: 0.55rem;
                 padding: 3px 5px;
                 min-width: 30px;
             }
-
             .fixture {
                 padding: 8px 12px;
                 overflow-x: auto;
             }
-
             .match {
                 gap: 8px;
             }
-
             .player-name {
                 font-size: 0.8rem;
                 flex: 1;
             }
-
             .score-inputs {
                 margin: 0 8px;
             }
-
             .score-inputs input {
                 width: 40px;
                 min-height: 28px;
                 font-size: 16px;
-                /* keep 16px on mobile to prevent zoom */
                 padding: 2px 0;
             }
-
             .versus {
                 font-size: 0.6rem;
             }
-
             .view-nav-row {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .view-nav-left,
             .view-nav-right {
                 justify-content: center;
             }
-
             .tournaments-header {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 10px;
             }
-
             .tournaments-header h2 {
                 text-align: center;
             }
-
             .search-wrapper {
                 max-width: 100%;
                 min-width: unset;
             }
-
             .header-actions {
                 width: 100%;
                 justify-content: center;
             }
-
             .form-header {
                 flex-direction: column;
                 align-items: stretch;
             }
-
             .toast {
                 bottom: 16px;
                 right: 16px;
@@ -1074,13 +1023,11 @@
                 padding: 10px 16px;
                 font-size: 0.85rem;
             }
-
             th,
             td {
                 padding: 7px 8px;
                 font-size: 0.75rem;
             }
-
             .form-indicator {
                 width: 20px;
                 height: 20px;
@@ -1088,138 +1035,109 @@
             }
         }
 
-        /* 1 column on phones */
         @media (max-width: 480px) {
             .container {
                 padding: 10px 8px 32px;
             }
-
             header {
                 padding: 18px 0 14px;
             }
-
             header h1 {
                 font-size: 1.2rem;
             }
-
             .tab {
                 padding: 6px 8px;
                 font-size: 0.65rem;
                 min-width: 44px;
             }
-
             .tab i {
                 font-size: 0.65rem;
             }
-
             .stat-card {
                 padding: 10px 12px;
                 min-width: 60px;
             }
-
             .stat-value {
                 font-size: 1rem;
             }
-
             .tournament-list {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
-
             .tournament-card {
                 padding: 12px 14px 12px;
             }
-
             .tournament-card h3 {
                 font-size: 0.85rem;
             }
-
             .tournament-card ul li {
                 font-size: 0.75rem;
             }
-
             .tournament-actions button {
                 font-size: 0.65rem;
                 padding: 4px 8px;
                 min-width: 40px;
             }
-
             .fixture {
                 padding: 6px 8px;
             }
-
             .match {
                 gap: 4px;
             }
-
             .player-name {
                 font-size: 0.7rem;
                 gap: 3px;
                 flex: 1;
             }
-
             .player-name i {
                 font-size: 0.55rem;
             }
-
             .score-inputs {
                 margin: 0 4px;
             }
-
             .score-inputs input {
                 width: 32px;
                 min-height: 24px;
                 font-size: 16px;
-                /* keep 16px on mobile to prevent zoom */
                 padding: 1px 0;
                 border-radius: 4px;
             }
-
             .versus {
                 font-size: 0.5rem;
                 padding: 0 2px;
             }
-
             .backup-section,
             .upload-section {
                 padding: 14px 16px;
             }
-
             th,
             td {
                 padding: 5px 6px;
                 font-size: 0.65rem;
             }
-
             .form-indicator {
                 width: 16px;
                 height: 16px;
                 font-size: 0.45rem;
             }
-
             h2 {
                 font-size: 1.1rem;
             }
-
             h3 {
                 font-size: 0.85rem;
             }
         }
 
-        /* Extra small: keep 1 column but tighter */
         @media (max-width: 360px) {
             .tournament-card {
                 padding: 8px 10px 10px;
             }
-
             .tournament-card h3 {
                 font-size: 0.75rem;
             }
-
             .tournament-card ul li {
                 font-size: 0.65rem;
             }
-
             .tournament-actions button {
                 font-size: 0.55rem;
                 padding: 3px 5px;
@@ -1232,13 +1150,11 @@
 
     <div class="container" id="app-container">
 
-        <!-- Header (hidden when tournament view is active) -->
         <header>
             <h1><i class="fas fa-trophy"></i> Tournament Manager</h1>
             <p class="subtitle">Create, track, and manage your tournaments</p>
         </header>
 
-        <!-- Tabs -->
         <div class="tabs">
             <div class="tab active" data-tab="create"><i class="fas fa-plus"></i> Create</div>
             <div class="tab" data-tab="tournaments"><i class="fas fa-list"></i> All</div>
@@ -1319,13 +1235,11 @@
                 </div>
             </div>
 
-            <!-- Tournament Title (just the player's name) -->
             <h2>
                 <i class="fas fa-trophy" style="color: #6c8cff;"></i>
                 <span id="tournament-view-title">Samuel</span>
             </h2>
 
-            <!-- Stats Row: Position, Points, Goal Diff (3 cards) -->
             <div class="stats" id="tournament-stats">
                 <div class="stat-card"><h4>POSITION</h4><div class="stat-value" id="current-position">—</div></div>
                 <div class="stat-card"><h4>POINTS</h4><div class="stat-value" id="current-points">0</div></div>
@@ -1351,18 +1265,16 @@
             </div>
         </div>
 
-        <!-- ─── BACKUPS TAB (simplified: download & upload) ─── -->
+        <!-- ─── BACKUPS TAB ─── -->
         <div class="tab-content" id="backups">
             <h2><i class="fas fa-database"></i> Backups</h2>
 
-            <!-- Download -->
             <div class="backup-section">
                 <h3><i class="fas fa-download"></i> Download Current Data</h3>
                 <p style="color:#5a5a6e;font-size:0.85rem;margin-bottom:12px;">Export all tournaments as a JSON file.</p>
                 <button id="download-backup-btn"><i class="fas fa-file-export"></i> Download Backup</button>
             </div>
 
-            <!-- Upload / Restore -->
             <div class="upload-section">
                 <h3><i class="fas fa-upload"></i> Restore from File</h3>
                 <p style="color:#5a5a6e;font-size:0.85rem;margin-bottom:10px;">Upload a previously downloaded backup .json file to restore all tournaments.</p>
@@ -1377,7 +1289,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast" id="toast"><i class="fas fa-info-circle"></i> <span id="toast-message">Message</span></div>
 
     <script>
@@ -1413,7 +1324,6 @@
             if (tabName === 'player-stats') updatePlayerStatsTable();
             if (tabName === 'tournaments') applySearchFilter();
 
-            // Toggle header visibility
             const container = document.getElementById('app-container');
             if (tabName === 'tournament-view') {
                 container.classList.add('tournament-view-active');
@@ -1472,18 +1382,61 @@
             updateTournamentDisplay();
         }
 
+        // ─── FIXED: updateTournament preserves scores ─────────────────────
         function updateTournament(id, playerName, opponents) {
             const tournaments = getTournaments();
             const idx = tournaments.findIndex(t => t.id === id);
             if (idx === -1) return showToast('Tournament not found', 'error');
+
+            const old = tournaments[idx];
+
+            // Build a map of opponent → scores from old fixtures
+            const scoreMap = {};
+            old.fixtures.forEach(f => {
+                // f.home is the player, f.away is the opponent
+                scoreMap[f.away] = {
+                    homeScore: f.homeScore,
+                    awayScore: f.awayScore
+                };
+            });
+
+            // Update basic info
             tournaments[idx].playerName = playerName;
             tournaments[idx].opponents = opponents;
-            tournaments[idx].fixtures = opponents.map((opp) => ({ home: playerName, away: opp, homeScore: "",
-                awayScore: "" }));
-            tournaments[idx].table = [{ name: playerName, isPlayer: true, position: 1, played: 0, won: 0, drawn: 0,
-                    lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] }]
-                .concat(opponents.map((opp) => ({ name: opp, isPlayer: false, position: 0, played: 0, won: 0, drawn: 0,
-                    lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] })));
+
+            // Rebuild fixtures, preserving scores for opponents that still exist
+            tournaments[idx].fixtures = opponents.map((opp) => {
+                const oldScore = scoreMap[opp] || { homeScore: "", awayScore: "" };
+                return {
+                    home: playerName,
+                    away: opp,
+                    homeScore: oldScore.homeScore,
+                    awayScore: oldScore.awayScore
+                };
+            });
+
+            // Rebuild table with fresh stats
+            tournaments[idx].table = [
+                { name: playerName, isPlayer: true, position: 1, played: 0, won: 0, drawn: 0, lost: 0,
+                    goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] }
+            ].concat(opponents.map((opp) => ({
+                name: opp,
+                isPlayer: false,
+                position: 0,
+                played: 0,
+                won: 0,
+                drawn: 0,
+                lost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0,
+                goalDifference: 0,
+                points: 0,
+                form: []
+            })));
+
+            // Recalculate table from fixtures
+            calculateTable(tournaments[idx]);
+
             setTournaments(tournaments);
         }
 
@@ -1553,13 +1506,10 @@
             const homeInput = document.querySelector(`.score-home[data-index="${fixtureIndex}"]`);
             const awayInput = document.querySelector(`.score-away[data-index="${fixtureIndex}"]`);
             if (!homeInput || !awayInput) return;
-            // Parse values: allow empty string for "not yet set"
             const rawHome = homeInput.value.trim();
             const rawAway = awayInput.value.trim();
-            // Only store numeric values if they are valid numbers, otherwise store empty string
             const hVal = rawHome === '' ? '' : (parseInt(rawHome) >= 0 ? parseInt(rawHome) : '');
             const aVal = rawAway === '' ? '' : (parseInt(rawAway) >= 0 ? parseInt(rawAway) : '');
-            // If invalid number was entered, revert to previous value
             if (rawHome !== '' && hVal === '') {
                 homeInput.value = t.fixtures[fixtureIndex].homeScore;
                 return;
@@ -1628,7 +1578,8 @@
                 if (!p) return;
                 const n = p.name;
                 if (!map[n]) {
-                    map[n] = { name: n, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0 };
+                    map[n] = { name: n, tournaments: 1, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0,
+                        goalsAgainst: 0, goalDifference: 0, points: 0 };
                 } else {
                     map[n].tournaments += 1;
                 }
@@ -1652,13 +1603,9 @@
             window._currentTournamentIndex = idx;
             const t = tournaments[idx];
 
-            // Store current id in view container
             document.getElementById('tournament-view').dataset.currentId = tournamentId;
-
-            // Set the title (Remove the 's Tournament suffix)
             document.getElementById('tournament-view-title').textContent = t.playerName;
 
-            // Update Global Position (Overall Player Stats)
             const globalStats = getGlobalStats();
             const globalPlayer = globalStats.find(p => p.name === t.playerName);
             if (globalPlayer) {
@@ -1668,7 +1615,6 @@
                 document.getElementById('current-position').textContent = '—';
             }
 
-            // Update local Points and Goal Diff (From this specific tournament)
             const localPlayer = t.table.find(team => team.isPlayer);
             if (localPlayer) {
                 document.getElementById('current-points').textContent = localPlayer.points;
@@ -1676,7 +1622,6 @@
                 document.getElementById('current-gd').textContent = (gd > 0 ? '+' : '') + gd;
             }
 
-            // Fixtures
             const container = document.getElementById('tournament-fixtures');
             container.innerHTML = '';
             t.fixtures.forEach((f, i) => {
@@ -1704,11 +1649,9 @@
 
             document.querySelectorAll('.score-home, .score-away').forEach(inp => {
                 inp.addEventListener('input', function() {
-                    // Allow only digits
                     this.value = this.value.replace(/[^0-9]/g, '');
                     updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
                 });
-                // Also handle blur to clean up
                 inp.addEventListener('blur', function() {
                     if (this.value === '') return;
                     const num = parseInt(this.value);
@@ -1728,7 +1671,6 @@
 
         function updateTableDisplay(t) {
             const table = document.getElementById('tournament-table');
-            // Filter only the player's row
             const playerRow = t.table.filter(team => team.isPlayer);
             if (playerRow.length === 0) {
                 table.innerHTML = `<thead><tr><th>Pos</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Form</th></tr></thead>
@@ -1809,7 +1751,7 @@
             document.getElementById('tournament-search').focus();
         });
 
-        // ─── Delete All Button Logic ───────────────────────────────────────
+        // ─── Delete All ────────────────────────────────────────────────────
         document.getElementById('delete-all-btn').addEventListener('click', function() {
             const tournaments = getTournaments();
             if (tournaments.length === 0) {
@@ -1848,7 +1790,7 @@
             }
         }
 
-        // ─── Event Delegation for Tournament Actions ──────────────────────
+        // ─── Event Delegation ─────────────────────────────────────────────
         document.getElementById('tournaments-list').addEventListener('click', function(e) {
             const target = e.target.closest('button');
             if (!target) return;
@@ -1939,7 +1881,7 @@
             });
         }
 
-        // ─── Backup: Download & Upload (simplified) ────────────────────────
+        // ─── Backup ────────────────────────────────────────────────────────
         function downloadBackup() {
             const data = getTournaments();
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
