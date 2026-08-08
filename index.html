@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Tournament Manager</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Supabase client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ─── Reset & Base ─── */
         * {
@@ -229,6 +231,7 @@
 
         input[type="text"],
         input[type="number"],
+        input[type="password"],
         textarea {
             width: 100%;
             padding: 10px 14px;
@@ -910,6 +913,21 @@
             font-size: 1rem;
         }
 
+        /* Cloud sync section */
+        .cloud-section {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+        }
+
+        .cloud-section .form-group {
+            margin-bottom: 0;
+        }
+
+        .cloud-section input {
+            margin-bottom: 0;
+        }
+
         @media (max-width: 1024px) {
             .tournament-list {
                 grid-template-columns: repeat(3, 1fr);
@@ -1032,6 +1050,9 @@
                 width: 20px;
                 height: 20px;
                 font-size: 0.5rem;
+            }
+            .cloud-section .form-group {
+                min-width: 100%;
             }
         }
 
@@ -1286,6 +1307,41 @@
                 </div>
                 <button id="upload-backup-btn"><i class="fas fa-upload"></i> Restore</button>
             </div>
+
+            <!-- ─── CLOUD SYNC (SUPABASE) ─── -->
+            <div class="cloud-section">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Cloud Sync (Supabase)</h3>
+                <p style="color:#5a5a6e;font-size:0.85rem;margin-bottom:12px;">
+                    Upload your local data to the cloud (requires username + access code) or load data from a specific user.
+                </p>
+
+                <!-- Upload form -->
+                <div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; min-width: 140px; margin-bottom: 0;">
+                            <label><i class="fas fa-user"></i> Username</label>
+                            <input type="text" id="upload-username" placeholder="Your username" style="width:100%;" />
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 140px; margin-bottom: 0;">
+                            <label><i class="fas fa-key"></i> Access Code</label>
+                            <input type="password" id="upload-accesscode" placeholder="Access code" style="width:100%;" />
+                        </div>
+                        <button id="upload-cloud-btn" style="flex-shrink: 0;"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+                    </div>
+                </div>
+
+                <!-- Load form -->
+                <div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: 10px;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;">
+                        <div class="form-group" style="flex: 1; min-width: 140px; margin-bottom: 0;">
+                            <label><i class="fas fa-user"></i> Username to load</label>
+                            <input type="text" id="load-username" placeholder="Enter username" style="width:100%;" />
+                        </div>
+                        <button id="load-cloud-btn" style="flex-shrink: 0;"><i class="fas fa-cloud-download-alt"></i> Load</button>
+                    </div>
+                </div>
+            </div>
+            <!-- ─── END CLOUD SYNC ─── -->
         </div>
     </div>
 
@@ -1917,6 +1973,112 @@
                 }
             };
             reader.readAsText(file);
+        });
+
+        // ─── Supabase Cloud Sync ──────────────────────────────────────────
+        // Supabase setup – rename variable to avoid duplicate declaration
+        const SUPABASE_URL = 'https://hbvpnslzoulogjivoipv.supabase.co';   // <-- Replace with your Supabase URL
+        const SUPABASE_ANON_KEY = 'sb_publishable_UTf_89tttlvxQ0N4JAqQaw_iXl7ocpm'; // <-- Replace with your anon key
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ─── Upload to Cloud ──────────────────────────────────────────────
+        async function uploadTournaments(username, accessCode) {
+            try {
+                // 1. Verify user credentials
+                const { data: user, error: userError } = await supabaseClient
+                    .from('users')
+                    .select('username')
+                    .eq('username', username)
+                    .eq('access_code', accessCode)
+                    .maybeSingle();
+
+                if (userError) throw new Error('Error verifying user: ' + userError.message);
+                if (!user) throw new Error('Invalid username or access code.');
+
+                // 2. Get local tournaments
+                const tournaments = getTournaments();
+                if (tournaments.length === 0) throw new Error('No tournaments to upload.');
+
+                // 3. Upsert each tournament (replace existing ones with same id)
+                const upsertPromises = tournaments.map(t => {
+                    const { id, playerName, opponents, created, fixtures, table } = t;
+                    const payload = {
+                        id,
+                        username,
+                        data: { playerName, opponents, created, fixtures, table }
+                    };
+                    return supabaseClient.from('tournaments').upsert(payload, { onConflict: 'id' });
+                });
+
+                const results = await Promise.all(upsertPromises);
+                const errors = results.filter(r => r.error);
+                if (errors.length) {
+                    throw new Error('Some tournaments failed to upload: ' + errors.map(e => e.error.message).join('; '));
+                }
+
+                showToast('All tournaments uploaded successfully!', 'success');
+            } catch (err) {
+                showToast(err.message, 'error');
+                console.error(err);
+            }
+        }
+
+        // ─── Load from Cloud ───────────────────────────────────────────────
+        async function loadTournaments(username) {
+            try {
+                // 1. Fetch all tournaments for this username
+                const { data, error } = await supabaseClient
+                    .from('tournaments')
+                    .select('id, data')
+                    .eq('username', username);
+
+                if (error) throw new Error('Error loading tournaments: ' + error.message);
+                if (!data || data.length === 0) throw new Error('No tournaments found for this user.');
+
+                // 2. Reconstruct the tournament objects
+                const tournaments = data.map(row => {
+                    const d = row.data;
+                    return {
+                        id: row.id,
+                        playerName: d.playerName,
+                        opponents: d.opponents,
+                        created: d.created,
+                        fixtures: d.fixtures,
+                        table: d.table
+                    };
+                });
+
+                // 3. Replace localStorage
+                localStorage.setItem('tournaments', JSON.stringify(tournaments));
+
+                // 4. Refresh UI
+                updateTournamentDisplay();
+
+                showToast(`Loaded ${tournaments.length} tournament(s) for ${username}`, 'success');
+            } catch (err) {
+                showToast(err.message, 'error');
+                console.error(err);
+            }
+        }
+
+        // ─── Cloud Upload / Load Event Listeners ──────────────────────────
+        document.getElementById('upload-cloud-btn').addEventListener('click', function() {
+            const username = document.getElementById('upload-username').value.trim();
+            const accessCode = document.getElementById('upload-accesscode').value.trim();
+            if (!username || !accessCode) {
+                showToast('Please enter both username and access code.', 'error');
+                return;
+            }
+            uploadTournaments(username, accessCode);
+        });
+
+        document.getElementById('load-cloud-btn').addEventListener('click', function() {
+            const username = document.getElementById('load-username').value.trim();
+            if (!username) {
+                showToast('Please enter a username to load.', 'error');
+                return;
+            }
+            loadTournaments(username);
         });
 
         // ─── Init ──────────────────────────────────────────────────────────
