@@ -1328,6 +1328,9 @@
                         </div>
                         <button id="upload-cloud-btn" style="flex-shrink: 0;"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
                     </div>
+                    <p style="color:#5a5a6e;font-size:0.75rem;margin:10px 0 0 0;">
+                        Uploading replaces your entire cloud dataset for this user — tournaments you deleted locally will also be removed from the cloud.
+                    </p>
                 </div>
 
                 <!-- Load form -->
@@ -1408,6 +1411,15 @@
             return 'th';
         }
 
+        // ─── Helper: Collision-safe ID ───────────────────────────────────
+        function generateTournamentId() {
+            if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+                return 'tournament_' + window.crypto.randomUUID();
+            }
+            // Fallback for older browsers
+            return 'tournament_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+        }
+
         // ─── Data ──────────────────────────────────────────────────────────
         function getTournaments() { return JSON.parse(localStorage.getItem('tournaments')) || []; }
 
@@ -1415,7 +1427,7 @@
 
         function saveTournament(playerName, opponents) {
             const tournaments = getTournaments();
-            const id = 'tournament_' + Date.now();
+            const id = generateTournamentId();
             const t = {
                 id,
                 playerName,
@@ -1438,7 +1450,7 @@
             updateTournamentDisplay();
         }
 
-        // ─── FIXED: updateTournament preserves scores ─────────────────────
+        // ─── Update tournament (preserves scores) ─────────────────────────
         function updateTournament(id, playerName, opponents) {
             const tournaments = getTournaments();
             const idx = tournaments.findIndex(t => t.id === id);
@@ -1976,12 +1988,14 @@
         });
 
         // ─── Supabase Cloud Sync ──────────────────────────────────────────
-        // Supabase setup – rename variable to avoid duplicate declaration
         const SUPABASE_URL = 'https://hbvpnslzoulogjivoipv.supabase.co';   // <-- Replace with your Supabase URL
         const SUPABASE_ANON_KEY = 'sb_publishable_UTf_89tttlvxQ0N4JAqQaw_iXl7ocpm'; // <-- Replace with your anon key
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ─── Upload to Cloud ──────────────────────────────────────────────
+        // ─── Upload to Cloud (REPLACE semantics) ──────────────────────────
+        // 1. Verify credentials
+        // 2. Upsert every local tournament
+        // 3. Delete any cloud row for this user that no longer exists locally
         async function uploadTournaments(username, accessCode) {
             try {
                 // 1. Verify user credentials
@@ -1999,34 +2013,59 @@
                 const tournaments = getTournaments();
                 if (tournaments.length === 0) throw new Error('No tournaments to upload.');
 
-                // 3. Upsert each tournament (replace existing ones with same id)
-                const upsertPromises = tournaments.map(t => {
-                    const { id, playerName, opponents, created, fixtures, table } = t;
-                    const payload = {
-                        id,
-                        username,
-                        data: { playerName, opponents, created, fixtures, table }
-                    };
-                    return supabaseClient.from('tournaments').upsert(payload, { onConflict: 'id' });
-                });
+                // 3. Upsert the local set (overwrite rows with matching id)
+                const rows = tournaments.map(t => ({
+                    id: t.id,
+                    username,
+                    data: {
+                        playerName: t.playerName,
+                        opponents: t.opponents,
+                        created: t.created,
+                        fixtures: t.fixtures,
+                        table: t.table
+                    }
+                }));
 
-                const results = await Promise.all(upsertPromises);
-                const errors = results.filter(r => r.error);
-                if (errors.length) {
-                    throw new Error('Some tournaments failed to upload: ' + errors.map(e => e.error.message).join('; '));
+                const { error: upErr } = await supabaseClient
+                    .from('tournaments')
+                    .upsert(rows, { onConflict: 'id' });
+                if (upErr) throw new Error('Upload failed: ' + upErr.message);
+
+                // 4. Remove cloud rows for this user that no longer exist locally
+                const localIds = new Set(tournaments.map(t => t.id));
+                const { data: existing, error: fetchErr } = await supabaseClient
+                    .from('tournaments')
+                    .select('id')
+                    .eq('username', username);
+                if (fetchErr) throw new Error('Could not verify cloud contents: ' + fetchErr.message);
+
+                const staleIds = (existing || [])
+                    .map(r => r.id)
+                    .filter(id => !localIds.has(id));
+
+                if (staleIds.length) {
+                    const { error: delErr } = await supabaseClient
+                        .from('tournaments')
+                        .delete()
+                        .eq('username', username)
+                        .in('id', staleIds);
+                    if (delErr) throw new Error('Could not remove stale cloud rows: ' + delErr.message);
                 }
 
-                showToast('All tournaments uploaded successfully!', 'success');
+                showToast(
+                    `Uploaded ${tournaments.length} tournament(s)` +
+                    (staleIds.length ? `, removed ${staleIds.length} stale` : ''),
+                    'success'
+                );
             } catch (err) {
                 showToast(err.message, 'error');
                 console.error(err);
             }
         }
 
-        // ─── Load from Cloud ───────────────────────────────────────────────
+        // ─── Load from Cloud (dedupe + stable sort) ───────────────────────
         async function loadTournaments(username) {
             try {
-                // 1. Fetch all tournaments for this username
                 const { data, error } = await supabaseClient
                     .from('tournaments')
                     .select('id, data')
@@ -2035,24 +2074,33 @@
                 if (error) throw new Error('Error loading tournaments: ' + error.message);
                 if (!data || data.length === 0) throw new Error('No tournaments found for this user.');
 
-                // 2. Reconstruct the tournament objects
-                const tournaments = data.map(row => {
-                    const d = row.data;
-                    return {
+                // Defensive dedupe by id (protects against any legacy duplicate rows)
+                const seen = new Set();
+                const tournaments = [];
+                for (const row of data) {
+                    if (seen.has(row.id)) continue;
+                    seen.add(row.id);
+                    const d = row.data || {};
+                    tournaments.push({
                         id: row.id,
                         playerName: d.playerName,
-                        opponents: d.opponents,
+                        opponents: d.opponents || [],
                         created: d.created,
-                        fixtures: d.fixtures,
-                        table: d.table
-                    };
-                });
+                        fixtures: d.fixtures || [],
+                        table: d.table || []
+                    });
+                }
 
-                // 3. Replace localStorage
+                // Stable chronological ordering
+                tournaments.sort((a, b) =>
+                    String(a.created || '').localeCompare(String(b.created || ''))
+                );
+
                 localStorage.setItem('tournaments', JSON.stringify(tournaments));
 
-                // 4. Refresh UI
+                window._currentTournamentIndex = 0;
                 updateTournamentDisplay();
+                updateNavButtons();
 
                 showToast(`Loaded ${tournaments.length} tournament(s) for ${username}`, 'success');
             } catch (err) {
@@ -2069,6 +2117,9 @@
                 showToast('Please enter both username and access code.', 'error');
                 return;
             }
+            if (!confirm('Uploading will REPLACE your entire cloud dataset for this user (stale tournaments will be deleted). Continue?')) {
+                return;
+            }
             uploadTournaments(username, accessCode);
         });
 
@@ -2076,6 +2127,9 @@
             const username = document.getElementById('load-username').value.trim();
             if (!username) {
                 showToast('Please enter a username to load.', 'error');
+                return;
+            }
+            if (!confirm('Loading will REPLACE all tournaments currently stored in this browser. Continue?')) {
                 return;
             }
             loadTournaments(username);
