@@ -397,6 +397,14 @@
             flex-shrink: 0;
         }
 
+        .tournament-card ul li .tick-icon {
+            color: #3dab7a;
+            font-size: 0.5rem;
+            width: auto;
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+
         .tournament-actions {
             display: flex;
             gap: 4px;
@@ -1416,7 +1424,6 @@
             if (window.crypto && typeof window.crypto.randomUUID === 'function') {
                 return 'tournament_' + window.crypto.randomUUID();
             }
-            // Fallback for older browsers
             return 'tournament_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
         }
 
@@ -1458,21 +1465,17 @@
 
             const old = tournaments[idx];
 
-            // Build a map of opponent → scores from old fixtures
             const scoreMap = {};
-            old.fixtures.forEach(f => {
-                // f.home is the player, f.away is the opponent
+            (old.fixtures || []).forEach(f => {
                 scoreMap[f.away] = {
                     homeScore: f.homeScore,
                     awayScore: f.awayScore
                 };
             });
 
-            // Update basic info
             tournaments[idx].playerName = playerName;
             tournaments[idx].opponents = opponents;
 
-            // Rebuild fixtures, preserving scores for opponents that still exist
             tournaments[idx].fixtures = opponents.map((opp) => {
                 const oldScore = scoreMap[opp] || { homeScore: "", awayScore: "" };
                 return {
@@ -1483,7 +1486,6 @@
                 };
             });
 
-            // Rebuild table with fresh stats
             tournaments[idx].table = [
                 { name: playerName, isPlayer: true, position: 1, played: 0, won: 0, drawn: 0, lost: 0,
                     goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0, form: [] }
@@ -1502,7 +1504,6 @@
                 form: []
             })));
 
-            // Recalculate table from fixtures
             calculateTable(tournaments[idx]);
 
             setTournaments(tournaments);
@@ -1567,9 +1568,8 @@
         }
 
         // ─── Score update (KEYBOARD-SAFE) ─────────────────────────────────
-        // NOTE: this must NEVER re-render the fixtures list. Rebuilding the
-        // inputs would destroy the focused element and dismiss the mobile
-        // keyboard. We only touch the table, the stats and the counters.
+        // Does NOT rebuild the fixtures list — that would destroy focus and
+        // dismiss the mobile keyboard.
         function updateFixtureScore(tournamentId, fixtureIndex) {
             const tournaments = getTournaments();
             const tIdx = tournaments.findIndex(t => t.id === tournamentId);
@@ -1604,6 +1604,9 @@
             updateTableDisplay(t);
             updateViewStats(t);
             updateGlobalCounters();
+            // Keep the All-Tournaments tick icons in sync (list is hidden
+            // while typing, so this won't steal focus from the input).
+            applySearchFilter();
 
             const all = getTournaments();
             const updatedIdx = all.findIndex(t => t.id === tournamentId);
@@ -1629,9 +1632,12 @@
             const prev = document.getElementById('prev-tournament-btn');
             const next = document.getElementById('next-tournament-btn');
             const counter = document.getElementById('tournament-counter');
-            if (total === 0) { prev.disabled = true;
+            if (total === 0) {
+                prev.disabled = true;
                 next.disabled = true;
-                counter.textContent = '0 / 0'; return; }
+                counter.textContent = '0 / 0';
+                return;
+            }
             prev.disabled = (cur <= 0);
             next.disabled = (cur >= total - 1);
             counter.textContent = `${cur + 1} / ${total}`;
@@ -1750,15 +1756,12 @@
             const scoreInputs = Array.from(container.querySelectorAll('.score-home, .score-away'));
 
             scoreInputs.forEach((inp, i) => {
-                // Keep keyboard open: only rewrite the value when it actually changes
                 inp.addEventListener('input', function() {
                     const cleaned = this.value.replace(/[^0-9]/g, '');
                     if (cleaned !== this.value) this.value = cleaned;
                     updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
                 });
 
-                // Enter / "next" key → jump to the following score box without
-                // dismissing the keyboard.
                 inp.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
@@ -1768,11 +1771,9 @@
                     }
                 });
 
-                // Tap into a box → select existing value for quick overwrite
                 inp.addEventListener('focus', function() {
                     const v = this.value;
                     if (v !== '') {
-                        // Defer so mobile browsers apply the selection reliably
                         setTimeout(() => { try { this.select(); } catch (_) {} }, 0);
                     }
                 });
@@ -1853,19 +1854,32 @@
                 return;
             }
 
-            list.innerHTML = filtered.map(t => `
+            // Iterate over fixtures (falls back to opponents for legacy data)
+            list.innerHTML = filtered.map(t => {
+                const fixtures = (t.fixtures && t.fixtures.length)
+                    ? t.fixtures
+                    : (t.opponents || []).map(o => ({ away: o, homeScore: "", awayScore: "" }));
+
+                const items = fixtures.map(f => {
+                    const hasScore = f.homeScore !== "" && f.awayScore !== "";
+                    const tick = hasScore
+                        ? `<i class="fas fa-check tick-icon"></i>`
+                        : '';
+                    return `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${f.away} ${tick}</li>`;
+                }).join('');
+
+                return `
                     <div class="tournament-card" data-id="${t.id}">
                         <h3><i class="fas fa-trophy"></i> ${t.playerName}</h3>
-                        <ul>
-                            ${t.opponents.map(opp => `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${opp}</li>`).join('')}
-                        </ul>
+                        <ul>${items}</ul>
                         <div class="tournament-actions">
                             <button class="view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
                             <button class="edit-btn" data-id="${t.id}"><i class="fas fa-pen"></i> Edit</button>
                             <button class="delete-btn btn-danger" data-id="${t.id}"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                `).join('');
+                `;
+            }).join('');
         }
 
         document.getElementById('tournament-search').addEventListener('input', applySearchFilter);
@@ -1894,13 +1908,13 @@
 
         // ─── Update Display ───────────────────────────────────────────────
         function updateTournamentDisplay() {
+            const tournaments = getTournaments();
             updateGlobalCounters();
             applySearchFilter();
 
             const viewTab = document.getElementById('tournament-view');
             if (viewTab.classList.contains('active')) {
-                // Never rebuild the view while the user is typing a score,
-                // otherwise the mobile keyboard would be dismissed.
+                // Don't rebuild the view while the user is typing a score
                 const active = document.activeElement;
                 const typingScore = active && active.classList &&
                     (active.classList.contains('score-home') || active.classList.contains('score-away'));
@@ -1912,12 +1926,10 @@
                     if (!exists && tournaments.length) navigateToTournamentByIndex(0);
                     else if (exists) displayTournament(currentId);
                     else if (tournaments.length) navigateToTournamentByIndex(0);
-                } else if (tournaments.length) navigateToTournamentByIndex(0);
+                } else if (tournaments.length) {
+                    navigateToTournamentByIndex(0);
+                }
             }
-            return;
-
-            // (unreachable – kept for clarity)
-            function tournaments() { return getTournaments(); }
         }
 
         // ─── Event Delegation ─────────────────────────────────────────────
@@ -2050,14 +2062,13 @@
         });
 
         // ─── Supabase Cloud Sync ──────────────────────────────────────────
-        const SUPABASE_URL = 'https://hbvpnslzoulogjivoipv.supabase.co';   // <-- Replace with your Supabase URL
-        const SUPABASE_ANON_KEY = 'sb_publishable_UTf_89tttlvxQ0N4JAqQaw_iXl7ocpm'; // <-- Replace with your anon key
+        const SUPABASE_URL = 'https://hbvpnslzoulogjivoipv.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_UTf_89tttlvxQ0N4JAqQaw_iXl7ocpm';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // ─── Upload to Cloud (REPLACE semantics) ──────────────────────────
         async function uploadTournaments(username, accessCode) {
             try {
-                // 1. Verify user credentials
                 const { data: user, error: userError } = await supabaseClient
                     .from('users')
                     .select('username')
@@ -2068,11 +2079,9 @@
                 if (userError) throw new Error('Error verifying user: ' + userError.message);
                 if (!user) throw new Error('Invalid username or access code.');
 
-                // 2. Get local tournaments
                 const tournaments = getTournaments();
                 if (tournaments.length === 0) throw new Error('No tournaments to upload.');
 
-                // 3. Upsert the local set (overwrite rows with matching id)
                 const rows = tournaments.map(t => ({
                     id: t.id,
                     username,
@@ -2090,7 +2099,6 @@
                     .upsert(rows, { onConflict: 'id' });
                 if (upErr) throw new Error('Upload failed: ' + upErr.message);
 
-                // 4. Remove cloud rows for this user that no longer exist locally
                 const localIds = new Set(tournaments.map(t => t.id));
                 const { data: existing, error: fetchErr } = await supabaseClient
                     .from('tournaments')
@@ -2133,7 +2141,6 @@
                 if (error) throw new Error('Error loading tournaments: ' + error.message);
                 if (!data || data.length === 0) throw new Error('No tournaments found for this user.');
 
-                // Defensive dedupe by id
                 const seen = new Set();
                 const tournaments = [];
                 for (const row of data) {
@@ -2150,7 +2157,6 @@
                     });
                 }
 
-                // Stable chronological ordering
                 tournaments.sort((a, b) =>
                     String(a.created || '').localeCompare(String(b.created || ''))
                 );
