@@ -1566,18 +1566,25 @@
             return tournament.table;
         }
 
+        // ─── Score update (KEYBOARD-SAFE) ─────────────────────────────────
+        // NOTE: this must NEVER re-render the fixtures list. Rebuilding the
+        // inputs would destroy the focused element and dismiss the mobile
+        // keyboard. We only touch the table, the stats and the counters.
         function updateFixtureScore(tournamentId, fixtureIndex) {
             const tournaments = getTournaments();
             const tIdx = tournaments.findIndex(t => t.id === tournamentId);
             if (tIdx === -1) return;
             const t = tournaments[tIdx];
+
             const homeInput = document.querySelector(`.score-home[data-index="${fixtureIndex}"]`);
             const awayInput = document.querySelector(`.score-away[data-index="${fixtureIndex}"]`);
             if (!homeInput || !awayInput) return;
+
             const rawHome = homeInput.value.trim();
             const rawAway = awayInput.value.trim();
             const hVal = rawHome === '' ? '' : (parseInt(rawHome) >= 0 ? parseInt(rawHome) : '');
             const aVal = rawAway === '' ? '' : (parseInt(rawAway) >= 0 ? parseInt(rawAway) : '');
+
             if (rawHome !== '' && hVal === '') {
                 homeInput.value = t.fixtures[fixtureIndex].homeScore;
                 return;
@@ -1586,12 +1593,18 @@
                 awayInput.value = t.fixtures[fixtureIndex].awayScore;
                 return;
             }
+
             t.fixtures[fixtureIndex].homeScore = hVal !== '' ? hVal : '';
             t.fixtures[fixtureIndex].awayScore = aVal !== '' ? aVal : '';
+
             t.table = calculateTable(t);
             setTournaments(tournaments);
+
+            // Partial, focus-safe refresh — no fixture re-render
             updateTableDisplay(t);
-            updateTournamentDisplay();
+            updateViewStats(t);
+            updateGlobalCounters();
+
             const all = getTournaments();
             const updatedIdx = all.findIndex(t => t.id === tournamentId);
             if (updatedIdx !== -1) window._currentTournamentIndex = updatedIdx;
@@ -1663,17 +1676,9 @@
             return Object.values(map).sort((a, b) => b.points - a.points || b.goalDifference - a.goalDifference);
         }
 
-        // ─── Display Tournament ────────────────────────────────────────────
-        function displayTournament(tournamentId) {
-            const tournaments = getTournaments();
-            const idx = tournaments.findIndex(t => t.id === tournamentId);
-            if (idx === -1) { showToast('Tournament not found', 'error'); return; }
-            window._currentTournamentIndex = idx;
-            const t = tournaments[idx];
-
-            document.getElementById('tournament-view').dataset.currentId = tournamentId;
-            document.getElementById('tournament-view-title').textContent = t.playerName;
-
+        // ─── View stats (position / points / GD) — cheap, focus-safe ──────
+        function updateViewStats(t) {
+            if (!t) return;
             const globalStats = getGlobalStats();
             const globalPlayer = globalStats.find(p => p.name === t.playerName);
             if (globalPlayer) {
@@ -1689,6 +1694,31 @@
                 const gd = localPlayer.goalDifference;
                 document.getElementById('current-gd').textContent = (gd > 0 ? '+' : '') + gd;
             }
+        }
+
+        // ─── Global counters only (no DOM rebuild of fixtures/list) ───────
+        function updateGlobalCounters() {
+            const tournaments = getTournaments();
+            document.getElementById('tournament-count').textContent = tournaments.length;
+            document.getElementById('active-players').textContent =
+                tournaments.reduce((s, t) => s + 1 + t.opponents.length, 0);
+            document.getElementById('matches-played').textContent =
+                tournaments.reduce((s, t) => s + t.fixtures.filter(f =>
+                    f.homeScore !== "" && f.awayScore !== "").length, 0);
+        }
+
+        // ─── Display Tournament ────────────────────────────────────────────
+        function displayTournament(tournamentId) {
+            const tournaments = getTournaments();
+            const idx = tournaments.findIndex(t => t.id === tournamentId);
+            if (idx === -1) { showToast('Tournament not found', 'error'); return; }
+            window._currentTournamentIndex = idx;
+            const t = tournaments[idx];
+
+            document.getElementById('tournament-view').dataset.currentId = tournamentId;
+            document.getElementById('tournament-view-title').textContent = t.playerName;
+
+            updateViewStats(t);
 
             const container = document.getElementById('tournament-fixtures');
             container.innerHTML = '';
@@ -1702,11 +1732,13 @@
                                 <input type="text" inputmode="numeric" pattern="[0-9]*"
                                        value="${f.homeScore}"
                                        class="score-home" data-index="${i}"
+                                       maxlength="3" enterkeyhint="next"
                                        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                                 <span class="versus">VS</span>
                                 <input type="text" inputmode="numeric" pattern="[0-9]*"
                                        value="${f.awayScore}"
                                        class="score-away" data-index="${i}"
+                                       maxlength="3" enterkeyhint="next"
                                        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                             </div>
                             <span class="player-name">${f.away}</span>
@@ -1715,17 +1747,40 @@
                 container.appendChild(div);
             });
 
-            document.querySelectorAll('.score-home, .score-away').forEach(inp => {
+            const scoreInputs = Array.from(container.querySelectorAll('.score-home, .score-away'));
+
+            scoreInputs.forEach((inp, i) => {
+                // Keep keyboard open: only rewrite the value when it actually changes
                 inp.addEventListener('input', function() {
-                    this.value = this.value.replace(/[^0-9]/g, '');
+                    const cleaned = this.value.replace(/[^0-9]/g, '');
+                    if (cleaned !== this.value) this.value = cleaned;
                     updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
                 });
+
+                // Enter / "next" key → jump to the following score box without
+                // dismissing the keyboard.
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const next = scoreInputs[i + 1];
+                        if (next) next.focus();
+                        else this.blur();
+                    }
+                });
+
+                // Tap into a box → select existing value for quick overwrite
+                inp.addEventListener('focus', function() {
+                    const v = this.value;
+                    if (v !== '') {
+                        // Defer so mobile browsers apply the selection reliably
+                        setTimeout(() => { try { this.select(); } catch (_) {} }, 0);
+                    }
+                });
+
                 inp.addEventListener('blur', function() {
                     if (this.value === '') return;
                     const num = parseInt(this.value);
-                    if (isNaN(num) || num < 0) {
-                        this.value = '';
-                    }
+                    if (isNaN(num) || num < 0) this.value = '';
                     updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
                 });
             });
@@ -1733,6 +1788,7 @@
             t.table = calculateTable(t);
             setTournaments(tournaments);
             updateTableDisplay(t);
+            updateGlobalCounters();
             updateNavButtons();
             switchTab('tournament-view');
         }
@@ -1838,16 +1894,18 @@
 
         // ─── Update Display ───────────────────────────────────────────────
         function updateTournamentDisplay() {
-            const tournaments = getTournaments();
-            document.getElementById('tournament-count').textContent = tournaments.length;
-            document.getElementById('active-players').textContent = tournaments.reduce((s, t) => s + 1 + t.opponents.length,
-                0);
-            document.getElementById('matches-played').textContent = tournaments.reduce((s, t) => s + t.fixtures.filter(f =>
-                f.homeScore !== "" && f.awayScore !== "").length, 0);
+            updateGlobalCounters();
             applySearchFilter();
 
             const viewTab = document.getElementById('tournament-view');
             if (viewTab.classList.contains('active')) {
+                // Never rebuild the view while the user is typing a score,
+                // otherwise the mobile keyboard would be dismissed.
+                const active = document.activeElement;
+                const typingScore = active && active.classList &&
+                    (active.classList.contains('score-home') || active.classList.contains('score-away'));
+                if (typingScore) return;
+
                 const currentId = viewTab.dataset.currentId || null;
                 if (currentId) {
                     const exists = tournaments.some(t => t.id === currentId);
@@ -1856,6 +1914,10 @@
                     else if (tournaments.length) navigateToTournamentByIndex(0);
                 } else if (tournaments.length) navigateToTournamentByIndex(0);
             }
+            return;
+
+            // (unreachable – kept for clarity)
+            function tournaments() { return getTournaments(); }
         }
 
         // ─── Event Delegation ─────────────────────────────────────────────
@@ -1993,9 +2055,6 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // ─── Upload to Cloud (REPLACE semantics) ──────────────────────────
-        // 1. Verify credentials
-        // 2. Upsert every local tournament
-        // 3. Delete any cloud row for this user that no longer exists locally
         async function uploadTournaments(username, accessCode) {
             try {
                 // 1. Verify user credentials
@@ -2074,7 +2133,7 @@
                 if (error) throw new Error('Error loading tournaments: ' + error.message);
                 if (!data || data.length === 0) throw new Error('No tournaments found for this user.');
 
-                // Defensive dedupe by id (protects against any legacy duplicate rows)
+                // Defensive dedupe by id
                 const seen = new Set();
                 const tournaments = [];
                 for (const row of data) {
@@ -2139,8 +2198,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateTournamentDisplay();
             const tournaments = getTournaments();
-            if (tournaments.length) { window._currentTournamentIndex = 0;
-                updateNavButtons(); }
+            if (tournaments.length) {
+                window._currentTournamentIndex = 0;
+                updateNavButtons();
+            }
             if (document.getElementById('player-stats').classList.contains('active')) updatePlayerStatsTable();
         });
     </script>
