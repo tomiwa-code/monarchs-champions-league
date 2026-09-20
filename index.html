@@ -628,11 +628,12 @@
             background-color: rgba(60, 140, 220, 0.15) !important;
         }
 
+        /* ─── View Nav Row (Back | Search | Nav) ─── */
         .view-nav-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 10px;
             margin-bottom: 18px;
         }
@@ -642,6 +643,20 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .view-nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .view-nav-center .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 340px;
         }
 
         .nav-btn {
@@ -706,6 +721,14 @@
             flex-wrap: wrap;
         }
 
+        /* ─── Search + suggestions ─── */
+        .search-container {
+            position: relative;
+            min-width: 180px;
+            max-width: 300px;
+            width: 100%;
+        }
+
         .search-wrapper {
             display: flex;
             align-items: center;
@@ -714,8 +737,7 @@
             border-radius: 8px;
             padding: 0 12px;
             transition: border 0.2s, box-shadow 0.2s;
-            min-width: 180px;
-            max-width: 300px;
+            width: 100%;
         }
 
         .search-wrapper:focus-within {
@@ -760,6 +782,84 @@
         .search-clear:hover {
             color: #b0b0c8;
         }
+
+        .search-suggestions {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #16161f;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            box-shadow: 0 14px 34px rgba(0, 0, 0, 0.6);
+            padding: 4px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 600;
+            display: none;
+        }
+
+        .search-suggestions.visible {
+            display: block;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #d0d0e0;
+            transition: background 0.12s;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.active {
+            background: rgba(108, 140, 255, 0.16);
+            color: #fff;
+        }
+
+        .suggestion-item > i.fa-user {
+            color: #6c8cff;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .suggestion-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .suggestion-meta {
+            font-size: 0.68rem;
+            color: #5a5a6e;
+            flex-shrink: 0;
+        }
+
+        .suggestion-go {
+            font-size: 0.6rem;
+            color: #6c8cff;
+            opacity: 0;
+            flex-shrink: 0;
+            transition: opacity 0.12s;
+        }
+
+        .suggestion-item:hover .suggestion-go,
+        .suggestion-item.active .suggestion-go {
+            opacity: 1;
+        }
+
+        .suggestion-empty {
+            padding: 10px 12px;
+            font-size: 0.8rem;
+            color: #5a5a6e;
+            text-align: center;
+        }
+        /* ─── /Search + suggestions ─── */
 
         .search-results-count {
             color: #5a5a6e;
@@ -1014,12 +1114,15 @@
                 font-size: 0.6rem;
             }
             .view-nav-row {
-                flex-direction: column;
-                align-items: stretch;
+                flex-wrap: wrap;
             }
-            .view-nav-left,
-            .view-nav-right {
-                justify-content: center;
+            .view-nav-center {
+                order: 3;
+                flex-basis: 100%;
+                justify-content: stretch;
+            }
+            .view-nav-center .search-container {
+                max-width: 100%;
             }
             .tournaments-header {
                 flex-direction: column;
@@ -1029,7 +1132,7 @@
             .tournaments-header h2 {
                 text-align: center;
             }
-            .search-wrapper {
+            .search-container {
                 max-width: 100%;
                 min-width: unset;
             }
@@ -1239,10 +1342,15 @@
             <div class="tournaments-header">
                 <h2><i class="fas fa-list"></i> All Tournaments</h2>
                 <div class="header-actions">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="tournament-search" placeholder="Search..." autocomplete="off" />
-                        <button class="search-clear" id="search-clear-btn" aria-label="Clear"><i class="fas fa-times-circle"></i></button>
+                    <!-- Search + player suggestions -->
+                    <div class="search-container">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="tournament-search" placeholder="Search players..." autocomplete="off"
+                                   autocorrect="off" autocapitalize="off" spellcheck="false" />
+                            <button class="search-clear" id="search-clear-btn" aria-label="Clear"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                        <div class="search-suggestions" id="search-suggestions"></div>
                     </div>
                     <button id="delete-all-btn" class="btn-danger btn-sm" style="white-space:nowrap;"><i class="fas fa-trash"></i> Delete All</button>
                 </div>
@@ -1256,6 +1364,17 @@
             <div class="view-nav-row">
                 <div class="view-nav-left">
                     <button class="back-btn" id="back-to-tournaments"><i class="fas fa-arrow-left"></i> Back</button>
+                </div>
+                <div class="view-nav-center">
+                    <div class="search-container">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="view-player-search" placeholder="Search players..." autocomplete="off"
+                                   autocorrect="off" autocapitalize="off" spellcheck="false" />
+                            <button class="search-clear" id="view-player-search-clear" aria-label="Clear"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                        <div class="search-suggestions" id="view-search-suggestions"></div>
+                    </div>
                 </div>
                 <div class="view-nav-right">
                     <button class="nav-btn" id="prev-tournament-btn" disabled><i class="fas fa-chevron-left"></i></button>
@@ -1419,6 +1538,13 @@
             return 'th';
         }
 
+        // ─── Helper: Escape HTML ─────────────────────────────────────────
+        function escapeHtml(str) {
+            return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
         // ─── Helper: Collision-safe ID ───────────────────────────────────
         function generateTournamentId() {
             if (window.crypto && typeof window.crypto.randomUUID === 'function') {
@@ -1568,8 +1694,6 @@
         }
 
         // ─── Score update (KEYBOARD-SAFE) ─────────────────────────────────
-        // Does NOT rebuild the fixtures list — that would destroy focus and
-        // dismiss the mobile keyboard.
         function updateFixtureScore(tournamentId, fixtureIndex) {
             const tournaments = getTournaments();
             const tIdx = tournaments.findIndex(t => t.id === tournamentId);
@@ -1600,12 +1724,9 @@
             t.table = calculateTable(t);
             setTournaments(tournaments);
 
-            // Partial, focus-safe refresh — no fixture re-render
             updateTableDisplay(t);
             updateViewStats(t);
             updateGlobalCounters();
-            // Keep the All-Tournaments tick icons in sync (list is hidden
-            // while typing, so this won't steal focus from the input).
             applySearchFilter();
 
             const all = getTournaments();
@@ -1682,7 +1803,6 @@
             return Object.values(map).sort((a, b) => b.points - a.points || b.goalDifference - a.goalDifference);
         }
 
-        // ─── View stats (position / points / GD) — cheap, focus-safe ──────
         function updateViewStats(t) {
             if (!t) return;
             const globalStats = getGlobalStats();
@@ -1702,7 +1822,6 @@
             }
         }
 
-        // ─── Global counters only (no DOM rebuild of fixtures/list) ───────
         function updateGlobalCounters() {
             const tournaments = getTournaments();
             document.getElementById('tournament-count').textContent = tournaments.length;
@@ -1726,6 +1845,13 @@
 
             updateViewStats(t);
 
+            // Clear any view-level player search when switching tournaments
+            const vInput = document.getElementById('view-player-search');
+            const vClear = document.getElementById('view-player-search-clear');
+            if (vInput) vInput.value = '';
+            if (vClear) vClear.classList.remove('visible');
+            hideViewSuggestions();
+
             const container = document.getElementById('tournament-fixtures');
             container.innerHTML = '';
             t.fixtures.forEach((f, i) => {
@@ -1733,7 +1859,7 @@
                 div.className = 'fixture';
                 div.innerHTML = `
                         <div class="match">
-                            <span class="player-name"><i class="fas fa-user"></i> ${f.home}</span>
+                            <span class="player-name"><i class="fas fa-user"></i> ${escapeHtml(f.home)}</span>
                             <div class="score-inputs">
                                 <input type="text" inputmode="numeric" pattern="[0-9]*"
                                        value="${f.homeScore}"
@@ -1747,7 +1873,7 @@
                                        maxlength="3" enterkeyhint="next"
                                        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
                             </div>
-                            <span class="player-name">${f.away}</span>
+                            <span class="player-name">${escapeHtml(f.away)}</span>
                         </div>
                     `;
                 container.appendChild(div);
@@ -1811,7 +1937,7 @@
                     <tbody>
                         <tr class="player-row">
                             <td>${team.position}</td>
-                            <td><i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>${team.name}</td>
+                            <td><i class="fas fa-user" style="color:#6c8cff;margin-right:6px;"></i>${escapeHtml(team.name)}</td>
                             <td>${team.played}</td>
                             <td>${team.won}</td>
                             <td>${team.drawn}</td>
@@ -1826,7 +1952,7 @@
                 `;
         }
 
-        // ─── Search ────────────────────────────────────────────────────────
+        // ─── Search (All Tournaments) ──────────────────────────────────────
         let _searchTerm = '';
 
         function applySearchFilter() {
@@ -1854,7 +1980,6 @@
                 return;
             }
 
-            // Iterate over fixtures (falls back to opponents for legacy data)
             list.innerHTML = filtered.map(t => {
                 const fixtures = (t.fixtures && t.fixtures.length)
                     ? t.fixtures
@@ -1865,12 +1990,12 @@
                     const tick = hasScore
                         ? `<i class="fas fa-check tick-icon"></i>`
                         : '';
-                    return `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${f.away} ${tick}</li>`;
+                    return `<li><i class="fas fa-circle" style="font-size:0.25rem;color:#6c8cff;"></i> ${escapeHtml(f.away)} ${tick}</li>`;
                 }).join('');
 
                 return `
                     <div class="tournament-card" data-id="${t.id}">
-                        <h3><i class="fas fa-trophy"></i> ${t.playerName}</h3>
+                        <h3><i class="fas fa-trophy"></i> ${escapeHtml(t.playerName)}</h3>
                         <ul>${items}</ul>
                         <div class="tournament-actions">
                             <button class="view-btn" data-id="${t.id}"><i class="fas fa-eye"></i> View</button>
@@ -1887,6 +2012,213 @@
             document.getElementById('tournament-search').value = '';
             applySearchFilter();
             document.getElementById('tournament-search').focus();
+        });
+
+        // ─── Search suggestions (shared helper) ────────────────────────────
+        // Builds the HTML for a list of matching tournaments (player names)
+        function buildSuggestionListHTML(matches, rawTerm) {
+            if (matches.length === 0) {
+                return `<div class="suggestion-empty">No players match "${escapeHtml(rawTerm)}"</div>`;
+            }
+            return matches.map((t, i) => {
+                const date = t.created ? new Date(t.created).toLocaleDateString() : '';
+                return `<div class="suggestion-item" data-id="${t.id}" data-index="${i}">
+                            <i class="fas fa-user"></i>
+                            <span class="suggestion-name">${escapeHtml(t.playerName)}</span>
+                            ${date ? `<span class="suggestion-meta">${date}</span>` : ''}
+                            <i class="fas fa-chevron-right suggestion-go"></i>
+                        </div>`;
+            }).join('');
+        }
+
+        function findPlayerMatches(term) {
+            const lower = term.toLowerCase();
+            return getTournaments()
+                .filter(t => (t.playerName || '').toLowerCase().includes(lower))
+                .sort((a, b) => String(a.playerName || '').localeCompare(String(b.playerName || '')) ||
+                                 String(a.created || '').localeCompare(String(b.created || '')));
+        }
+
+        // ─── Search suggestions (All Tournaments tab) ─────────────────────
+        let _suggestionIndex = -1;
+
+        function hideSuggestions() {
+            const box = document.getElementById('search-suggestions');
+            if (!box) return;
+            box.classList.remove('visible');
+            box.innerHTML = '';
+            _suggestionIndex = -1;
+        }
+
+        function renderSuggestions() {
+            const box = document.getElementById('search-suggestions');
+            const input = document.getElementById('tournament-search');
+            if (!box || !input) return;
+
+            const raw = input.value.trim();
+            if (raw === '') { hideSuggestions(); return; }
+
+            const matches = findPlayerMatches(raw);
+            box.innerHTML = buildSuggestionListHTML(matches, raw);
+            box.classList.add('visible');
+            _suggestionIndex = -1;
+        }
+
+        function highlightSuggestion(items) {
+            items.forEach((el, i) => el.classList.toggle('active', i === _suggestionIndex));
+            const el = items[_suggestionIndex];
+            if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+        }
+
+        function openPlayerTournament(id) {
+            hideSuggestions();
+            hideViewSuggestions();
+            const input = document.getElementById('tournament-search');
+            if (input) {
+                input.value = '';
+                try { input.blur(); } catch (_) {}
+            }
+            applySearchFilter();
+            displayTournament(id);
+        }
+
+        document.getElementById('search-suggestions').addEventListener('mousedown', function(e) {
+            const item = e.target.closest('.suggestion-item');
+            if (!item) return;
+            e.preventDefault();
+            openPlayerTournament(item.getAttribute('data-id'));
+        });
+
+        document.getElementById('tournament-search').addEventListener('keydown', function(e) {
+            const box = document.getElementById('search-suggestions');
+            const items = Array.from(box.querySelectorAll('.suggestion-item'));
+            if (!box.classList.contains('visible') || items.length === 0) {
+                if (e.key === 'Escape') hideSuggestions();
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                _suggestionIndex = Math.min(_suggestionIndex + 1, items.length - 1);
+                highlightSuggestion(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                _suggestionIndex = Math.max(_suggestionIndex - 1, -1);
+                highlightSuggestion(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const it = items[_suggestionIndex] || items[0];
+                if (it) openPlayerTournament(it.getAttribute('data-id'));
+            } else if (e.key === 'Escape') {
+                hideSuggestions();
+                this.blur();
+            }
+        });
+
+        document.getElementById('tournament-search').addEventListener('input', renderSuggestions);
+
+        document.getElementById('tournament-search').addEventListener('blur', function() {
+            setTimeout(hideSuggestions, 150);
+        });
+        document.addEventListener('click', function(e) {
+            const c = document.querySelector('.search-container');
+            if (c && !c.contains(e.target)) hideSuggestions();
+            const vc = document.getElementById('tournament-view');
+            if (vc && !vc.querySelector('.view-nav-center .search-container')?.contains(e.target)) {
+                hideViewSuggestions();
+            }
+        });
+
+        // ─── View-level player search (inside tournament view) ────────────
+        let _viewSuggestionIndex = -1;
+
+        function hideViewSuggestions() {
+            const box = document.getElementById('view-search-suggestions');
+            if (!box) return;
+            box.classList.remove('visible');
+            box.innerHTML = '';
+            _viewSuggestionIndex = -1;
+        }
+
+        function renderViewSuggestions() {
+            const box = document.getElementById('view-search-suggestions');
+            const input = document.getElementById('view-player-search');
+            const clearBtn = document.getElementById('view-player-search-clear');
+            if (!box || !input) return;
+
+            const raw = input.value.trim();
+            if (clearBtn) {
+                if (raw.length > 0) clearBtn.classList.add('visible');
+                else clearBtn.classList.remove('visible');
+            }
+            if (raw === '') { hideViewSuggestions(); return; }
+
+            const matches = findPlayerMatches(raw);
+            box.innerHTML = buildSuggestionListHTML(matches, raw);
+            box.classList.add('visible');
+            _viewSuggestionIndex = -1;
+        }
+
+        function highlightViewSuggestion(items) {
+            items.forEach((el, i) => el.classList.toggle('active', i === _viewSuggestionIndex));
+            const el = items[_viewSuggestionIndex];
+            if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+        }
+
+        function openPlayerFromView(id) {
+            hideViewSuggestions();
+            const input = document.getElementById('view-player-search');
+            if (input) {
+                input.value = '';
+                try { input.blur(); } catch (_) {}
+            }
+            const clearBtn = document.getElementById('view-player-search-clear');
+            if (clearBtn) clearBtn.classList.remove('visible');
+            displayTournament(id);
+        }
+
+        document.getElementById('view-player-search').addEventListener('input', renderViewSuggestions);
+
+        document.getElementById('view-search-suggestions').addEventListener('mousedown', function(e) {
+            const item = e.target.closest('.suggestion-item');
+            if (!item) return;
+            e.preventDefault();
+            openPlayerFromView(item.getAttribute('data-id'));
+        });
+
+        document.getElementById('view-player-search').addEventListener('keydown', function(e) {
+            const box = document.getElementById('view-search-suggestions');
+            const items = Array.from(box.querySelectorAll('.suggestion-item'));
+            if (!box.classList.contains('visible') || items.length === 0) {
+                if (e.key === 'Escape') hideViewSuggestions();
+                return;
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                _viewSuggestionIndex = Math.min(_viewSuggestionIndex + 1, items.length - 1);
+                highlightViewSuggestion(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                _viewSuggestionIndex = Math.max(_viewSuggestionIndex - 1, -1);
+                highlightViewSuggestion(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const it = items[_viewSuggestionIndex] || items[0];
+                if (it) openPlayerFromView(it.getAttribute('data-id'));
+            } else if (e.key === 'Escape') {
+                hideViewSuggestions();
+                this.blur();
+            }
+        });
+
+        document.getElementById('view-player-search').addEventListener('blur', function() {
+            setTimeout(hideViewSuggestions, 150);
+        });
+
+        document.getElementById('view-player-search-clear').addEventListener('click', function() {
+            document.getElementById('view-player-search').value = '';
+            this.classList.remove('visible');
+            hideViewSuggestions();
+            document.getElementById('view-player-search').focus();
         });
 
         // ─── Delete All ────────────────────────────────────────────────────
@@ -1914,7 +2246,6 @@
 
             const viewTab = document.getElementById('tournament-view');
             if (viewTab.classList.contains('active')) {
-                // Don't rebuild the view while the user is typing a score
                 const active = document.activeElement;
                 const typingScore = active && active.classList &&
                     (active.classList.contains('score-home') || active.classList.contains('score-away'));
@@ -2018,7 +2349,7 @@
                 if (rankClass) tr.className = rankClass;
 
                 tr.innerHTML =
-                    `<td>${index + 1}</td><td><i class="fas fa-user" style="color:#6c8cff;margin-right:8px;"></i>${p.name}</td><td>${p.tournaments}</td><td>${p.played}</td><td>${p.won}</td><td>${p.drawn}</td><td>${p.lost}</td><td>${p.goalsFor}</td><td>${p.goalsAgainst}</td><td>${p.goalDifference > 0 ? '+' : ''}${p.goalDifference}</td><td>${p.points}</td>`;
+                    `<td>${index + 1}</td><td><i class="fas fa-user" style="color:#6c8cff;margin-right:8px;"></i>${escapeHtml(p.name)}</td><td>${p.tournaments}</td><td>${p.played}</td><td>${p.won}</td><td>${p.drawn}</td><td>${p.lost}</td><td>${p.goalsFor}</td><td>${p.goalsAgainst}</td><td>${p.goalDifference > 0 ? '+' : ''}${p.goalDifference}</td><td>${p.points}</td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -2066,7 +2397,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_UTf_89tttlvxQ0N4JAqQaw_iXl7ocpm';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ─── Upload to Cloud (REPLACE semantics) ──────────────────────────
         async function uploadTournaments(username, accessCode) {
             try {
                 const { data: user, error: userError } = await supabaseClient
@@ -2130,7 +2460,6 @@
             }
         }
 
-        // ─── Load from Cloud (dedupe + stable sort) ───────────────────────
         async function loadTournaments(username) {
             try {
                 const { data, error } = await supabaseClient
@@ -2174,7 +2503,6 @@
             }
         }
 
-        // ─── Cloud Upload / Load Event Listeners ──────────────────────────
         document.getElementById('upload-cloud-btn').addEventListener('click', function() {
             const username = document.getElementById('upload-username').value.trim();
             const accessCode = document.getElementById('upload-accesscode').value.trim();
