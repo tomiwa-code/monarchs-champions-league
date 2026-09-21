@@ -756,7 +756,6 @@
             flex: 1;
             min-width: 200px;
             max-width: 420px;
-            max-width: 420px;
         }
 
         /* ─── Single vs Split View ─── */
@@ -1485,15 +1484,22 @@
             return tournament.table;
         }
 
-        // ─── Score update (KEYBOARD-SAFE, split-aware) ────────────────────
-        function updateFixtureScore(tournamentId, fixtureIndex) {
+        // ─── Score update (CONTAINER-SCOPED + split-aware) ────────────────
+        // IMPORTANT: the same tournament can be rendered in more than one
+        // place at once (single view + split pane 1). A global
+        // document.querySelector would grab the *first* match in the DOM —
+        // which is the hidden single-view copy — and read a stale value.
+        // So every lookup is scoped to the fixtures-list container that
+        // actually fired the event.
+        function updateFixtureScore(tournamentId, fixtureIndex, container) {
             const tournaments = getTournaments();
             const tIdx = tournaments.findIndex(t => t.id === tournamentId);
             if (tIdx === -1) return;
             const t = tournaments[tIdx];
 
-            const homeInput = document.querySelector(`.score-home[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`);
-            const awayInput = document.querySelector(`.score-away[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`);
+            const scope = container || document;
+            const homeInput = scope.querySelector(`.score-home[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`);
+            const awayInput = scope.querySelector(`.score-away[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`);
             if (!homeInput || !awayInput) return;
 
             const rawHome = homeInput.value.trim();
@@ -1501,14 +1507,24 @@
             const hVal = rawHome === '' ? '' : (parseInt(rawHome) >= 0 ? parseInt(rawHome) : '');
             const aVal = rawAway === '' ? '' : (parseInt(rawAway) >= 0 ? parseInt(rawAway) : '');
 
-            if (rawHome !== '' && hVal === '') { homeInput.value = t.fixtures[fixtureIndex].homeScore; return; }
-            if (rawAway !== '' && aVal === '') { awayInput.value = t.fixtures[fixtureIndex].awayScore; return; }
+            if (rawHome !== '' && hVal === '') {
+                homeInput.value = t.fixtures[fixtureIndex].homeScore;
+                return;
+            }
+            if (rawAway !== '' && aVal === '') {
+                awayInput.value = t.fixtures[fixtureIndex].awayScore;
+                return;
+            }
 
-            t.fixtures[fixtureIndex].homeScore = hVal !== '' ? hVal : '';
-            t.fixtures[fixtureIndex].awayScore = aVal !== '' ? aVal : '';
+            t.fixtures[fixtureIndex].homeScore = hVal;
+            t.fixtures[fixtureIndex].awayScore = aVal;
 
             t.table = calculateTable(t);
             setTournaments(tournaments);
+
+            // Keep every other rendered copy of this fixture in sync
+            // (without touching the input the user is currently typing in).
+            syncFixtureInputs(tournamentId, fixtureIndex, hVal, aVal);
 
             refreshVisibleViews(tournamentId);
             updateGlobalCounters();
@@ -1519,6 +1535,28 @@
             if (updatedIdx !== -1 && document.getElementById('tournament-view').dataset.currentId === tournamentId) {
                 window._currentTournamentIndex = updatedIdx;
             }
+        }
+
+        // Mirror a fixture score into all other rendered copies of the same
+        // fixture (single view <-> split pane 1), skipping the focused input.
+        function syncFixtureInputs(tournamentId, fixtureIndex, hVal, aVal) {
+            const active = document.activeElement;
+            const hStr = hVal === '' ? '' : String(hVal);
+            const aStr = aVal === '' ? '' : String(aVal);
+
+            document
+                .querySelectorAll(`.score-home[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`)
+                .forEach(inp => {
+                    if (inp === active) return;
+                    if (inp.value !== hStr) inp.value = hStr;
+                });
+
+            document
+                .querySelectorAll(`.score-away[data-tid="${tournamentId}"][data-index="${fixtureIndex}"]`)
+                .forEach(inp => {
+                    if (inp === active) return;
+                    if (inp.value !== aStr) inp.value = aStr;
+                });
         }
 
         // Refresh stats + table for wherever a tournament is visible (without
@@ -1681,7 +1719,7 @@
                 inp.addEventListener('input', function() {
                     const cleaned = this.value.replace(/[^0-9]/g, '');
                     if (cleaned !== this.value) this.value = cleaned;
-                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
+                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')), container);
                 });
                 inp.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
@@ -1697,10 +1735,11 @@
                     }
                 });
                 inp.addEventListener('blur', function() {
-                    if (this.value === '') return;
-                    const num = parseInt(this.value);
-                    if (isNaN(num) || num < 0) this.value = '';
-                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')));
+                    if (this.value !== '') {
+                        const num = parseInt(this.value);
+                        if (isNaN(num) || num < 0) this.value = '';
+                    }
+                    updateFixtureScore(tournamentId, parseInt(this.getAttribute('data-index')), container);
                 });
             });
         }
@@ -1796,6 +1835,18 @@
             if (si) si.value = '';
             if (sc) sc.classList.remove('visible');
             hideSplitSuggestions();
+
+            // Re-render the single view from stored data so any score typed
+            // while split was active is guaranteed to be reflected.
+            const mainId = document.getElementById('tournament-view').dataset.currentId;
+            if (mainId) {
+                const t = getTournaments().find(x => x.id === mainId);
+                if (t) {
+                    renderFixturesInto('tournament-fixtures', t);
+                    updateViewStats(t);
+                    updateTableDisplay(t);
+                }
+            }
         }
 
         function renderSplitPanes() {
